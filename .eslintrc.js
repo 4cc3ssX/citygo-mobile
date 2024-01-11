@@ -28,8 +28,10 @@ module.exports = {
               ['^\\u0000'],
               // React and React Native packages come first.
               ['^react', '^react-native', '^@?\\w'],
+              // React Native Packages
+              ['^react-native-[\\w\\-/]*'],
               // Other libraries.
-              ['^.+'],
+              ['^[\\w\\-/]*'],
               // Internal packages.
               [
                 '^@(api|hooks|theme|assets|navigations|typescript|components|store|utils|configs|screens|helpers|locales|styles|constants|errors)(/.*|$)',
