@@ -29,7 +29,7 @@ module.exports = {
               // React and React Native packages come first.
               ['^react', '^react-native', '^@?\\w'],
               // React Native Packages
-              ['^react-native-[\\w\\-/]*'],
+              ['^react-[\\w\\-/]*'],
               // Other libraries.
               ['^[\\w\\-/]*'],
               // Internal packages.
