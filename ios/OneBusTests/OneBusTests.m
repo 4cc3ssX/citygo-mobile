@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface OneBusAppTests : XCTestCase
+@interface OneBusTests : XCTestCase
 
 @end
 
-@implementation OneBusAppTests
+@implementation OneBusTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL (^)(UIView *view))test
 {
