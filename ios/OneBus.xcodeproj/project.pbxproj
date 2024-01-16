@@ -18,7 +18,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		965E1BB1F21348D2BB83636D /* Padauk-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C3E87FA80C534C6AB3ED9BCA /* Padauk-Regular.ttf */; };
 		CD45F27EA08F4530881EFBC2 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3BB25E3CEC8047369CB65B70 /* Poppins-Bold.ttf */; };
-		EA0EB7572B516DF500AFD89A /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA0EB7562B516DF500AFD89A /* Ionicons.ttf */; };
+		EA6471DC2B56242A00F84D47 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA6471DB2B56242A00F84D47 /* MaterialCommunityIcons.ttf */; };
 		ED1A8692A270418DA54E903A /* Padauk-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 266503BF2D8547B78DA4A9F3 /* Padauk-Bold.ttf */; };
 /* End PBXBuildFile section */
 
@@ -43,18 +43,19 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OneBus/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OneBus/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-OneBus-OneBusTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneBus-OneBusTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		266503BF2D8547B78DA4A9F3 /* Padauk-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Padauk-Bold.ttf"; path = "../src/assets/fonts/Padauk-Bold.ttf"; sourceTree = "<group>"; };
+		266503BF2D8547B78DA4A9F3 /* Padauk-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Padauk-Bold.ttf"; path = "../src/assets/fonts/Padauk-Bold.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-OneBus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneBus.debug.xcconfig"; path = "Target Support Files/Pods-OneBus/Pods-OneBus.debug.xcconfig"; sourceTree = "<group>"; };
-		3BB25E3CEC8047369CB65B70 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
-		4D32D72660EB417D96C2AB4E /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
+		3BB25E3CEC8047369CB65B70 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
+		4D32D72660EB417D96C2AB4E /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-OneBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneBus.release.xcconfig"; path = "Target Support Files/Pods-OneBus/Pods-OneBus.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-OneBus-OneBusTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneBus-OneBusTests.debug.xcconfig"; path = "Target Support Files/Pods-OneBus-OneBusTests/Pods-OneBus-OneBusTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-OneBus.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneBus.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OneBus/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-OneBus-OneBusTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneBus-OneBusTests.release.xcconfig"; path = "Target Support Files/Pods-OneBus-OneBusTests/Pods-OneBus-OneBusTests.release.xcconfig"; sourceTree = "<group>"; };
-		AF52DE5D74C44899BBEF422C /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
-		C3E87FA80C534C6AB3ED9BCA /* Padauk-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Padauk-Regular.ttf"; path = "../src/assets/fonts/Padauk-Regular.ttf"; sourceTree = "<group>"; };
-		EA0EB7562B516DF500AFD89A /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		AF52DE5D74C44899BBEF422C /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		C3E87FA80C534C6AB3ED9BCA /* Padauk-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Padauk-Regular.ttf"; path = "../src/assets/fonts/Padauk-Regular.ttf"; sourceTree = "<group>"; };
+		EA6471DB2B56242A00F84D47 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		EA6471DD2B562CA200F84D47 /* OneBus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = OneBus.entitlements; path = OneBus/OneBus.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -98,6 +99,7 @@
 		13B07FAE1A68108700A75B9A /* OneBus */ = {
 			isa = PBXGroup;
 			children = (
+				EA6471DD2B562CA200F84D47 /* OneBus.entitlements */,
 				EA0EB7532B516CE200AFD89A /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -177,7 +179,7 @@
 		EA0EB7532B516CE200AFD89A /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				EA0EB7562B516DF500AFD89A /* Ionicons.ttf */,
+				EA6471DB2B56242A00F84D47 /* MaterialCommunityIcons.ttf */,
 			);
 			name = Fonts;
 			sourceTree = "<group>";
@@ -277,11 +279,11 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				EA0EB7572B516DF500AFD89A /* Ionicons.ttf in Resources */,
 				ED1A8692A270418DA54E903A /* Padauk-Bold.ttf in Resources */,
 				965E1BB1F21348D2BB83636D /* Padauk-Regular.ttf in Resources */,
 				CD45F27EA08F4530881EFBC2 /* Poppins-Bold.ttf in Resources */,
 				319FE6C1D6BD4BACAC11F266 /* Poppins-Medium.ttf in Resources */,
+				EA6471DC2B56242A00F84D47 /* MaterialCommunityIcons.ttf in Resources */,
 				6226C1C720664B94B711636A /* Poppins-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -505,6 +507,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = OneBus/OneBus.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
@@ -535,6 +538,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = OneBus/OneBus.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9743WR37TP;
 				INFOPLIST_FILE = OneBus/Info.plist;
