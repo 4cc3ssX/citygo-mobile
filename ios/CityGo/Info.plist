@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>One Bus</string>
+	<string>CityGo</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
