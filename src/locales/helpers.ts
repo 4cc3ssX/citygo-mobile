@@ -4,7 +4,7 @@ export type ISupportedLanguageType = {
   [key in supportedLng]: string;
 };
 
-export const SupportedLanguages: ISupportedLanguageType = {
+export const supportedLanguages: ISupportedLanguageType = {
   en: 'English',
   mm: 'မြန်မာ',
 };

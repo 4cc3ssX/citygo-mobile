@@ -1,13 +1,21 @@
 import {createStyleSheet} from 'react-native-unistyles';
 
 export const globalStyles = createStyleSheet({
+  container: {
+    paddingHorizontal: 25,
+  },
   flex1: {
     flex: 1,
   },
-  fab: (right: number, bottom: number) => ({
+  fab: {
     position: 'absolute',
-    right,
-    bottom,
+    right: 0,
+    bottom: 0,
+    margin: 16,
     zIndex: 999,
-  }),
+  },
+  centerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });

@@ -7,7 +7,7 @@ import {dark, light} from './themes';
 type AppBreakpoints = typeof breakpoints;
 
 // if you defined themes
-type AppThemes = {
+export type AppThemes = {
   light: typeof light;
   dark: typeof dark;
 };

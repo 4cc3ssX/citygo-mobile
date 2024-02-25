@@ -12,14 +12,12 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		319FE6C1D6BD4BACAC11F266 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D32D72660EB417D96C2AB4E /* Poppins-Medium.ttf */; };
-		6226C1C720664B94B711636A /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF52DE5D74C44899BBEF422C /* Poppins-Regular.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-OneBus-OneBusTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-OneBus-OneBusTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		965E1BB1F21348D2BB83636D /* Padauk-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C3E87FA80C534C6AB3ED9BCA /* Padauk-Regular.ttf */; };
-		CD45F27EA08F4530881EFBC2 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3BB25E3CEC8047369CB65B70 /* Poppins-Bold.ttf */; };
 		EA6471DC2B56242A00F84D47 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA6471DB2B56242A00F84D47 /* MaterialCommunityIcons.ttf */; };
-		ED1A8692A270418DA54E903A /* Padauk-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 266503BF2D8547B78DA4A9F3 /* Padauk-Bold.ttf */; };
+		EA684CEB2B8B12B300A4F7B4 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA684CEA2B8B12B300A4F7B4 /* Ionicons.ttf */; };
+		F6B05944AD49421180CE5518 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0FC8F95D1B50437D998EDF0F /* Inter.ttf */; };
+		8ADC2BF2F40943E7BF7C9728 /* ProductSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B81156F37F74864BB9E86C3 /* ProductSans.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,20 +41,18 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OneBus/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OneBus/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-OneBus-OneBusTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneBus-OneBusTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		266503BF2D8547B78DA4A9F3 /* Padauk-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Padauk-Bold.ttf"; path = "../src/assets/fonts/Padauk-Bold.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-OneBus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneBus.debug.xcconfig"; path = "Target Support Files/Pods-OneBus/Pods-OneBus.debug.xcconfig"; sourceTree = "<group>"; };
-		3BB25E3CEC8047369CB65B70 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
-		4D32D72660EB417D96C2AB4E /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-OneBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneBus.release.xcconfig"; path = "Target Support Files/Pods-OneBus/Pods-OneBus.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-OneBus-OneBusTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneBus-OneBusTests.debug.xcconfig"; path = "Target Support Files/Pods-OneBus-OneBusTests/Pods-OneBus-OneBusTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-OneBus.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneBus.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OneBus/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-OneBus-OneBusTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneBus-OneBusTests.release.xcconfig"; path = "Target Support Files/Pods-OneBus-OneBusTests/Pods-OneBus-OneBusTests.release.xcconfig"; sourceTree = "<group>"; };
-		AF52DE5D74C44899BBEF422C /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
-		C3E87FA80C534C6AB3ED9BCA /* Padauk-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Padauk-Regular.ttf"; path = "../src/assets/fonts/Padauk-Regular.ttf"; sourceTree = "<group>"; };
 		EA6471DB2B56242A00F84D47 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		EA6471DD2B562CA200F84D47 /* OneBus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = OneBus.entitlements; path = OneBus/OneBus.entitlements; sourceTree = "<group>"; };
+		EA684CEA2B8B12B300A4F7B4 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		0FC8F95D1B50437D998EDF0F /* Inter.ttf */ = {isa = PBXFileReference; name = "Inter.ttf"; path = "../src/assets/fonts/Inter.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2B81156F37F74864BB9E86C3 /* ProductSans.ttf */ = {isa = PBXFileReference; name = "ProductSans.ttf"; path = "../src/assets/fonts/ProductSans.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,11 +163,8 @@
 		E1458F7FC83142DD9092BBC4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				266503BF2D8547B78DA4A9F3 /* Padauk-Bold.ttf */,
-				C3E87FA80C534C6AB3ED9BCA /* Padauk-Regular.ttf */,
-				3BB25E3CEC8047369CB65B70 /* Poppins-Bold.ttf */,
-				4D32D72660EB417D96C2AB4E /* Poppins-Medium.ttf */,
-				AF52DE5D74C44899BBEF422C /* Poppins-Regular.ttf */,
+				0FC8F95D1B50437D998EDF0F /* Inter.ttf */,
+				2B81156F37F74864BB9E86C3 /* ProductSans.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -179,6 +172,7 @@
 		EA0EB7532B516CE200AFD89A /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				EA684CEA2B8B12B300A4F7B4 /* Ionicons.ttf */,
 				EA6471DB2B56242A00F84D47 /* MaterialCommunityIcons.ttf */,
 			);
 			name = Fonts;
@@ -279,12 +273,10 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				ED1A8692A270418DA54E903A /* Padauk-Bold.ttf in Resources */,
-				965E1BB1F21348D2BB83636D /* Padauk-Regular.ttf in Resources */,
-				CD45F27EA08F4530881EFBC2 /* Poppins-Bold.ttf in Resources */,
-				319FE6C1D6BD4BACAC11F266 /* Poppins-Medium.ttf in Resources */,
+				EA684CEB2B8B12B300A4F7B4 /* Ionicons.ttf in Resources */,
 				EA6471DC2B56242A00F84D47 /* MaterialCommunityIcons.ttf in Resources */,
-				6226C1C720664B94B711636A /* Poppins-Regular.ttf in Resources */,
+				F6B05944AD49421180CE5518 /* Inter.ttf in Resources */,
+				8ADC2BF2F40943E7BF7C9728 /* ProductSans.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,11 +622,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -702,11 +690,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

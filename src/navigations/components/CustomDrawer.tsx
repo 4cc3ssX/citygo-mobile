@@ -9,9 +9,6 @@ import {
 import {CommonActions, DrawerActions} from '@react-navigation/native';
 
 import {useTranslation} from 'react-i18next';
-import {Icon} from 'react-native-paper';
-
-import DrawerItem from './DrawerItem';
 
 const CustomDrawer = ({
   descriptors,
@@ -24,14 +21,8 @@ const CustomDrawer = ({
   /* Drawer props */
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];
-  const {
-    drawerContentStyle,
-    drawerContentContainerStyle,
-    drawerActiveTintColor,
-    drawerInactiveTintColor,
-    drawerActiveBackgroundColor,
-    drawerInactiveBackgroundColor,
-  } = focusedDescriptor.options;
+  const {drawerContentStyle, drawerContentContainerStyle} =
+    focusedDescriptor.options;
 
   const onPressDrawerItem = useCallback(
     (route: (typeof state.routes)[number], focused: boolean) => {
@@ -62,48 +53,27 @@ const CustomDrawer = ({
       <View style={styles.routeContainer}>
         {state.routes.map((route, index) => {
           const focused = focusedRoute.key === route.key; // this is need due to filter of Home key
-          const {
-            title,
-            drawerLabel,
-            drawerIcon,
-            drawerLabelStyle,
-            drawerItemStyle,
-            drawerAllowFontScaling,
-          } = descriptors[route.key].options as DrawerNavigationOptions;
+          const {title, drawerIcon, drawerItemStyle} = descriptors[route.key]
+            .options as DrawerNavigationOptions;
 
           return (
-            <DrawerItem
+            <Drawer.Item
               key={`${route.key}-${index}`}
-              label={
-                drawerLabel !== undefined
-                  ? drawerLabel
-                  : title !== undefined
-                  ? title
-                  : route.name
-              }
-              icon={drawerIcon}
-              focused={focused}
-              activeTintColor={drawerActiveTintColor}
-              inactiveTintColor={drawerInactiveTintColor}
-              activeBackgroundColor={drawerActiveBackgroundColor}
-              inactiveBackgroundColor={drawerInactiveBackgroundColor}
-              allowFontScaling={drawerAllowFontScaling}
-              labelStyle={drawerLabelStyle}
+              label={title !== undefined ? title : route.name}
+              icon={props => drawerIcon && drawerIcon({...props, focused})}
+              active={focused}
               style={drawerItemStyle}
               onPress={() => onPressDrawerItem(route, focused)}
             />
           );
         })}
-        <DrawerItem
-          label={t('Settings')}
-          // eslint-disable-next-line react/no-unstable-nested-components
-          icon={props => <Icon source="cog-outline" {...props} />}
-          activeTintColor={drawerActiveTintColor}
-          inactiveTintColor={drawerInactiveTintColor}
-          activeBackgroundColor={drawerActiveBackgroundColor}
-          inactiveBackgroundColor={drawerInactiveBackgroundColor}
-          onPress={() => navigation.navigate('Settings')}
-        />
+        <Drawer.Section title={t('Preferences')}>
+          <Drawer.Item
+            icon="cog-outline"
+            label={t('Settings')}
+            onPress={() => navigation.navigate('Settings')}
+          />
+        </Drawer.Section>
       </View>
     </DrawerContentScrollView>
   );

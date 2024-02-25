@@ -7,13 +7,11 @@ import {Platform, StatusBar, useColorScheme} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 
 import {useTranslation} from 'react-i18next';
-import {PaperProvider} from 'react-native-paper';
 import {UnistylesRuntime} from 'react-native-unistyles';
 
 import {AppContextProvider} from '@hooks/context';
 import Stack from '@navigations/Stack';
 import {useAppStore} from '@store/app';
-import {themes} from '@theme/themes';
 import {isSystemTheme} from '@utils/theme';
 
 function Main() {
@@ -26,10 +24,6 @@ function Main() {
 
   /* Theme */
   const systemTheme = useColorScheme();
-
-  const theme = isSystemTheme(app.theme)
-    ? themes[systemTheme || 'light']
-    : themes[app.theme];
 
   useEffect(() => {
     if (language !== app.language) {
@@ -44,11 +38,9 @@ function Main() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [app.language, app.theme]);
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer theme={theme}>
-        <Stack />
-      </NavigationContainer>
-    </PaperProvider>
+    <NavigationContainer>
+      <Stack />
+    </NavigationContainer>
   );
 }
 

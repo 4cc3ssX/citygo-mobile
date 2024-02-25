@@ -24,11 +24,7 @@ module.exports = {
         },
       },
     ],
+    '@sigmacomputing/babel-plugin-lodash',
     'react-native-reanimated/plugin',
   ],
-  env: {
-    production: {
-      plugins: ['react-native-paper/babel'],
-    },
-  },
 };

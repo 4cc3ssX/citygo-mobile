@@ -1,4 +1,8 @@
 {
+  "Explore": "Explore",
   "Settings": "Settings",
-  "Language": "Language"
+  "Language": "Language",
+  "Preferences": "Preferences",
+  "WhereUWantToGo": "Where u want to go?",
+  "SearchOnMap": "Search on map"
 }

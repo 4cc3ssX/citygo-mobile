@@ -1,14 +1,19 @@
 import {MMKV} from 'react-native-mmkv';
 
-import {StateStorage} from 'zustand/middleware';
-
 import {name as appName} from '../../../app.json';
 
 export const mmkvInstance = new MMKV({
   id: `${appName}-storage`,
 });
 
-export const Storage: StateStorage = {
+export interface IStorage {
+  setItem(key: string, value: string): void;
+  getItem(key: string): string | null;
+  removeItem(key: string): void;
+  clear(): void;
+}
+
+export const Storage: IStorage = {
   setItem: (key, value) => {
     mmkvInstance.set(key, value);
     return;
@@ -19,6 +24,10 @@ export const Storage: StateStorage = {
   },
   removeItem: key => {
     mmkvInstance.delete(key);
+    return;
+  },
+  clear: () => {
+    mmkvInstance.clearAll();
     return;
   },
 };

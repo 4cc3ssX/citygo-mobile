@@ -1,31 +1,54 @@
-import {configureFonts} from 'react-native-paper';
-import {MD3Type} from 'react-native-paper/lib/typescript/types';
+import {TextStyle} from 'react-native';
 
-export const baseFont: Partial<MD3Type> = {
-  fontFamily: 'Poppins-Regular',
-};
+export type FontSizes = keyof (typeof fonts)['sizes'];
+export type FontWeights = keyof (typeof fonts)['weights'];
+export type LineHeights = keyof (typeof fonts)['lineHeights'];
 
-export const baseFontMM: Partial<MD3Type> = {
-  fontFamily: 'Padauk-Regular',
-};
+export type TypoVariants = 'h1' | 'h2';
 
-const baseVariants = configureFonts({config: baseFont});
-
-const customVariants = {
-  // Add own tokens if required:
-  bold: {
-    ...baseVariants.bodyMedium,
-    fontFamily: 'Poppins-Bold',
+export const variants: Record<TypoVariants, TextStyle> = {
+  h1: {
+    fontSize: 28,
+    fontWeight: '700',
+    lineHeight: 42,
   },
-  medium: {
-    ...baseVariants.bodyMedium,
-    fontFamily: 'Poppins-Medium',
+  h2: {
+    fontSize: 20,
+    fontWeight: '600',
+    lineHeight: 30,
+  },
+};
+
+export const fonts = {
+  lineHeights: {
+    xs: 18,
+    sm: 21,
+    md: 24,
+    lg: 30,
+    xl: 42,
+  },
+
+  weights: {
+    normal: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
+  },
+
+  family: {
+    inter: 'Inter',
+  },
+
+  sizes: {
+    '2xs': 10,
+    xs: 12,
+    sm: 14,
+    md: 16,
+    lg: 18,
+    xl: 20,
+    '2xl': 24,
+    '3xl': 30,
+    '4xl': 36,
+    '5xl': 48,
   },
 } as const;
-
-export const fonts = configureFonts({
-  config: {
-    ...baseVariants,
-    ...customVariants,
-  },
-});

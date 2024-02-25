@@ -53,11 +53,9 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaterialCommunityIcons.ttf</string>
-		<string>Padauk-Bold.ttf</string>
-		<string>Padauk-Regular.ttf</string>
-		<string>Poppins-Bold.ttf</string>
-		<string>Poppins-Medium.ttf</string>
-		<string>Poppins-Regular.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>Inter.ttf</string>
+		<string>ProductSans.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

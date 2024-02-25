@@ -1,61 +1,54 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, {memo} from 'react';
-import {Dimensions} from 'react-native';
+import {Dimensions, useWindowDimensions} from 'react-native';
 import {
   createDrawerNavigator,
   DrawerNavigationOptions,
 } from '@react-navigation/drawer';
 
-import {Icon, useTheme} from 'react-native-paper';
-
-/* Screens */
-import Home from '@screens/Home';
+import {useTranslation} from 'react-i18next';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {CustomDrawer} from './components';
+import Tab from './Tab';
 
 export type RootDrawerParamsList = {
-  Home: undefined;
+  Tab: undefined;
 };
 
 const RNDrawer = createDrawerNavigator<RootDrawerParamsList>();
-
-const {width} = Dimensions.get('screen');
 
 const screenOptions: DrawerNavigationOptions = {
   lazy: true,
   overlayColor: 'rgba(0, 0, 0, 0.25)',
   drawerPosition: 'left',
-  drawerType: width >= 768 ? 'permanent' : 'front',
-  drawerContentContainerStyle: {
-    paddingStart: 20,
-    paddingEnd: 20,
-    flexGrow: 1,
-  },
-  drawerStyle: {
-    borderTopRightRadius: 20, // only compatible with drawerType: 'front',
-    borderBottomRightRadius: 20,
-  },
   keyboardDismissMode: 'none',
 };
 
 function Drawer() {
-  const theme = useTheme();
+  const {t} = useTranslation();
+  const dimensions = useWindowDimensions();
+
+  const isLargeScreen = dimensions.width >= 768;
   return (
     <RNDrawer.Navigator
-      initialRouteName="Home"
+      initialRouteName="Tab"
       drawerContent={CustomDrawer}
       screenOptions={{
         ...screenOptions,
-        drawerActiveBackgroundColor: theme.colors.primary,
-        drawerActiveTintColor: theme.colors.onPrimary,
-        drawerInactiveTintColor: theme.colors.primary,
+        drawerType: isLargeScreen ? 'permanent' : 'slide',
+        drawerStyle: {
+          borderTopRightRadius: 20, // only compatible with drawerType: 'front',
+          borderBottomRightRadius: 20,
+        },
       }}>
       <RNDrawer.Screen
-        name="Home"
-        component={Home}
+        name="Tab"
+        component={Tab}
         options={{
           headerShown: false,
-          drawerIcon: props => <Icon source="home-outline" {...props} />,
+          title: t('Explore'),
+          drawerIcon: props => <Ionicons name="map-marker" {...props} />,
         }}
       />
     </RNDrawer.Navigator>

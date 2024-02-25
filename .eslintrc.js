@@ -1,7 +1,11 @@
 module.exports = {
   root: true,
   extends: '@react-native',
-  plugins: ['unused-imports', 'simple-import-sort'],
+  plugins: [
+    'unused-imports',
+    'simple-import-sort',
+    '@tanstack/eslint-plugin-query',
+  ],
   rules: {
     '@typescript-eslint/no-unused-vars': 'warn',
     'unused-imports/no-unused-imports': 'error',
