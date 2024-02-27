@@ -1,27 +1,20 @@
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 
-import {createStyleSheet, useStyles} from 'react-native-unistyles';
+import {useStyles} from 'react-native-unistyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {globalStyles} from '@styles/global';
+import {HStack} from '@components/ui';
 
 export const StackHeader = () => {
   const {theme} = useStyles();
   return (
-    <View style={[globalStyles.centerRow]}>
+    <HStack alignItems="center">
       <TouchableOpacity>
         <View>
           <Ionicons name="chevron-back" color={theme.colors.text} />
         </View>
       </TouchableOpacity>
-    </View>
+    </HStack>
   );
 };
-
-const styles = createStyleSheet({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});

@@ -1,11 +1,8 @@
 import React, {memo} from 'react';
-import {ViewProps} from 'react-native';
 
-import {Stack, StackStyle} from './Stack';
+import {IStackProps, Stack} from './Stack';
 
-export interface IHStackProps
-  extends ViewProps,
-    Omit<StackStyle, 'flexDirection'> {}
+export interface IHStackProps extends Omit<IStackProps, 'flexDirection'> {}
 
 export const HStack = memo((props: IHStackProps) => {
   return <Stack flexDirection="row" {...props} />;

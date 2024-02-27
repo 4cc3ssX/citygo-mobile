@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, {memo} from 'react';
-import {Dimensions, useWindowDimensions} from 'react-native';
+import {useWindowDimensions} from 'react-native';
 import {
   createDrawerNavigator,
   DrawerNavigationOptions,

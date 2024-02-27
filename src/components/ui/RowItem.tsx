@@ -3,10 +3,10 @@ import {Pressable, View, ViewProps} from 'react-native';
 
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
-import {globalStyles} from '@styles/global';
+import {HStack} from './HStack';
 
 export interface IRowItemProps extends ViewProps {
-  children: ReactElement[];
+  children: ReactElement | ReactElement[];
   onPress?: () => void;
 }
 
@@ -18,15 +18,16 @@ const RowItem = ({style, children, onPress, ...rest}: IRowItemProps) => {
   const {styles} = useStyles(stylesheet);
   return (
     <Pressable onPress={onPress}>
-      <View
-        style={[globalStyles.centerRow, styles.rowItemContainer, style]}
+      <HStack
+        alignItems="center"
+        style={[styles.rowItemContainer, style]}
         {...rest}>
         {Children.map(children, child =>
           cloneElement(child, {
             styles,
           }),
         )}
-      </View>
+      </HStack>
     </Pressable>
   );
 };
@@ -53,8 +54,8 @@ const stylesheet = createStyleSheet(theme => ({
   },
   rowItemContentContainer: {
     flex: 1,
-    gap: theme.spacing['1'],
+    gap: theme.spacing['0.5'],
   },
 }));
 
-export default RowItem;
+export {RowItem};

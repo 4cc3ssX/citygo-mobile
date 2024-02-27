@@ -13,7 +13,12 @@ export const lightColors = {
   white: '#FFFFFF',
   surface: '#FFFFFF',
   border: '#DDDDDD',
-  hint: '#9C9C9C',
+  gray: '#B1B1B1',
+  gray2: '#9C9C9C',
+  gray3: '#F6F6F6',
+  blueSoft2: '#E4ECFD',
+  disabled: '#757575',
+  disabledBackground: '#E5E5E5',
 } as const;
 
 export const darkColors = {
@@ -29,5 +34,10 @@ export const darkColors = {
   white: '#FFFFFF',
   surface: '#FFFFFF',
   border: '#DDDDDD',
-  hint: '#9C9C9C',
+  gray: '#B1B1B1',
+  gray2: '#9C9C9C',
+  gray3: '#F6F6F6',
+  blueSoft2: '#E4ECFD',
+  disabled: '#757575',
+  disabledBackground: '#E5E5E5',
 } as const;

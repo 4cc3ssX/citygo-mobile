@@ -5,13 +5,11 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useTranslation} from 'react-i18next';
 
 import Language from '@screens/Language';
-import {Settings} from '@screens/Settings';
 
 import Tab from './Tab';
 
 export type RootStackParamsList = {
   MainTab: undefined;
-  Settings: undefined;
   Language: undefined;
 };
 
@@ -29,11 +27,6 @@ function Stack() {
           headerShown: false,
           title: 'Home', // back native button title
         }}
-      />
-      <RNStack.Screen
-        name="Settings"
-        component={Settings}
-        options={{title: t('Settings')}}
       />
       <RNStack.Screen
         name="Language"

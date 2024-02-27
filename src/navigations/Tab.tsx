@@ -2,62 +2,37 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useStyles} from 'react-native-unistyles';
 
-import Go from '@screens/Go';
+import {Icon} from '@components/icons';
 import Home from '@screens/Home';
+import Map from '@screens/Map';
+import Services from '@screens/Services';
+import Settings from '@screens/Settings';
+
+import CustomTab from './components/CustomTab';
 
 export type RootTabParamsList = {
   Home: undefined;
-  Go: undefined;
+  Services: undefined;
+  Map: undefined;
+  Settings: undefined;
 };
 
 const RNTab = createBottomTabNavigator<RootTabParamsList>();
 
 export default function Tab() {
+  const {theme} = useStyles();
   return (
     <RNTab.Navigator
       screenOptions={{
         headerShown: false,
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.text,
+        tabBarActiveBackgroundColor: theme.colors.blueSoft2,
+        tabBarInactiveBackgroundColor: theme.colors.white,
       }}
-      // tabBar={({navigation, state, descriptors, insets}) => (
-      //   <BottomNavigation.Bar
-      //     navigationState={state}
-      //     safeAreaInsets={insets}
-      //     onTabPress={({route, preventDefault}) => {
-      //       const event = navigation.emit({
-      //         type: 'tabPress',
-      //         target: route.key,
-      //         canPreventDefault: true,
-      //       });
-
-      //       if (event.defaultPrevented) {
-      //         preventDefault();
-      //       } else {
-      //         navigation.dispatch({
-      //           ...CommonActions.navigate(route.name, route.params),
-      //           target: state.key,
-      //         });
-      //       }
-      //     }}
-      //     renderIcon={({route, focused, color}) => {
-      //       const {options} = descriptors[route.key];
-      //       if (options.tabBarIcon) {
-      //         return options.tabBarIcon({focused, color, size: 24});
-      //       }
-
-      //       return null;
-      //     }}
-      //     getLabelText={({route}) => {
-      //       const {options} = descriptors[route.key];
-      //       const label =
-      //         options.title !== undefined ? options.title : route.name;
-
-      //       return label;
-      //     }}
-      //   />
-      // )}
-    >
+      tabBar={props => <CustomTab theme={theme} {...props} />}>
       <RNTab.Screen
         name="Home"
         component={Home}
@@ -66,7 +41,7 @@ export default function Tab() {
           tabBarIcon: ({focused, color, size}) => {
             return (
               <Icon
-                name={focused ? 'map-marker' : 'map-marker-outline'}
+                name={focused ? 'home' : 'home-outline'}
                 size={size}
                 color={color}
               />
@@ -75,12 +50,50 @@ export default function Tab() {
         }}
       />
       <RNTab.Screen
-        name="Go"
-        component={Go}
+        name="Services"
+        component={Services}
         options={{
-          tabBarLabel: 'Go',
-          tabBarIcon: ({color, size}) => {
-            return <Icon name="bus" size={size} color={color} />;
+          tabBarLabel: 'Services',
+          tabBarIcon: ({focused, color, size}) => {
+            return (
+              <Icon
+                name={focused ? 'services' : 'services-outline'}
+                size={size}
+                color={color}
+              />
+            );
+          },
+        }}
+      />
+      <RNTab.Screen
+        name="Map"
+        component={Map}
+        options={{
+          tabBarLabel: 'Map',
+          tabBarIcon: ({focused, color, size}) => {
+            return (
+              <Icon
+                name={focused ? 'map' : 'map-outline'}
+                size={size}
+                color={color}
+              />
+            );
+          },
+        }}
+      />
+      <RNTab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          tabBarLabel: 'Settings',
+          tabBarIcon: ({focused, color, size}) => {
+            return (
+              <Icon
+                name={focused ? 'settings' : 'settings-outline'}
+                size={size}
+                color={color}
+              />
+            );
           },
         }}
       />

@@ -4,5 +4,7 @@
   "Language": "Language",
   "Preferences": "Preferences",
   "WhereUWantToGo": "Where u want to go?",
-  "SearchOnMap": "Search on map"
+  "FavoriteRoute": "Favorite Routes",
+  "SearchOnMap": "Search on map",
+  "WelcomeToApp": "Welcome to {{appName}}"
 }

@@ -8,9 +8,9 @@ import {Container, Text} from '@components/ui';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootTabParamsList} from '@navigations/Tab';
 
-type Props = NativeStackScreenProps<RootTabParamsList, 'Settings'>;
+type Props = NativeStackScreenProps<RootTabParamsList, 'Services'>;
 
-const Settings = ({navigation}: Props) => {
+const Services = ({navigation}: Props) => {
   const {t} = useTranslation();
   const themeName = useThemeName();
   const {theme} = useStyles();
@@ -18,9 +18,9 @@ const Settings = ({navigation}: Props) => {
     <Container
       edges={['top', 'left', 'right']}
       barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}>
-      <Text>settings</Text>
+      <Text>services</Text>
     </Container>
   );
 };
 
-export default Settings;
+export default Services;

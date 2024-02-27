@@ -3,6 +3,7 @@ import {TextStyle} from 'react-native';
 export type FontSizes = keyof (typeof fonts)['sizes'];
 export type FontWeights = keyof (typeof fonts)['weights'];
 export type LineHeights = keyof (typeof fonts)['lineHeights'];
+export type FontFamily = keyof (typeof fonts)['family'];
 
 export type TypoVariants = 'h1' | 'h2';
 
@@ -37,6 +38,7 @@ export const fonts = {
 
   family: {
     inter: 'Inter',
+    product: 'ProductSans',
   },
 
   sizes: {

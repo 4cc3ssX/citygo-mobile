@@ -1,4 +1,11 @@
+import {displayName} from '../../app.json';
+
 export class Constants {
+  /**
+   * App Name
+   */
+  public static readonly APP_NAME = displayName;
+
   /**
    * The height of the header
    */

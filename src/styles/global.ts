@@ -14,8 +14,4 @@ export const globalStyles = createStyleSheet({
     margin: 16,
     zIndex: 999,
   },
-  centerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
 });
