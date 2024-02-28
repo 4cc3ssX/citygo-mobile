@@ -1,26 +1,83 @@
-import React from 'react';
+import React, {useCallback} from 'react';
+import {SectionList} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {useTranslation} from 'react-i18next';
-import {useStyles} from 'react-native-unistyles';
+import {createStyleSheet, useStyles} from 'react-native-unistyles';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {Container, Text} from '@components/ui';
+import {Container, RowItem, Text, VStack} from '@components/ui';
 import {useThemeName} from '@hooks/useThemeName';
+import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
 
-type Props = NativeStackScreenProps<RootTabParamsList, 'Settings'>;
+import {settings} from './data/settings';
+
+type Props = NativeStackScreenProps<
+  RootTabParamsList & RootStackParamsList,
+  'Settings'
+>;
 
 const Settings = ({navigation}: Props) => {
   const {t} = useTranslation();
   const themeName = useThemeName();
-  const {theme} = useStyles();
+  const {styles, theme} = useStyles(stylesheet);
+
+  const sectionSeparatorComponent = useCallback(
+    () => <VStack h={theme.spacing['5']} />,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+  const itemSeparatorComponent = useCallback(
+    () => <VStack h={theme.spacing['2']} />,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
   return (
     <Container
       edges={['top', 'left', 'right']}
-      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}>
-      <Text>settings</Text>
+      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
+      style={styles.container}>
+      <Text size="3xl" family="product">
+        {t('Settings')}
+      </Text>
+
+      <SectionList
+        sections={settings}
+        stickySectionHeadersEnabled={false}
+        renderSectionHeader={({section: {title}}) => (
+          <Text family="product" size="xl">
+            {t(title as any)}
+          </Text>
+        )}
+        SectionSeparatorComponent={sectionSeparatorComponent}
+        ItemSeparatorComponent={itemSeparatorComponent}
+        renderItem={({item}) => (
+          <RowItem onPress={() => navigation.navigate(item.to)}>
+            <RowItem.Left bg={theme.colors.blueSoft1}>
+              {item.icon({color: theme.colors.primary, size: 20})}
+            </RowItem.Left>
+            <RowItem.Content>{t(item.title as any)}</RowItem.Content>
+            <RowItem.Right pr={theme.spacing['3']}>
+              <Ionicons
+                name="chevron-forward"
+                size={14}
+                color={theme.colors.gray2}
+              />
+            </RowItem.Right>
+          </RowItem>
+        )}
+        keyExtractor={item => `${item.title}`}
+      />
     </Container>
   );
 };
+
+const stylesheet = createStyleSheet(theme => ({
+  container: {
+    gap: theme.spacing['5'],
+  },
+}));
 
 export default Settings;

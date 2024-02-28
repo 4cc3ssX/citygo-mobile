@@ -1,7 +1,7 @@
 import {useColorScheme} from 'react-native';
 
 import {useAppStore} from '@store/app';
-import {IAppTheme} from '@typescript';
+import {IAppTheme} from '@theme/themes';
 import {isSystemTheme} from '@utils/theme';
 
 export const useThemeName = (): Exclude<IAppTheme, 'system'> => {

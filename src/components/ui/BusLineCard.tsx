@@ -7,12 +7,7 @@ import {IVStackProps, VStack} from './VStack';
 
 export interface IBusLineCardProps extends IVStackProps {}
 
-export const BusLineCard = ({
-  bg,
-  children,
-  style,
-  ...rest
-}: IBusLineCardProps) => {
+export const BusLineCard = ({children, style, ...rest}: IBusLineCardProps) => {
   const {styles, theme} = useStyles(stylesheet);
   return (
     <VStack
@@ -20,7 +15,7 @@ export const BusLineCard = ({
       justifyContent="center"
       w={theme.spacing['10']}
       h={theme.spacing['12']}
-      bg={bg || theme.colors.primary}
+      bg={theme.colors.primary}
       style={[styles.container, style]}
       {...rest}>
       {typeof children === 'string' ? (

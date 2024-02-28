@@ -1,3 +1,2 @@
-import CustomDrawer from './CustomDrawer';
-
-export {CustomDrawer};
+export * from './CustomDrawer';
+export * from './CustomTab';

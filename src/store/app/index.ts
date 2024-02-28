@@ -3,7 +3,7 @@ import {createJSONStorage, persist} from 'zustand/middleware';
 
 import {Storage} from '@helpers/storage';
 import {supportedLng} from '@locales/helpers';
-import {IAppTheme} from '@typescript';
+import {IAppTheme} from '@theme/themes';
 
 export interface IAppState {
   theme: IAppTheme;

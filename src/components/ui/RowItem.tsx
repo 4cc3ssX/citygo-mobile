@@ -1,26 +1,30 @@
 import React, {Children, cloneElement, memo, ReactElement} from 'react';
-import {Pressable, View, ViewProps} from 'react-native';
+import {Pressable} from 'react-native';
 
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
-import {HStack} from './HStack';
+import {HStack, IHStackProps} from './HStack';
+import {Text} from './Text';
+import {IVStackProps, VStack} from './VStack';
 
-export interface IRowItemProps extends ViewProps {
+export interface IRowItemProps extends IHStackProps {
   children: ReactElement | ReactElement[];
   onPress?: () => void;
 }
 
-export interface IRowItemChildProps extends ViewProps {
+export interface IRowItemChildProps extends IVStackProps {
   styles?: ReturnType<typeof stylesheet>;
 }
 
 const RowItem = ({style, children, onPress, ...rest}: IRowItemProps) => {
-  const {styles} = useStyles(stylesheet);
+  const {styles, theme} = useStyles(stylesheet);
+
   return (
     <Pressable onPress={onPress}>
       <HStack
         alignItems="center"
-        style={[styles.rowItemContainer, style]}
+        bg={theme.colors.surface}
+        style={[styles.container, styles.rowItemContainer, style]}
         {...rest}>
         {Children.map(children, child =>
           cloneElement(child, {
@@ -32,30 +36,61 @@ const RowItem = ({style, children, onPress, ...rest}: IRowItemProps) => {
   );
 };
 
-RowItem.Left = memo(({children, ...rest}: IRowItemChildProps) => {
-  return <View {...rest}>{children}</View>;
-});
+RowItem.Left = memo(
+  ({children, styles, style, ...rest}: IRowItemChildProps) => {
+    return (
+      <VStack style={[styles?.rowItemLeftContainer, style]} {...rest}>
+        {children}
+      </VStack>
+    );
+  },
+);
 
-RowItem.Content = memo(({styles, children, ...rest}: IRowItemChildProps) => {
-  return (
-    <View style={styles?.rowItemContentContainer} {...rest}>
-      {children}
-    </View>
-  );
-});
+RowItem.Content = memo(
+  ({styles, children, style, ...rest}: IRowItemChildProps) => {
+    return (
+      <VStack style={[styles?.rowItemContentContainer, style]} {...rest}>
+        {typeof children === 'string' ? (
+          <Text size="md">{children}</Text>
+        ) : (
+          children
+        )}
+      </VStack>
+    );
+  },
+);
 
-RowItem.Right = memo(({children, ...rest}: IRowItemChildProps) => {
-  return <View {...rest}>{children}</View>;
-});
+RowItem.Right = memo(
+  ({children, styles, style, ...rest}: IRowItemChildProps) => {
+    return (
+      <VStack style={[styles?.rowItemRightContainer, style]} {...rest}>
+        {children}
+      </VStack>
+    );
+  },
+);
 
 const stylesheet = createStyleSheet(theme => ({
+  container: {
+    borderRadius: theme.roundness,
+  },
   rowItemContainer: {
-    gap: theme.spacing['1'],
+    padding: theme.spacing['2'],
+    gap: theme.spacing['3.5'],
+  },
+  rowItemLeftContainer: {
+    width: theme.spacing['11'],
+    height: theme.spacing['11'],
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.blueSoft1,
+    borderRadius: theme.roundness,
   },
   rowItemContentContainer: {
     flex: 1,
     gap: theme.spacing['0.5'],
   },
+  rowItemRightContainer: {},
 }));
 
 export {RowItem};

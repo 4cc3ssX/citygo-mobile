@@ -79,7 +79,7 @@ export const AppContextProvider = ({children}: PropsWithChildren) => {
 
   return (
     <AppContext.Provider value={{isLocationEnabled, requestPermissions}}>
-      <GestureHandlerRootView style={globalStyles.flex1}>
+      <GestureHandlerRootView style={globalStyles.flex}>
         <SafeAreaProvider>
           <QueryClientProvider client={queryClient}>
             {children}

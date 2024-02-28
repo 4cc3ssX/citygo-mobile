@@ -2,6 +2,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
+import {useTranslation} from 'react-i18next';
 import {useStyles} from 'react-native-unistyles';
 
 import {Icon} from '@components/icons';
@@ -10,18 +11,20 @@ import Map from '@screens/Map';
 import Services from '@screens/Services';
 import Settings from '@screens/Settings';
 
-import CustomTab from './components/CustomTab';
+import {CustomTab} from './components';
 
 export type RootTabParamsList = {
   Home: undefined;
   Services: undefined;
   Map: undefined;
   Settings: undefined;
+  Search: undefined;
 };
 
 const RNTab = createBottomTabNavigator<RootTabParamsList>();
 
 export default function Tab() {
+  const {t} = useTranslation();
   const {theme} = useStyles();
   return (
     <RNTab.Navigator
@@ -30,14 +33,14 @@ export default function Tab() {
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.text,
         tabBarActiveBackgroundColor: theme.colors.blueSoft2,
-        tabBarInactiveBackgroundColor: theme.colors.white,
+        tabBarInactiveBackgroundColor: theme.colors.surface,
       }}
       tabBar={props => <CustomTab theme={theme} {...props} />}>
       <RNTab.Screen
         name="Home"
         component={Home}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: t('Home'),
           tabBarIcon: ({focused, color, size}) => {
             return (
               <Icon
@@ -53,7 +56,7 @@ export default function Tab() {
         name="Services"
         component={Services}
         options={{
-          tabBarLabel: 'Services',
+          tabBarLabel: t('Services'),
           tabBarIcon: ({focused, color, size}) => {
             return (
               <Icon
@@ -69,7 +72,7 @@ export default function Tab() {
         name="Map"
         component={Map}
         options={{
-          tabBarLabel: 'Map',
+          tabBarLabel: t('Map'),
           tabBarIcon: ({focused, color, size}) => {
             return (
               <Icon
@@ -85,7 +88,7 @@ export default function Tab() {
         name="Settings"
         component={Settings}
         options={{
-          tabBarLabel: 'Settings',
+          tabBarLabel: t('Settings'),
           tabBarIcon: ({focused, color, size}) => {
             return (
               <Icon

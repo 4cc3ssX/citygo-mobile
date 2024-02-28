@@ -4,6 +4,7 @@ import Geolocation from '@react-native-community/geolocation';
 
 import {useTranslation} from 'react-i18next';
 import MapView, {Marker} from 'react-native-maps';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -25,7 +26,9 @@ import {Constants} from '@constants';
 import {useGetStops} from '@hooks/api';
 import {useAppContext} from '@hooks/context';
 import {useThemeName} from '@hooks/useThemeName';
+import {TAB_HEIGHT} from '@navigations/components';
 import {useMapStore} from '@store/map';
+import {globalStyles} from '@styles/global';
 import {filterStopsWithinRadius, getDelta} from '@utils/map';
 
 Geolocation.setRNConfiguration({
@@ -34,6 +37,7 @@ Geolocation.setRNConfiguration({
 
 const Home = () => {
   const {t} = useTranslation();
+  const insets = useSafeAreaInsets();
 
   const themeName = useThemeName();
   const {styles, theme} = useStyles(stylesheet);
@@ -126,56 +130,60 @@ const Home = () => {
       edges={['top', 'left', 'right']}
       barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
       style={styles.container}>
-      <View>
-        <HStack alignItems="center" gap={theme.spacing['3.5']}>
-          <Avatar
-            w={theme.spacing['14']}
-            h={theme.spacing['14']}
-            bg={theme.colors.primary}
-            source={require('@assets/images/citygo.png')}
+      <HStack alignItems="center" gap={theme.spacing['3.5']}>
+        <Avatar
+          w={theme.spacing['14']}
+          h={theme.spacing['14']}
+          bg={theme.colors.primary}
+          source={require('@assets/images/citygo.png')}
+        />
+        <VStack flex={1} justifyContent="center" gap={theme.spacing['1']}>
+          <Text size="xl" family="product">
+            {t('WelcomeToApp', {
+              appName: Constants.APP_NAME,
+            })}
+          </Text>
+          <Text size="md" color={theme.colors.gray}>
+            {dayjs().format('ddd[,] DD MMM')}
+          </Text>
+        </VStack>
+        <HStack alignItems="center">
+          <IconButton
+            icon={
+              <Icon
+                name="bell-broken"
+                color={theme.colors.text}
+                size={theme.spacing['5']}
+              />
+            }
           />
-          <VStack flex={1} justifyContent="center" gap={theme.spacing['1']}>
-            <Text size="xl" family="product">
-              {t('WelcomeToApp', {
-                appName: Constants.APP_NAME,
-              })}
-            </Text>
-            <Text size="md" color={theme.colors.gray}>
-              {dayjs().format('ddd[,] DD MMM')}
-            </Text>
-          </VStack>
-          <HStack alignItems="center">
-            <IconButton
-              icon={
-                <Icon
-                  name="bell"
-                  color={theme.colors.text}
-                  size={theme.spacing['5']}
-                />
-              }
-            />
-          </HStack>
         </HStack>
-      </View>
+      </HStack>
+
       <ScrollView
-        contentContainerStyle={[styles.container, styles.scrollView]}
+        contentContainerStyle={[styles.container, styles.scrollView(insets)]}
         showsVerticalScrollIndicator={false}>
         <View style={styles.sectionContainer}>
           <HStack alignItems="center">
-            <Text size="xl" style={styles.favoriteRouteTitle}>
-              {t('FavoriteRoute')}
-            </Text>
+            <VStack flex={2}>
+              <Text size="xl">{t('FavoriteRoute')}</Text>
+            </VStack>
             <Link size="lg" color={theme.colors.gray} underlined={false}>
               Add more
             </Link>
           </HStack>
           <View style={styles.cardContainer}>
             <RowItem
-              style={[
-                styles.rowItemContainer,
-                styles.favoriteRouteRowItemContainer,
-              ]}>
-              <RowItem.Left style={styles.rowItemLeftContainer}>
+              bw={1}
+              bc={theme.colors.border}
+              style={[styles.rowItemContainer]}>
+              <RowItem.Left
+                w={theme.spacing['10']}
+                h={theme.spacing['12']}
+                alignItems="center"
+                justifyContent="center"
+                bg={theme.colors.blueSoft1}
+                br={theme.roundness}>
                 <Text>📍</Text>
               </RowItem.Left>
               <RowItem.Content>
@@ -194,11 +202,16 @@ const Home = () => {
               </RowItem.Right>
             </RowItem>
             <RowItem
-              style={[
-                styles.rowItemContainer,
-                styles.favoriteRouteRowItemContainer,
-              ]}>
-              <RowItem.Left style={styles.rowItemLeftContainer}>
+              bw={1}
+              bc={theme.colors.border}
+              style={[styles.rowItemContainer]}>
+              <RowItem.Left
+                w={theme.spacing['10']}
+                h={theme.spacing['12']}
+                alignItems="center"
+                justifyContent="center"
+                bg={theme.colors.blueSoft1}
+                br={theme.roundness}>
                 <Text>📍</Text>
               </RowItem.Left>
               <RowItem.Content>
@@ -227,18 +240,23 @@ const Home = () => {
           </View>
           <View style={styles.cardContainer}>
             <RowItem
-              style={[styles.rowItemContainer, styles.mapRowItemContainer]}>
-              <RowItem.Left style={styles.rowItemLeftContainer}>
+              bg={theme.colors.blueSoft1}
+              style={[styles.rowItemContainer]}>
+              <RowItem.Left
+                w={theme.spacing['10']}
+                alignItems="center"
+                justifyContent="center">
                 <Ionicons name="search-outline" size={23} />
               </RowItem.Left>
               <RowItem.Content>
                 <Text
+                  lineHeight="sm"
                   color={theme.colors.gray2}
-                  size={theme.fonts.sizes.sm}
+                  size="sm"
                   numberOfLines={1}>
                   {t('WhereUWantToGo')}
                 </Text>
-                <Text size="lg" numberOfLines={1}>
+                <Text color={theme.colors.black} size="lg" numberOfLines={1}>
                   Hledan
                 </Text>
               </RowItem.Content>
@@ -282,11 +300,12 @@ const stylesheet = createStyleSheet(theme => ({
   container: {
     gap: theme.spacing['8'],
   },
-  scrollView: {
+  scrollView: (insets: EdgeInsets) => ({
+    paddingBottom: insets.bottom + TAB_HEIGHT + theme.spacing['10'], // extra padding for scroll
     flexGrow: 1,
-  },
+  }),
   favoriteRouteTitle: {
-    flex: 1,
+    ...globalStyles.flex,
   },
   sectionContainer: {
     gap: theme.spacing['4'],
@@ -294,28 +313,18 @@ const stylesheet = createStyleSheet(theme => ({
   rowItemContainer: {
     padding: theme.spacing['1.5'],
     borderRadius: theme.spacing['4'],
-    gap: theme.spacing['4'],
-  },
-  rowItemLeftContainer: {
-    paddingLeft: theme.spacing['3'],
+    gap: theme.spacing['3'],
   },
   cardContainer: {
-    gap: 12,
-    padding: 15,
-    backgroundColor: theme.colors.white,
+    padding: theme.spacing['4'],
+    backgroundColor: theme.colors.surface,
     borderRadius: 25,
+    gap: theme.spacing['3'],
   },
   mapView: {
     width: '100%',
-    height: 160,
+    height: theme.spacing['40'],
     borderRadius: 10,
-  },
-  mapRowItemContainer: {
-    backgroundColor: theme.colors.infoBackground,
-  },
-  favoriteRouteRowItemContainer: {
-    borderWidth: 1,
-    borderColor: theme.colors.border,
   },
 }));
 

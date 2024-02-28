@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 import {Pressable, View} from 'react-native';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 
@@ -31,17 +31,18 @@ export interface ITabItemProps {
   inactiveTintColor: string;
   activeBackgroundColor: string;
   inactiveBackgroundColor: string;
+  containerBackgroundColor: string;
   onPress?: () => void;
 }
 
 /* Tab Constants */
 const MIN_TAB_SIZE = 60;
 const MAX_TAB_SIZE = 160;
-const TAB_HEIGHT = 60;
+export const TAB_HEIGHT = 60;
 const TAB_RAIDUS = MIN_TAB_SIZE / 2;
 
 /* Separator */
-const SEPARATOR_WIDTH = 20;
+const SEPARATOR_WIDTH = MIN_TAB_SIZE / 2;
 const SEPARATOR_HEIGHT = 8;
 
 const TabItem = ({
@@ -55,6 +56,7 @@ const TabItem = ({
   inactiveTintColor,
   activeBackgroundColor,
   inactiveBackgroundColor,
+  containerBackgroundColor,
   onPress,
 }: ITabItemProps) => {
   /* Boder Radius States */
@@ -129,7 +131,7 @@ const TabItem = ({
   const itemMarginRightDerivedValue = useDerivedValue(() => {
     const isSelected =
       isActive || isPrevItem || (isLastItem && activeIndex === tabCount - 1);
-    return withTiming(isSelected ? SEPARATOR_WIDTH * 0.2 : 0, {
+    return withTiming(isSelected ? 6 : 0, {
       ...defaultTimingConfig,
       duration: isSelected ? 400 : 50,
     });
@@ -184,39 +186,48 @@ const TabItem = ({
 
   return (
     <Pressable onPress={onPress}>
-      <View>
-        <Animated.View style={[styles.tabItemOuterContianer, tabStyle]}>
-          <Animated.View
-            style={[styles.tabItemInnerContainer, tabBackgroundStyle]}>
-            <Animated.View style={[styles.iconContainer, iconContainerStyle]}>
-              {typeof icon === 'function' &&
-                icon({
-                  focused: isActive,
-                  color: (isActive
-                    ? activeTintColor
-                    : inactiveTintColor) as string,
-                  size: 22,
-                })}
-            </Animated.View>
-            <Animated.View style={[styles.labelContainer, labelContainerStyle]}>
-              {typeof label === 'string' && (
-                <Text
-                  color={isActive ? activeTintColor : inactiveTintColor}
-                  size="md"
-                  textAlign="center"
-                  numberOfLines={1}>
-                  {label}
-                </Text>
-              )}
-            </Animated.View>
+      <Animated.View
+        style={[
+          styles.tabItemOuterContianer,
+          {backgroundColor: containerBackgroundColor},
+          tabStyle,
+        ]}>
+        <Animated.View
+          style={[styles.tabItemInnerContainer, tabBackgroundStyle]}>
+          <Animated.View style={[styles.iconContainer, iconContainerStyle]}>
+            {typeof icon === 'function' &&
+              icon({
+                focused: isActive,
+                color: (isActive
+                  ? activeTintColor
+                  : inactiveTintColor) as string,
+                size: 22,
+              })}
+          </Animated.View>
+          <Animated.View style={[styles.labelContainer, labelContainerStyle]}>
+            {typeof label === 'string' && (
+              <Text
+                color={isActive ? activeTintColor : inactiveTintColor}
+                size="md"
+                textAlign="center"
+                numberOfLines={1}>
+                {label}
+              </Text>
+            )}
           </Animated.View>
         </Animated.View>
-        {!isLastItem && (
-          <View style={styles.itemSeparatorContainer}>
-            <Animated.View style={[styles.itemSeparator, itemSeparatorStyle]} />
-          </View>
-        )}
-      </View>
+      </Animated.View>
+      {!isLastItem && (
+        <View style={styles.itemSeparatorContainer}>
+          <Animated.View
+            style={[
+              styles.itemSeparator,
+              {backgroundColor: containerBackgroundColor},
+              itemSeparatorStyle,
+            ]}
+          />
+        </View>
+      )}
     </Pressable>
   );
 };
@@ -273,6 +284,7 @@ const CustomTab = ({
             inactiveBackgroundColor={
               options.tabBarInactiveBackgroundColor as string
             }
+            containerBackgroundColor={theme.colors.surface}
             onPress={onPress}
           />
         );
@@ -295,7 +307,6 @@ const styles = createStyleSheet({
   tabItemOuterContianer: {
     height: TAB_HEIGHT,
     padding: spacing['2'],
-    backgroundColor: '#FFFFFF',
     zIndex: 10,
   },
   tabItemInnerContainer: {
@@ -317,11 +328,9 @@ const styles = createStyleSheet({
     justifyContent: 'center',
     zIndex: 0,
   },
-
   itemSeparator: {
     width: SEPARATOR_WIDTH,
-    backgroundColor: '#FFFFFF',
   },
 });
 
-export default CustomTab;
+export {CustomTab};

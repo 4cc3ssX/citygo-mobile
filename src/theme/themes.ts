@@ -3,6 +3,10 @@ import {fonts} from './fonts';
 import {radius} from './radius';
 import {spacing} from './spacing';
 
+export const appThemes = ['light', 'dark', 'system'] as const;
+
+export type IAppTheme = (typeof appThemes)[number];
+
 // Unistyles themes
 export const light = {
   colors: lightColors,

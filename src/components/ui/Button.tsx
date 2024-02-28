@@ -1,6 +1,5 @@
 import React, {ReactElement} from 'react';
 import {
-  DimensionValue,
   StyleProp,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -24,30 +23,31 @@ export interface IButtonProps
       TouchableOpacityProps,
       'activeOpacity' | 'onPress' | 'onLongPress' | 'disabled'
     > {
+  size?: 'sm' | 'md' | 'lg';
   icon?: ReactElement;
   color?: StringOmit<ColorKeys>;
   variant?: 'solid' | 'clear' | 'outline';
   titleProps?: ITextProps;
   disableStyle?: StyleProp<ViewStyle>;
-  w?: DimensionValue;
-  h?: DimensionValue;
 }
 
 export const Button = ({
+  size = 'md',
   w,
   h,
   icon,
   color = 'primary',
   variant = 'solid',
   titleProps,
-  disabled,
-  activeOpacity = 0.75,
+  disabled = false,
+  activeOpacity = 0.6,
   onPress,
   children,
   style,
   ...rest
 }: IButtonProps) => {
   const {styles, theme} = useStyles(stylesheet);
+
   return (
     <TouchableOpacity
       activeOpacity={activeOpacity}
@@ -61,8 +61,9 @@ export const Button = ({
           styles.buttonContainer(
             theme.colors[color as ColorKeys] || color,
             variant,
+            disabled,
+            size,
           ),
-          {width: w || '100%', height: h || theme.spacing['14']},
           style,
         ]}
         {...rest}>
@@ -77,6 +78,7 @@ export const Button = ({
                       styles.buttonTitle(
                         theme.colors[color as ColorKeys] || color,
                         variant,
+                        disabled,
                       ),
                     ],
                     ...titleProps,
@@ -91,19 +93,48 @@ export const Button = ({
 };
 
 const stylesheet = createStyleSheet(theme => ({
-  buttonContainer: (color: string, variant: IButtonProps['variant']) => ({
-    paddingVertical: theme.spacing['2'],
-    paddingHorizontal: theme.spacing['3'],
+  buttonContainer: (
+    color: string,
+    variant: IButtonProps['variant'],
+    disabled: boolean,
+    size: IButtonProps['size'],
+  ) => ({
+    paddingVertical:
+      size === 'sm'
+        ? theme.spacing['1']
+        : size === 'md'
+        ? theme.spacing['2']
+        : theme.spacing['3'],
+    paddingHorizontal:
+      size === 'sm'
+        ? theme.spacing['2']
+        : size === 'md'
+        ? theme.spacing['3']
+        : theme.spacing['6'],
     justifyContent: 'center',
-    backgroundColor: variant === 'solid' ? color : 'transparent',
+    backgroundColor: !disabled
+      ? variant === 'solid'
+        ? color
+        : 'transparent'
+      : theme.colors.disabledBackground,
     borderWidth: variant === 'outline' ? StyleSheet.hairlineWidth : 0,
     borderColor: variant === 'outline' ? color : 'transparent',
     borderRadius: theme.roundness,
-    gap: theme.spacing['3'],
+    gap: theme.spacing['2'],
   }),
   buttonIconContainer: {},
   buttonTitleContainer: {},
-  buttonTitle: (color: string, variant: IButtonProps['variant']) => ({
-    color: variant === 'solid' ? theme.colors.white : color,
+  buttonTitle: (
+    color: string,
+    variant: IButtonProps['variant'],
+    disabled: boolean,
+  ) => ({
+    color: !disabled
+      ? variant === 'solid'
+        ? theme.colors.white
+        : variant === 'clear'
+        ? theme.colors.text
+        : color
+      : theme.colors.disabled,
   }),
 }));

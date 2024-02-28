@@ -10,3 +10,4 @@ export * from './Link';
 export * from './BusLineCard';
 export * from './Avatar';
 export * from './IconButton';
+export * from './Section';

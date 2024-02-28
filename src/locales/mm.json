@@ -1,6 +1,14 @@
 {
-  "Explore": "ရှာဖွေ",
-  "Settings": "ဆက်တင်",
+  "Home": "Home",
+  "Services": "Services",
+  "Map": "Map",
+  "Settings": "Settings",
   "Language": "ဘာသာစကား",
-  "Preferences": "စိတ်ကြိုက်ပြင်ဆင်ရန်"
+  "Preferences": "စိတ်ကြိုက်ပြင်ဆင်ရန်",
+  "WhereUWantToGo": "ဘယ်ကို သွားချင်လဲ။",
+  "FavoriteRoute": "အကြိုက်ဆုံးလမ်းကြောင်းများ",
+  "SearchOnMap": "မြေပုံပေါ်တွင်ရှာမည်",
+  "WelcomeToApp": "{{appName}} မှကြိုဆိုပါတယ်။",
+  "Notifications": "အသိပေးချက်များ",
+  "AppTheme": "အက်ပ်အပြင်အဆင်"
 }

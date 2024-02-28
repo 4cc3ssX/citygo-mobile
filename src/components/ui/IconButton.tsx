@@ -10,7 +10,7 @@ export const IconButton = ({icon, ...rest}: IIconButton) => {
   const {styles} = useStyles(stylesheet);
   return (
     <Button
-      color="white"
+      color="surface"
       alignItems="center"
       justifyContent="center"
       style={styles.container}

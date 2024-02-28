@@ -1,10 +1,14 @@
 {
-  "Explore": "Explore",
+  "Home": "Home",
+  "Services": "Services",
+  "Map": "Map",
   "Settings": "Settings",
   "Language": "Language",
   "Preferences": "Preferences",
-  "WhereUWantToGo": "Where u want to go?",
-  "FavoriteRoute": "Favorite Routes",
+  "WhereUWantToGo": "Where you want to go?",
+  "FavoriteRoute": "Favorite routes",
   "SearchOnMap": "Search on map",
-  "WelcomeToApp": "Welcome to {{appName}}"
+  "WelcomeToApp": "Welcome to {{appName}}",
+  "Notifications": "Notifications",
+  "AppTheme": "App Theme"
 }

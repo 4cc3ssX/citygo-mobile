@@ -1,10 +1,7 @@
 import {createStyleSheet} from 'react-native-unistyles';
 
 export const globalStyles = createStyleSheet({
-  container: {
-    paddingHorizontal: 25,
-  },
-  flex1: {
+  flex: {
     flex: 1,
   },
   fab: {

@@ -4,35 +4,37 @@ import {FlashList} from '@shopify/flash-list';
 import {useStyles} from 'react-native-unistyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {capitalize} from 'lodash';
+
 import {Container, RowItem} from '@components/ui';
 import {useThemeName} from '@hooks/useThemeName';
-import {supportedLanguages, supportedLng} from '@locales/helpers';
 import {useAppStore} from '@store/app';
+import {appThemes} from '@theme/themes';
 
-const Language = () => {
+const AppTheme = () => {
+  const app = useAppStore();
   const themeName = useThemeName();
   const {theme} = useStyles();
-  const app = useAppStore();
+
   return (
     <Container
       barStyle={themeName === 'dark' ? 'light-content' : 'dark-content'}
       bg={theme.colors.surface}>
       <FlashList
         showsVerticalScrollIndicator={false}
-        data={Object.keys(supportedLanguages)}
+        data={appThemes}
+        extraData={theme.colors.surface}
         estimatedItemSize={theme.spacing['12']}
-        renderItem={({item: lang}) => {
+        renderItem={({item: name}) => {
           return (
             <RowItem
               h={theme.spacing['12']}
               bg={theme.colors.surface}
               p={0}
-              onPress={() => app.setLanguage(lang as supportedLng)}>
-              <RowItem.Content>
-                {supportedLanguages[lang as supportedLng]}
-              </RowItem.Content>
+              onPress={() => app.setTheme(name)}>
+              <RowItem.Content>{capitalize(name)}</RowItem.Content>
               <RowItem.Right>
-                {app.language === lang && (
+                {app.theme === name && (
                   <Ionicons
                     name="checkmark-outline"
                     size={24}
@@ -48,4 +50,4 @@ const Language = () => {
   );
 };
 
-export default Language;
+export default AppTheme;
