@@ -3,15 +3,16 @@ import {Linking} from 'react-native';
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useStyles} from 'react-native-unistyles';
+import {createStyleSheet, useStyles} from 'react-native-unistyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {Button, HStack, Text, VStack} from '@components/ui';
+import {Constants} from '@constants';
 
 export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
   const {top} = useSafeAreaInsets();
 
-  const {theme} = useStyles();
+  const {styles, theme} = useStyles(stylesheet);
 
   /* Handlers */
   const onGoBackHandler = useCallback(async () => {
@@ -31,26 +32,44 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
   const onPressHelpHandler = useCallback(() => {
     navigation.navigate('Help');
   }, [navigation]);
+
   return (
     <HStack
-      pt={top + theme.spacing['3']}
+      maxH={Constants.HEADER_HEIGHT + top}
+      pt={
+        options.presentation === 'modal'
+          ? theme.spacing['3']
+          : top + theme.spacing['3']
+      }
       pb={theme.spacing['3']}
       px={theme.spacing['4']}
       alignItems="center"
-      bg={theme.colors.surface}>
-      <Button
-        size="sm"
-        variant="clear"
-        icon={
+      bg={theme.colors.surface}
+      style={[styles.headerContainer, options.headerStyle]}>
+      {options.presentation === 'modal' ? (
+        <Button size="sm" variant="clear" onPress={onGoBackHandler}>
           <Ionicons
-            name="chevron-back"
+            name="chevron-back-outline"
             size={theme.spacing['6']}
             color={theme.colors.text}
           />
-        }
-        onPress={onGoBackHandler}>
-        Back
-      </Button>
+        </Button>
+      ) : (
+        <Button
+          size="sm"
+          variant="clear"
+          icon={
+            <Ionicons
+              name="chevron-back-outline"
+              size={theme.spacing['6']}
+              color={theme.colors.text}
+            />
+          }
+          onPress={onGoBackHandler}>
+          Back
+        </Button>
+      )}
+
       <VStack flex={2}>
         {options.title ? (
           <Text family="product" size="lg" type="medium" textAlign="center">
@@ -59,19 +78,30 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
         ) : null}
       </VStack>
 
-      <Button
-        size="sm"
-        variant="clear"
-        icon={
-          <Ionicons
-            name="alert-circle-outline"
-            size={24}
-            color={theme.colors.text}
-          />
-        }
-        onPress={onPressHelpHandler}>
-        Help
-      </Button>
+      {(!options.presentation || options.presentation === 'card') && (
+        <Button
+          size="sm"
+          variant="clear"
+          icon={
+            <Ionicons
+              name="alert-circle-outline"
+              size={24}
+              color={theme.colors.text}
+            />
+          }
+          onPress={onPressHelpHandler}>
+          Help
+        </Button>
+      )}
     </HStack>
   );
 };
+
+const stylesheet = createStyleSheet(theme => ({
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+}));

@@ -28,6 +28,8 @@ export type StackStyle = Pick<FlexStyle, (typeof FlexStyleKeys)[number]>;
 
 export interface IStackProps extends ViewProps, StackStyle {
   maxW?: DimensionValue;
+  minW?: DimensionValue;
+  maxH?: DimensionValue;
   minH?: DimensionValue;
   w?: DimensionValue;
   h?: DimensionValue;
@@ -42,11 +44,19 @@ export interface IStackProps extends ViewProps, StackStyle {
   pl?: number;
   px?: number;
   py?: number;
+  mt?: number;
+  mb?: number;
+  mr?: number;
+  ml?: number;
+  mx?: number;
+  my?: number;
 }
 
 export const Stack = memo(
   ({
     maxW,
+    minW,
+    maxH,
     minH,
     w,
     h,
@@ -61,6 +71,12 @@ export const Stack = memo(
     pl,
     px,
     py,
+    mt,
+    mb,
+    mr,
+    ml,
+    mx,
+    my,
     style,
     ...rest
   }: IStackProps) => {
@@ -75,6 +91,8 @@ export const Stack = memo(
           omitBy<ViewStyle>(
             {
               maxWidth: maxW,
+              minWidth: minW,
+              maxHeight: maxH,
               minHeight: minH,
               width: w,
               height: h,
@@ -89,6 +107,12 @@ export const Stack = memo(
               paddingRight: pr,
               paddingHorizontal: px,
               paddingVertical: py,
+              marginTop: mt,
+              marginBottom: mb,
+              marginRight: mr,
+              marginLeft: ml,
+              marginHorizontal: mx,
+              marginVertical: my,
             },
             isUndefined,
           ),

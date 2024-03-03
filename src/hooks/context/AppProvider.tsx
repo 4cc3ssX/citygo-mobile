@@ -16,7 +16,10 @@ import {
 import {persistQueryClient} from '@tanstack/react-query-persist-client';
 
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {
+  initialWindowMetrics,
+  SafeAreaProvider,
+} from 'react-native-safe-area-context';
 
 import {checkLocationPermission} from '@helpers/permissions';
 import {Storage} from '@helpers/storage';
@@ -80,7 +83,7 @@ export const AppContextProvider = ({children}: PropsWithChildren) => {
   return (
     <AppContext.Provider value={{isLocationEnabled, requestPermissions}}>
       <GestureHandlerRootView style={globalStyles.flex}>
-        <SafeAreaProvider>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <QueryClientProvider client={queryClient}>
             {children}
           </QueryClientProvider>

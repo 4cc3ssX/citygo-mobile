@@ -42,8 +42,8 @@ export const fonts = {
   },
 
   sizes: {
-    '2xs': 10,
-    xs: 12,
+    '2xs': 12,
+    xs: 13,
     sm: 14,
     md: 16,
     lg: 18,

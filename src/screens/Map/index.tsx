@@ -7,6 +7,7 @@ import {useStyles} from 'react-native-unistyles';
 import {Container, Text} from '@components/ui';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootTabParamsList} from '@navigations/Tab';
+import {globalStyles} from '@styles/global';
 
 type Props = NativeStackScreenProps<RootTabParamsList, 'Map'>;
 
@@ -17,7 +18,8 @@ const Map = ({navigation}: Props) => {
   return (
     <Container
       edges={['top', 'left', 'right']}
-      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}>
+      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
+      style={globalStyles.container}>
       <Text>map</Text>
     </Container>
   );

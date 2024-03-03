@@ -9,7 +9,7 @@ export class Constants {
   /**
    * The height of the header
    */
-  public static readonly HEADER_HEIGHT = 64;
+  public static readonly HEADER_HEIGHT = 56;
 
   /**
    * The height of the map camera

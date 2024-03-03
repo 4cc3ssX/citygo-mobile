@@ -18,7 +18,6 @@ export type RootTabParamsList = {
   Services: undefined;
   Map: undefined;
   Settings: undefined;
-  Search: undefined;
 };
 
 const RNTab = createBottomTabNavigator<RootTabParamsList>();

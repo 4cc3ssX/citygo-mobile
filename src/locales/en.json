@@ -10,5 +10,11 @@
   "SearchOnMap": "Search on map",
   "WelcomeToApp": "Welcome to {{appName}}",
   "Notifications": "Notifications",
-  "AppTheme": "App Theme"
+  "AppTheme": "App Theme",
+  "Search": "Search",
+  "ChooseLocationOnMap": "Choose location on map",
+  "FindTheBestRoute": "Find the Best Route",
+  "FindRoute": "Find Route",
+  "AvailableRoutes": "Available routes",
+  "OtherFeatures": "Other Features"
 }

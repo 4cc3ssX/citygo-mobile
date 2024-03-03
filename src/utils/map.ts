@@ -1,8 +1,5 @@
 import {Region} from 'react-native-maps';
 
-import {ICoordinates} from '@typescript/api';
-import {IStop} from '@typescript/api/stops';
-
 export function getDelta(lat: number, lng: number, distance: number): Region {
   distance = distance / 2;
   const circumference = 40075;
@@ -44,21 +41,4 @@ export function haversine(
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
   return R * c;
-}
-
-export function filterStopsWithinRadius(
-  at: ICoordinates,
-  stops: IStop[],
-  radius: number,
-): IStop[] {
-  const filteredItems: IStop[] = [];
-
-  for (const stop of stops) {
-    const distance = haversine(at.lat, at.lng, stop.lat, stop.lng);
-    if (distance <= radius) {
-      filteredItems.push(stop);
-    }
-  }
-
-  return filteredItems;
 }

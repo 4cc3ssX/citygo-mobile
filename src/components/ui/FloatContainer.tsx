@@ -1,20 +1,58 @@
 import React, {memo} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ViewProps} from 'react-native';
 
-import {SafeAreaView, SafeAreaViewProps} from 'react-native-safe-area-context';
+import {useSoftInputHeightChanged} from 'react-native-avoid-softinput';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createStyleSheet} from 'react-native-unistyles';
 
-export interface IFContainerProps extends SafeAreaViewProps {
+export interface IFContainerProps extends ViewProps {
+  keyboardAvoiding?: boolean;
   position?: 'top' | 'bottom';
 }
 
 export const FContainer = memo(
-  ({position = 'top', style, ...rest}: IFContainerProps) => {
+  ({
+    keyboardAvoiding = false,
+    position = 'bottom',
+    style,
+    ...rest
+  }: IFContainerProps) => {
+    const insets = useSafeAreaInsets();
+    const buttonContainerPaddingValue = useSharedValue(0);
+
+    const containerStyle = useAnimatedStyle(() => {
+      return {
+        paddingBottom: buttonContainerPaddingValue.value,
+      };
+    });
+
+    useSoftInputHeightChanged(({softInputHeight}) => {
+      if (keyboardAvoiding) {
+        buttonContainerPaddingValue.value = withTiming(softInputHeight);
+      }
+    });
+
     return (
-      <SafeAreaView
+      <Animated.View
+        style={[
+          styles.container(position),
+          style,
+          containerStyle,
+          {
+            paddingTop:
+              StyleSheet.flatten(style)?.paddingTop ||
+              0 + (position === 'top' ? insets.top : 0),
+            paddingBottom:
+              StyleSheet.flatten(style)?.paddingBottom ||
+              0 + (position === 'bottom' ? insets.bottom : 0),
+          },
+        ]}
         {...rest}
-        edges={['left', 'right', position]}
-        style={StyleSheet.flatten([style, styles.container(position)])}
       />
     );
   },

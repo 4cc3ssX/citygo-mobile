@@ -1,6 +1,7 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ScrollView, View} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 
 import {useTranslation} from 'react-i18next';
 import MapView, {Marker} from 'react-native-maps';
@@ -19,23 +20,31 @@ import {
   IconButton,
   Link,
   RowItem,
+  Stack,
   Text,
   VStack,
 } from '@components/ui';
 import {Constants} from '@constants';
-import {useGetStops} from '@hooks/api';
+import {useGetNearestStops} from '@hooks/api';
 import {useAppContext} from '@hooks/context';
 import {useThemeName} from '@hooks/useThemeName';
 import {TAB_HEIGHT} from '@navigations/components';
+import {RootStackParamsList} from '@navigations/Stack';
+import {RootTabParamsList} from '@navigations/Tab';
 import {useMapStore} from '@store/map';
 import {globalStyles} from '@styles/global';
-import {filterStopsWithinRadius, getDelta} from '@utils/map';
+import {getDelta} from '@utils/map';
+
+type Props = BottomTabScreenProps<
+  RootTabParamsList & RootStackParamsList,
+  'Home'
+>;
 
 Geolocation.setRNConfiguration({
   skipPermissionRequests: true,
 });
 
-const Home = () => {
+const Home = ({navigation}: Props) => {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
 
@@ -46,7 +55,7 @@ const Home = () => {
   const {isLocationEnabled, requestPermissions} = useAppContext();
 
   /* Query */
-  const {data, error} = useGetStops();
+  const {data: nearestStops, mutate: getNearestStops} = useGetNearestStops();
 
   /* State */
   const [isReady, setIsReady] = useState(false);
@@ -58,25 +67,14 @@ const Home = () => {
   /* Ref */
   const mapRef = useRef<MapView>(null);
 
-  /* Memo */
-  const nearbyStops = useMemo(() => {
-    if (!map.userLocation || !data) {
-      return [];
-    }
-
-    return filterStopsWithinRadius(
-      map.userLocation,
-      data,
-      Constants.MAP_SCAN_RADIUS,
-    );
-  }, [data, map.userLocation]);
-
   /* Handlers */
   const onLocateMe = useCallback(() => {
     setIsLocating(true);
 
     Geolocation.getCurrentPosition(
       ({coords}) => {
+        getNearestStops({lat: coords.latitude, lng: coords.longitude});
+
         // update user location
         map.setUserLocation({lat: coords.latitude, lng: coords.longitude});
 
@@ -103,7 +101,7 @@ const Home = () => {
         maximumAge: 5000,
       },
     );
-  }, [map]);
+  }, [getNearestStops, map]);
 
   const onInitialized = useCallback(async () => {
     await requestPermissions();
@@ -129,7 +127,7 @@ const Home = () => {
     <Container
       edges={['top', 'left', 'right']}
       barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
-      style={styles.container}>
+      style={[globalStyles.container, styles.container]}>
       <HStack alignItems="center" gap={theme.spacing['3.5']}>
         <Avatar
           w={theme.spacing['14']}
@@ -163,11 +161,11 @@ const Home = () => {
       <ScrollView
         contentContainerStyle={[styles.container, styles.scrollView(insets)]}
         showsVerticalScrollIndicator={false}>
-        <View style={styles.sectionContainer}>
-          <HStack alignItems="center">
-            <VStack flex={2}>
+        <Stack gap={theme.spacing['4']}>
+          <HStack justifyContent="space-between" alignItems="center">
+            <Stack flex={2}>
               <Text size="xl">{t('FavoriteRoute')}</Text>
-            </VStack>
+            </Stack>
             <Link size="lg" color={theme.colors.gray} underlined={false}>
               Add more
             </Link>
@@ -233,15 +231,14 @@ const Home = () => {
               </RowItem.Right>
             </RowItem>
           </View>
-        </View>
-        <View style={styles.sectionContainer}>
-          <View>
-            <Text size="xl">{t('SearchOnMap')}</Text>
-          </View>
+        </Stack>
+        <Stack gap={theme.spacing['4']}>
+          <Text size="xl">{t('SearchOnMap')}</Text>
           <View style={styles.cardContainer}>
             <RowItem
               bg={theme.colors.blueSoft1}
-              style={[styles.rowItemContainer]}>
+              style={[styles.rowItemContainer]}
+              onPress={() => navigation.navigate('Search')}>
               <RowItem.Left
                 w={theme.spacing['10']}
                 alignItems="center"
@@ -256,12 +253,13 @@ const Home = () => {
                   numberOfLines={1}>
                   {t('WhereUWantToGo')}
                 </Text>
-                <Text color={theme.colors.black} size="lg" numberOfLines={1}>
+                <Text color={theme.colors.text} size="lg" numberOfLines={1}>
                   Hledan
                 </Text>
               </RowItem.Content>
               <RowItem.Right>
                 <IconButton
+                  pointerEvents="none"
                   color="primary"
                   icon={
                     <Ionicons
@@ -281,16 +279,16 @@ const Home = () => {
               mapType="standard"
               userInterfaceStyle={themeName}
               style={styles.mapView}>
-              {nearbyStops.map(stop => (
+              {nearestStops?.map(stop => (
                 <Marker
                   key={stop.id}
                   coordinate={{latitude: stop.lat, longitude: stop.lng}}
-                  image={{uri: 'location_pin'}}
+                  image={{uri: 'marker'}}
                 />
               ))}
             </MapView>
           </View>
-        </View>
+        </Stack>
       </ScrollView>
     </Container>
   );
@@ -306,9 +304,6 @@ const stylesheet = createStyleSheet(theme => ({
   }),
   favoriteRouteTitle: {
     ...globalStyles.flex,
-  },
-  sectionContainer: {
-    gap: theme.spacing['4'],
   },
   rowItemContainer: {
     padding: theme.spacing['1.5'],

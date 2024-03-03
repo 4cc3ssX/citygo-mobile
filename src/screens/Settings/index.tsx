@@ -6,10 +6,11 @@ import {useTranslation} from 'react-i18next';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {Container, RowItem, Text, VStack} from '@components/ui';
+import {Container, RowItem, Stack, Text} from '@components/ui';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
+import {globalStyles} from '@styles/global';
 
 import {settings} from './data/settings';
 
@@ -24,21 +25,20 @@ const Settings = ({navigation}: Props) => {
   const {styles, theme} = useStyles(stylesheet);
 
   const sectionSeparatorComponent = useCallback(
-    () => <VStack h={theme.spacing['5']} />,
+    () => <Stack h={theme.spacing['5']} />,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
   const itemSeparatorComponent = useCallback(
-    () => <VStack h={theme.spacing['2']} />,
+    () => <Stack h={theme.spacing['2']} />,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
   return (
     <Container
-      edges={['top', 'left', 'right']}
       barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
-      style={styles.container}>
+      style={[globalStyles.container, styles.container]}>
       <Text size="3xl" family="product">
         {t('Settings')}
       </Text>
@@ -54,14 +54,14 @@ const Settings = ({navigation}: Props) => {
         SectionSeparatorComponent={sectionSeparatorComponent}
         ItemSeparatorComponent={itemSeparatorComponent}
         renderItem={({item}) => (
-          <RowItem onPress={() => navigation.navigate(item.to)}>
+          <RowItem onPress={() => navigation.navigate(item.to as any)}>
             <RowItem.Left bg={theme.colors.blueSoft1}>
               {item.icon({color: theme.colors.primary, size: 20})}
             </RowItem.Left>
             <RowItem.Content>{t(item.title as any)}</RowItem.Content>
             <RowItem.Right pr={theme.spacing['3']}>
               <Ionicons
-                name="chevron-forward"
+                name="chevron-forward-outline"
                 size={14}
                 color={theme.colors.gray2}
               />

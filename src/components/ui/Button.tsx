@@ -26,12 +26,13 @@ export interface IButtonProps
   size?: 'sm' | 'md' | 'lg';
   icon?: ReactElement;
   color?: StringOmit<ColorKeys>;
-  variant?: 'solid' | 'clear' | 'outline';
+  variant?: 'solid' | 'clear' | 'outline' | 'ghost';
   titleProps?: ITextProps;
   disableStyle?: StyleProp<ViewStyle>;
 }
 
 export const Button = ({
+  pointerEvents,
   size = 'md',
   w,
   h,
@@ -40,7 +41,7 @@ export const Button = ({
   variant = 'solid',
   titleProps,
   disabled = false,
-  activeOpacity = 0.6,
+  activeOpacity = 0.95,
   onPress,
   children,
   style,
@@ -51,7 +52,7 @@ export const Button = ({
   return (
     <TouchableOpacity
       activeOpacity={activeOpacity}
-      disabled={disabled}
+      disabled={pointerEvents === 'none' || disabled}
       onPress={onPress}>
       <HStack
         w={w}
@@ -79,6 +80,7 @@ export const Button = ({
                         theme.colors[color as ColorKeys] || color,
                         variant,
                         disabled,
+                        size,
                       ),
                     ],
                     ...titleProps,
@@ -115,6 +117,8 @@ const stylesheet = createStyleSheet(theme => ({
     backgroundColor: !disabled
       ? variant === 'solid'
         ? color
+        : variant === 'ghost'
+        ? color
         : 'transparent'
       : theme.colors.disabledBackground,
     borderWidth: variant === 'outline' ? StyleSheet.hairlineWidth : 0,
@@ -128,6 +132,7 @@ const stylesheet = createStyleSheet(theme => ({
     color: string,
     variant: IButtonProps['variant'],
     disabled: boolean,
+    size: IButtonProps['size'],
   ) => ({
     color: !disabled
       ? variant === 'solid'
@@ -136,5 +141,11 @@ const stylesheet = createStyleSheet(theme => ({
         ? theme.colors.text
         : color
       : theme.colors.disabled,
+    fontSize:
+      size === 'sm'
+        ? theme.fonts.sizes.sm
+        : size === 'md'
+        ? theme.fonts.sizes.sm
+        : theme.fonts.sizes.md,
   }),
 }));

@@ -12,7 +12,10 @@ import {
 } from 'react-native-safe-area-context';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
+import {Constants} from '@constants';
+
 interface ContainerProps extends SafeAreaViewProps {
+  hasHeader?: boolean;
   handleKeyboard?: boolean;
   barStyle?: SystemBarStyle;
   navigationBarStyle?: SystemBarStyle;
@@ -28,15 +31,16 @@ const defaultEdges: Edges = {
 
 export const Container = memo(
   ({
-    style,
-
+    hasHeader = false,
     handleKeyboard,
     barStyle,
     navigationBarStyle,
     bg,
     edges,
+    style,
     ...props
   }: ContainerProps) => {
+    const insets = useSafeAreaInsets();
     const {styles, theme} = useStyles(stylesheet);
 
     useEffect(() => {
@@ -70,10 +74,11 @@ export const Container = memo(
           }
           {...props}
           style={[
-            style,
             {
               backgroundColor: bg || theme.colors.background,
+              paddingTop: hasHeader ? Constants.HEADER_HEIGHT : undefined,
             },
+            style,
             styles.container,
           ]}
         />
@@ -85,6 +90,5 @@ export const Container = memo(
 const stylesheet = createStyleSheet(theme => ({
   container: {
     flex: 1,
-    paddingHorizontal: theme.spacing['6'],
   },
 }));

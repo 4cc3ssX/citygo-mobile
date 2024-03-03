@@ -1,6 +1,11 @@
-import {createStyleSheet} from 'react-native-unistyles';
+import {StyleSheet} from 'react-native';
 
-export const globalStyles = createStyleSheet({
+import {spacing} from '@theme/spacing';
+
+export const globalStyles = StyleSheet.create({
+  container: {
+    paddingHorizontal: spacing['6'],
+  },
   flex: {
     flex: 1,
   },

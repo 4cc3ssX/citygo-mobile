@@ -7,6 +7,7 @@ import {createStyleSheet, useStyles} from 'react-native-unistyles';
 import {Container} from '@components/ui';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
+import {globalStyles} from '@styles/global';
 
 type Props = NativeStackScreenProps<
   RootStackParamsList,
@@ -20,7 +21,7 @@ const NotificationSettings = (props: Props) => {
   return (
     <Container
       barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
-      style={styles.container}
+      style={[globalStyles.container, styles.container]}
     />
   );
 };

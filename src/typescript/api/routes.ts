@@ -1,4 +1,4 @@
-import {ReplaceValueByType} from '@typescript';
+import {ReplaceValueByType} from '..';
 
 import {ICoordinates, ILocalizedString} from '.';
 
@@ -37,18 +37,19 @@ export interface ITransitRoute {
   distance: number;
 }
 
-export enum ITransitType {
+export enum TransitType {
   TRANSIT = 'transit',
   WALK = 'walk',
 }
 
 export interface ITransitSteps {
-  [ITransitType.TRANSIT]: ITransitStop;
-  [ITransitType.WALK]?: ITransitWalk;
+  type: TransitType;
+  step: ITransitStop & ITransitWalk;
 }
 
 export interface ITransitStop {
   id: string;
+  color: string;
   stops: number[];
 }
 

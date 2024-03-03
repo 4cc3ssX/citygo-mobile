@@ -87,7 +87,7 @@ const stylesheet = createStyleSheet(theme => ({
     borderRadius: theme.roundness,
   },
   rowItemContentContainer: {
-    flex: 1,
+    flex: 2,
     gap: theme.spacing['0.5'],
   },
   rowItemRightContainer: {},

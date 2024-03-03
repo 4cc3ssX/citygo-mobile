@@ -3,9 +3,13 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {useTranslation} from 'react-i18next';
 
+import {FindRouteValues} from '@helpers/validations';
 import AppTheme from '@screens/AppTheme';
+import FindRoute from '@screens/FindRoute';
 import Language from '@screens/Language';
 import {NotificationSettings} from '@screens/Notifications';
+import Search from '@screens/Search';
+import {ServiceMap} from '@screens/Services';
 
 import {StackHeader} from './components/Header';
 import Tab from './Tab';
@@ -15,6 +19,11 @@ export type RootStackParamsList = {
   Language: undefined;
   NotificationSettings: undefined;
   AppTheme: undefined;
+  Search: undefined;
+  FindRoute: FindRouteValues;
+  ServiceMap: {
+    type: 'stops' | 'routes';
+  };
 };
 
 const RNStack = createNativeStackNavigator<RootStackParamsList>();
@@ -49,6 +58,26 @@ function Stack() {
         name="AppTheme"
         component={AppTheme}
         options={{title: t('AppTheme')}}
+      />
+      <RNStack.Screen
+        name="Search"
+        component={Search}
+        options={{title: t('Search')}}
+      />
+      <RNStack.Screen
+        name="FindRoute"
+        component={FindRoute}
+        options={{title: t('FindRoute')}}
+      />
+      <RNStack.Screen
+        name="ServiceMap"
+        component={ServiceMap}
+        options={{
+          title: t('Map'),
+          headerStyle: {
+            backgroundColor: 'transparent',
+          },
+        }}
       />
     </RNStack.Navigator>
   );
