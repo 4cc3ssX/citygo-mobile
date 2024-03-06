@@ -5,15 +5,12 @@ import React, {
   useState,
 } from 'react';
 import {AppState, AppStateStatus, Platform} from 'react-native';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {PortalProvider} from '@gorhom/portal';
 import NetInfo from '@react-native-community/netinfo';
 import {createSyncStoragePersister} from '@tanstack/query-sync-storage-persister';
-import {
-  focusManager,
-  onlineManager,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
-import {persistQueryClient} from '@tanstack/react-query-persist-client';
+import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query';
+import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client';
 
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {
@@ -31,18 +28,13 @@ import {AppContext} from '.';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      gcTime: 60000, // 1 minute
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
     },
   },
 });
 
 const storagePersister = createSyncStoragePersister({
   storage: Storage,
-});
-
-persistQueryClient({
-  queryClient,
-  persister: storagePersister,
 });
 
 onlineManager.setEventListener(setOnline => {
@@ -84,9 +76,15 @@ export const AppContextProvider = ({children}: PropsWithChildren) => {
     <AppContext.Provider value={{isLocationEnabled, requestPermissions}}>
       <GestureHandlerRootView style={globalStyles.flex}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <QueryClientProvider client={queryClient}>
-            {children}
-          </QueryClientProvider>
+          <PortalProvider>
+            <BottomSheetModalProvider>
+              <PersistQueryClientProvider
+                client={queryClient}
+                persistOptions={{persister: storagePersister}}>
+                {children}
+              </PersistQueryClientProvider>
+            </BottomSheetModalProvider>
+          </PortalProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
     </AppContext.Provider>

@@ -48,7 +48,9 @@ const fuseOptions: IFuseOptions<IStop> = {
 
 const chooseOnMapButtonNativeID = 'choose-location-on-map';
 
-const Search = ({navigation}: Props) => {
+const Search = ({navigation, route}: Props) => {
+  const {chooseFor, stop} = route.params;
+
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
   const themeName = useThemeName();
@@ -91,8 +93,19 @@ const Search = ({navigation}: Props) => {
     [navigation],
   );
 
+  const onChooseLocationOnMap = useCallback(() => {
+    const dest = destRef.current;
+
+    navigation.navigate('ChooseFromMap', {
+      prevRouteName: 'Search',
+      prevRouteProps: {
+        chooseFor: dest,
+      },
+    });
+  }, [navigation]);
+
   const onSelectStop = useCallback(
-    (stop: IStop) => {
+    (selectedStop: IStop) => {
       const dest = destRef.current;
 
       if (dest === 'from') {
@@ -105,10 +118,10 @@ const Search = ({navigation}: Props) => {
       setValue(
         dest,
         {
-          preferId: stop.id,
-          name: stop.name.en,
-          road: stop.road.en,
-          township: stop.township.en,
+          preferId: selectedStop.id,
+          name: selectedStop.name.en,
+          road: selectedStop.road.en,
+          township: selectedStop.township.en,
         },
         {
           shouldValidate: true,
@@ -156,6 +169,14 @@ const Search = ({navigation}: Props) => {
     }
   }, [stops]);
 
+  useEffect(() => {
+    if (chooseFor && stop) {
+      destRef.current = chooseFor;
+      onSelectStop(stop);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chooseFor, stop]);
+
   const itemSeparatorComponent = useCallback(
     () => <Separator my={theme.spacing['1']} />,
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -169,7 +190,8 @@ const Search = ({navigation}: Props) => {
 
   return (
     <Container
-      edges={{bottom: 'off'}}
+      hasHeader
+      containerPaddingTop={theme.spacing['3']}
       barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
       bg={theme.colors.surface}
       style={[globalStyles.container, styles.container]}>
@@ -178,7 +200,8 @@ const Search = ({navigation}: Props) => {
           br={0}
           variant="ghost"
           bg={theme.colors.blueSoft1}
-          icon={<Ionicons name="map" color={theme.colors.primary} size={22} />}>
+          icon={<Ionicons name="map" color={theme.colors.primary} size={22} />}
+          onPress={onChooseLocationOnMap}>
           {t('ChooseLocationOnMap')}
         </Button>
       </InputAccessoryView>
@@ -260,21 +283,22 @@ const Search = ({navigation}: Props) => {
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={itemSeparatorComponent}
         ListEmptyComponent={listEmptyComponent}
-        renderItem={({item: stop}) => (
-          <RowItem onPress={() => onSelectStop(stop)}>
+        renderItem={({item}) => (
+          <RowItem onPress={() => onSelectStop(item)}>
             <RowItem.Left bg={theme.colors.background}>
               <Text size="xl" textAlign="center">
                 📍
               </Text>
             </RowItem.Left>
             <RowItem.Content>
-              <Text size="md">{stop.name[app.language]}</Text>
+              <Text size="md">{item.name[app.language]}</Text>
               <Text size="xs" color={theme.colors.gray2} numberOfLines={1}>
-                {stop.road[app.language]}, {stop.township[app.language]}
+                {item.road[app.language]}, {item.township[app.language]}
               </Text>
             </RowItem.Content>
           </RowItem>
         )}
+        keyExtractor={(item, index) => `stop-${item.id}-${index}`}
         contentContainerStyle={styles.listContainer(insets.bottom)}
       />
     </Container>
@@ -282,7 +306,6 @@ const Search = ({navigation}: Props) => {
 };
 const stylesheet = createStyleSheet(theme => ({
   container: {
-    paddingVertical: theme.spacing['5'],
     gap: theme.spacing['5'],
   },
   swapContainer: {

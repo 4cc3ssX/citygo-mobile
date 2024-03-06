@@ -1,6 +1,7 @@
 import React, {ReactElement} from 'react';
 import {
   StyleProp,
+  TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
@@ -28,6 +29,7 @@ export interface IButtonProps
   color?: StringOmit<ColorKeys>;
   variant?: 'solid' | 'clear' | 'outline' | 'ghost';
   titleProps?: ITextProps;
+  titleStyle?: StyleProp<TextStyle>;
   disableStyle?: StyleProp<ViewStyle>;
 }
 
@@ -39,12 +41,14 @@ export const Button = ({
   icon,
   color = 'primary',
   variant = 'solid',
+  titleStyle,
   titleProps,
   disabled = false,
   activeOpacity = 0.95,
   onPress,
   children,
   style,
+  disableStyle,
   ...rest
 }: IButtonProps) => {
   const {styles, theme} = useStyles(stylesheet);
@@ -58,6 +62,8 @@ export const Button = ({
         w={w}
         h={h}
         alignItems="center"
+        br={theme.roundness}
+        {...rest}
         style={[
           styles.buttonContainer(
             theme.colors[color as ColorKeys] || color,
@@ -66,8 +72,8 @@ export const Button = ({
             size,
           ),
           style,
-        ]}
-        {...rest}>
+          disabled && disableStyle,
+        ]}>
         {icon && <View style={styles.buttonIconContainer}>{icon}</View>}
 
         <View style={styles.buttonTitleContainer}>
@@ -82,6 +88,7 @@ export const Button = ({
                         disabled,
                         size,
                       ),
+                      titleStyle,
                     ],
                     ...titleProps,
                   })
@@ -105,13 +112,13 @@ const stylesheet = createStyleSheet(theme => ({
       size === 'sm'
         ? theme.spacing['1']
         : size === 'md'
-        ? theme.spacing['2']
+        ? theme.spacing['2.5']
         : theme.spacing['3'],
     paddingHorizontal:
       size === 'sm'
         ? theme.spacing['2']
         : size === 'md'
-        ? theme.spacing['3']
+        ? theme.spacing['5']
         : theme.spacing['6'],
     justifyContent: 'center',
     backgroundColor: !disabled
@@ -123,7 +130,6 @@ const stylesheet = createStyleSheet(theme => ({
       : theme.colors.disabledBackground,
     borderWidth: variant === 'outline' ? StyleSheet.hairlineWidth : 0,
     borderColor: variant === 'outline' ? color : 'transparent',
-    borderRadius: theme.roundness,
     gap: theme.spacing['2'],
   }),
   buttonIconContainer: {},

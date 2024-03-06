@@ -8,7 +8,7 @@ import {Text} from './Text';
 import {IVStackProps, VStack} from './VStack';
 
 export interface IRowItemProps extends IHStackProps {
-  children: ReactElement | ReactElement[];
+  children: ReactElement | (ReactElement | null)[];
   onPress?: () => void;
 }
 
@@ -26,10 +26,13 @@ const RowItem = ({style, children, onPress, ...rest}: IRowItemProps) => {
         bg={theme.colors.surface}
         style={[styles.container, styles.rowItemContainer, style]}
         {...rest}>
-        {Children.map(children, child =>
-          cloneElement(child, {
-            styles,
-          }),
+        {Children.map(
+          children,
+          child =>
+            child &&
+            cloneElement(child, {
+              styles,
+            }),
         )}
       </HStack>
     </Pressable>
@@ -51,7 +54,9 @@ RowItem.Content = memo(
     return (
       <VStack style={[styles?.rowItemContentContainer, style]} {...rest}>
         {typeof children === 'string' ? (
-          <Text size="md">{children}</Text>
+          <Text size="md" numberOfLines={2}>
+            {children}
+          </Text>
         ) : (
           children
         )}

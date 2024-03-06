@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
 import {Container, HStack, Stack, Text} from '@components/ui';
-import {useGetStops} from '@hooks/api';
+import {useGetRoutes} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
@@ -24,11 +24,11 @@ const Services = ({navigation}: Props) => {
   const themeName = useThemeName();
   const {styles, theme} = useStyles(stylesheet);
 
-  const {data: stops} = useGetStops();
+  const {data: routes} = useGetRoutes();
 
-  const findOnMapHandler = (type: 'stops' | 'routes') => {
-    navigation.navigate('ServiceMap', {
-      type,
+  const findOnMapHandler = (type: 'routes') => {
+    navigation.navigate('Routes', {
+      initialRoute: null,
     });
   };
 
@@ -44,17 +44,17 @@ const Services = ({navigation}: Props) => {
         <ServiceCard
           icon="📍"
           title="Find On Map"
-          subtitle="Bus Stops"
-          badge={`+${getReadableBadgeCount(stops?.length)}`}
-          onPress={() => findOnMapHandler('stops')}
+          subtitle="Bus Lines"
+          badge={`+${getReadableBadgeCount(routes?.length)}`}
+          onPress={() => findOnMapHandler('routes')}
         />
-        {/* <ServiceCard
+        <ServiceCard
           icon="💰"
           title="Find On Map"
           subtitle="Top-up"
-          badge={`+${getReadableBadgeCount(stops?.length)}`}
+          badge={`+99`}
           onPress={() => findOnMapHandler('routes')}
-        /> */}
+        />
       </HStack>
       <Stack gap={theme.spacing['4']}>
         <Text size="xl">{t('OtherFeatures')}</Text>
@@ -65,9 +65,9 @@ const Services = ({navigation}: Props) => {
 
 const stylesheet = createStyleSheet(theme => ({
   container: {
+    paddingVertical: theme.spacing['3'],
     gap: theme.spacing['5'],
   },
 }));
 
 export default Services;
-export * from './ServiceMap';

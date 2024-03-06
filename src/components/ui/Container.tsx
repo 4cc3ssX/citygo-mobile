@@ -15,6 +15,7 @@ import {createStyleSheet, useStyles} from 'react-native-unistyles';
 import {Constants} from '@constants';
 
 interface ContainerProps extends SafeAreaViewProps {
+  containerPaddingTop?: number;
   hasHeader?: boolean;
   handleKeyboard?: boolean;
   barStyle?: SystemBarStyle;
@@ -31,6 +32,7 @@ const defaultEdges: Edges = {
 
 export const Container = memo(
   ({
+    containerPaddingTop,
     hasHeader = false,
     handleKeyboard,
     barStyle,
@@ -76,7 +78,11 @@ export const Container = memo(
           style={[
             {
               backgroundColor: bg || theme.colors.background,
-              paddingTop: hasHeader ? Constants.HEADER_HEIGHT : undefined,
+              paddingTop: hasHeader
+                ? Constants.HEADER_HEIGHT +
+                  insets.top +
+                  (containerPaddingTop || 0)
+                : undefined,
             },
             style,
             styles.container,

@@ -24,6 +24,7 @@ const AppTheme = () => {
   );
   return (
     <Container
+      hasHeader
       barStyle={themeName === 'dark' ? 'light-content' : 'dark-content'}
       bg={theme.colors.surface}
       style={globalStyles.container}>

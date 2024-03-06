@@ -37,6 +37,7 @@ const Settings = ({navigation}: Props) => {
 
   return (
     <Container
+      edges={['top', 'left', 'right']}
       barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
       style={[globalStyles.container, styles.container]}>
       <Text size="3xl" family="product">
@@ -76,6 +77,7 @@ const Settings = ({navigation}: Props) => {
 
 const stylesheet = createStyleSheet(theme => ({
   container: {
+    paddingVertical: theme.spacing['3'],
     gap: theme.spacing['5'],
   },
 }));

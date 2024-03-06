@@ -5,11 +5,14 @@ import {useTranslation} from 'react-i18next';
 
 import {FindRouteValues} from '@helpers/validations';
 import AppTheme from '@screens/AppTheme';
+import ChooseFromMap from '@screens/ChooseFromMap';
 import FindRoute from '@screens/FindRoute';
 import Language from '@screens/Language';
 import {NotificationSettings} from '@screens/Notifications';
+import Routes from '@screens/Routes';
 import Search from '@screens/Search';
-import {ServiceMap} from '@screens/Services';
+import {IRoute} from '@typescript/api/routes';
+import {IStop} from '@typescript/api/stops';
 
 import {StackHeader} from './components/Header';
 import Tab from './Tab';
@@ -19,10 +22,17 @@ export type RootStackParamsList = {
   Language: undefined;
   NotificationSettings: undefined;
   AppTheme: undefined;
-  Search: undefined;
+  Search: {
+    chooseFor?: keyof FindRouteValues;
+    stop?: IStop | undefined;
+  };
   FindRoute: FindRouteValues;
-  ServiceMap: {
-    type: 'stops' | 'routes';
+  Routes: {
+    initialRoute: IRoute | null;
+  };
+  ChooseFromMap: {
+    prevRouteName: keyof RootStackParamsList;
+    prevRouteProps: any;
   };
 };
 
@@ -70,13 +80,25 @@ function Stack() {
         options={{title: t('FindRoute')}}
       />
       <RNStack.Screen
-        name="ServiceMap"
-        component={ServiceMap}
+        name="Routes"
+        component={Routes}
         options={{
-          title: t('Map'),
+          title: '',
           headerStyle: {
             backgroundColor: 'transparent',
-          },
+            maxHeight: 'auto',
+          } as any,
+        }}
+      />
+      <RNStack.Screen
+        name="ChooseFromMap"
+        component={ChooseFromMap}
+        options={{
+          title: '',
+          headerStyle: {
+            backgroundColor: 'transparent',
+            maxHeight: 'auto',
+          } as any,
         }}
       />
     </RNStack.Navigator>

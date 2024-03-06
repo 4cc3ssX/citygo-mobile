@@ -26,6 +26,7 @@ const Language = () => {
   );
   return (
     <Container
+      hasHeader
       barStyle={themeName === 'dark' ? 'light-content' : 'dark-content'}
       style={globalStyles.container}>
       <FlashList

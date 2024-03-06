@@ -23,6 +23,7 @@ export const BusLineCard = ({children, style, ...rest}: IBusLineCardProps) => {
           type="semibold"
           size="sm"
           color={theme.colors.white}
+          textAlign="center"
           numberOfLines={1}>
           {children}
         </Text>

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
+import {Dimensions, StyleSheet, useWindowDimensions} from 'react-native';
 import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetFlatList,
@@ -7,19 +7,27 @@ import BottomSheet, {
 import {Portal} from '@gorhom/portal';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
+import {useTranslation} from 'react-i18next';
 import Geolocation from 'react-native-geolocation-service';
-import MapView, {Callout, Marker, Region} from 'react-native-maps';
+import MapView, {
+  Callout,
+  Geojson,
+  LatLng,
+  Marker,
+  Region,
+} from 'react-native-maps';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
 import Color from 'color';
-import {BBox, FeatureCollection, Point} from 'geojson';
+import {BBox, FeatureCollection, LineString, Point} from 'geojson';
 import useSupercluster from 'use-supercluster';
 
 import {Icon} from '@components/icons';
 import {
   Container,
   CustomBackdrop,
+  HStack,
   IconButton,
   RowItem,
   Separator,
@@ -29,11 +37,9 @@ import {
 } from '@components/ui';
 import {defaultMapProps} from '@configs/map';
 import {Constants} from '@constants';
-import {useGetRoutes, useGetStops} from '@hooks/api';
+import {useGetRouteById, useGetRoutes, useGetStops} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
-import {TAB_HEIGHT} from '@navigations/components';
 import {RootStackParamsList} from '@navigations/Stack';
-import {RootTabParamsList} from '@navigations/Tab';
 import {useAppStore} from '@store/app';
 import {useMapStore} from '@store/map';
 import {globalStyles} from '@styles/global';
@@ -42,12 +48,14 @@ import {IRoute} from '@typescript/api/routes';
 import {IStop} from '@typescript/api/stops';
 import {boundingBoxToBbox, convertFeatureToData} from '@utils/map';
 
-type Props = NativeStackScreenProps<
-  RootTabParamsList & RootStackParamsList,
-  'Map'
->;
+type Props = NativeStackScreenProps<RootStackParamsList, 'Routes'>;
 
-const Map = ({navigation}: Props) => {
+const {height: SCREEN_HEIGHT} = Dimensions.get('window');
+
+const Routes = ({navigation, route}: Props) => {
+  const {initialRoute} = route.params;
+
+  const {t} = useTranslation();
   const insets = useSafeAreaInsets();
   const themeName = useThemeName();
   const {styles, theme} = useStyles(stylesheet);
@@ -59,40 +67,46 @@ const Map = ({navigation}: Props) => {
   const map = useMapStore();
 
   /* Query */
-  const {isFetching, data: stops} = useGetStops<
+  const {data: stops} = useGetStops<IStop[]>();
+  const {isFetching: isStopsFetching, data: stopsGeoJSON} = useGetStops<
     FeatureCollection<Point, IStop>
+  >(ResponseFormat.GEOJSON);
+  const {isFetching: isRoutesFetching, data: routes} = useGetRoutes();
+  const {data: activeRouteGeoJson, mutate: getRouteById} = useGetRouteById<
+    FeatureCollection<LineString, IRoute>
   >(ResponseFormat.GEOJSON);
 
   /* Ref */
   const mapRef = useRef<MapView>(null);
 
   /* BottomSheet */
-  const bottomSheetRef = useRef<BottomSheet>(null);
   const stopBottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['25%', '50%', '80%'], []);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ['30%', '60%', '80%'], []);
 
   /* State */
-  const [selectedStop, setSelectedStop] = useState<IStop | null>(null);
+  const [activeRoute, setActiveRoute] = useState<IRoute | null>(initialRoute);
   const [isLocating, setIsLocating] = useState(false);
   const [bounds, setBounds] = useState<BBox | null>(null);
   const [zoom, setZoom] = useState(0);
 
   /* Memo */
-  const {data: routes} = useGetRoutes();
-
-  const routesByStop = useMemo(() => {
-    if (routes && selectedStop) {
-      return routes.filter(r => r.stops.includes(selectedStop.id));
+  const activeRouteStops = useMemo<IStop[]>(() => {
+    if (activeRoute) {
+      return activeRoute?.stops.map(
+        stopId => stops?.find(stop => stop.id === stopId) as IStop,
+      );
     }
+
     return [];
-  }, [routes, selectedStop]);
+  }, [activeRoute, stops]);
 
   /* Hooks */
   const {clusters} = useSupercluster({
-    points: stops?.features || [],
+    points: stopsGeoJSON?.features || [],
     bounds: bounds || undefined,
     zoom,
-    disableRefresh: isFetching,
+    disableRefresh: isStopsFetching,
     options: {
       radius: 40,
       maxZoom: 20,
@@ -100,28 +114,6 @@ const Map = ({navigation}: Props) => {
   });
 
   /* Handlers */
-  const onPressItem = useCallback(
-    (item: IRoute) => {
-      stopBottomSheetRef.current?.close();
-
-      setTimeout(() => {
-        navigation.navigate('Routes', {
-          initialRoute: item,
-        });
-      }, 0);
-    },
-    [navigation],
-  );
-  const onPressMarkerHandler = useCallback(
-    (stop: IStop) => {
-      setSelectedStop(stop);
-
-      setTimeout(() => {
-        stopBottomSheetRef.current?.snapToIndex(1);
-      }, 0);
-    },
-    [stopBottomSheetRef],
-  );
   const handleRegionChange = useCallback(
     async (region: Region) => {
       const regionBounds = await mapRef.current!.getMapBoundaries();
@@ -171,10 +163,74 @@ const Map = ({navigation}: Props) => {
     );
   }, [handleRegionChange, map]);
 
+  const onCloseStopSheet = useCallback(() => {
+    bottomSheetRef.current?.snapToIndex(0);
+
+    setActiveRoute(null);
+  }, []);
+
+  const onPressStopItem = useCallback((stop: IStop) => {
+    stopBottomSheetRef.current?.snapToIndex(0);
+
+    // move to stop coordinate
+    const region = Constants.getDefaultMapDelta(stop.lat, stop.lng);
+
+    mapRef.current?.animateToRegion(region);
+  }, []);
+
+  const onPressItem = useCallback(
+    (selectedRoute: IRoute) => {
+      setActiveRoute(selectedRoute);
+
+      bottomSheetRef.current?.close();
+
+      mapRef.current?.fitToCoordinates(
+        selectedRoute.coordinates.map<LatLng>(coord => ({
+          latitude: coord.lat,
+          longitude: coord.lng,
+        })),
+        {
+          edgePadding: {
+            top: 20,
+            bottom: 60,
+            left: 20,
+            right: 20,
+          },
+          animated: true,
+        },
+      );
+
+      setTimeout(() => {
+        stopBottomSheetRef.current?.snapToIndex(1);
+      }, 100);
+
+      // fetch route geojson
+      getRouteById({id: selectedRoute.route_id});
+    },
+    [getRouteById],
+  );
+
   useEffect(() => {
-    onLocateMe();
+    if (initialRoute) {
+      onPressItem(initialRoute);
+    } else {
+      onLocateMe();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const backdropComponent = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <CustomBackdrop
+        {...props}
+        style={styles.backdropContainer}
+        appearsOnIndex={2}
+        disappearsOnIndex={1}
+        opacity={0.1}
+      />
+    ),
+    [styles.backdropContainer],
+  );
 
   const itemSeparatorComponent = useCallback(
     () => <Stack h={theme.spacing['2']} />,
@@ -182,75 +238,95 @@ const Map = ({navigation}: Props) => {
     [],
   );
 
-  const backdropComponent = useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <CustomBackdrop
-        {...props}
-        style={styles.backdropContainer}
-        appearsOnIndex={1}
-        disappearsOnIndex={0}
-        opacity={0.1}
-      />
-    ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
   return (
     <Container
       barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}>
-      {/* <BottomSheet
-        ref={bottomSheetRef}
-        animateOnMount
-        enableDynamicSizing
-        handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
-        backgroundStyle={[
-          globalStyles.bottomSheetContainer,
-          {backgroundColor: theme.colors.background},
-        ]}
-        containerStyle={[styles.bottomSheetContainer]}>
-        <BottomSheetView
-          style={[
-            styles.innerContainer(insets),
-            styles.bottomSheetView(insets),
-            globalStyles.bottomSheetView,
-          ]}>
-          <Button
-            size="lg"
-            icon={
-              <Ionicons
-                name="home-sharp"
-                color={theme.colors.white}
-                size={theme.spacing['6']}
-              />
-            }>
-            Get me to home
-          </Button>
-          <HStack justifyContent="space-between" alignItems="center">
-            <Text size="xl">Your recent route</Text>
-            <Link underlined={false}>Filter</Link>
-          </HStack>
-          {selectedStop && (
-            <RecentRouteCard
-              from={selectedStop}
-              to={selectedStop}
-              id={''}
-              route={[]}
-              transitSteps={[]}
-              coordinates={[]}
-            />
-          )}
-        </BottomSheetView>
-      </BottomSheet> */}
-
       <Portal>
         <BottomSheet
           ref={stopBottomSheetRef}
-          topInset={insets.top + theme.spacing['3']}
+          topInset={Constants.HEADER_HEIGHT + insets.top + theme.spacing['3']}
           index={-1}
           snapPoints={snapPoints}
           animateOnMount={false}
           enablePanDownToClose
+          onClose={onCloseStopSheet}
+          backdropComponent={backdropComponent}
+          handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
+          backgroundStyle={[
+            globalStyles.bottomSheetContainer,
+            {backgroundColor: theme.colors.background},
+          ]}
+          containerStyle={[styles.stopBottomSheetContainer]}>
+          <BottomSheetFlatList
+            showsVerticalScrollIndicator={false}
+            data={activeRouteStops}
+            ListHeaderComponent={
+              <VStack
+                pt={theme.spacing['2']}
+                pb={theme.spacing['5']}
+                gap={theme.spacing['6']}>
+                <Text family="product" size="xl">
+                  Bus Line Details
+                </Text>
+                <RowItem bg={theme.colors.surface} h={theme.spacing['18']}>
+                  <RowItem.Left h="100%" bg={activeRoute?.color}>
+                    <Text type="semibold" color="white">
+                      {activeRoute?.route_id.split('-')[0]}
+                    </Text>
+                  </RowItem.Left>
+                  <Separator h={theme.spacing['8']} direction="vertical" />
+                  <RowItem.Content>
+                    <Text size="md" numberOfLines={1}>
+                      {activeRoute?.agency_id}
+                    </Text>
+                    <Text
+                      size="xs"
+                      color={theme.colors.gray2}
+                      numberOfLines={2}>
+                      {activeRoute?.name[app.language]}
+                    </Text>
+                  </RowItem.Content>
+                </RowItem>
+                <Separator />
+              </VStack>
+            }
+            ItemSeparatorComponent={itemSeparatorComponent}
+            renderItem={({item: stop}) => {
+              return (
+                <RowItem onPress={() => onPressStopItem(stop)}>
+                  <RowItem.Left bg={theme.colors.background}>
+                    <Text size="xl" textAlign="center">
+                      📍
+                    </Text>
+                  </RowItem.Left>
+
+                  <RowItem.Content>
+                    <Text size="md">{stop.name[app.language]}</Text>
+                    <Text
+                      size="xs"
+                      color={theme.colors.gray2}
+                      numberOfLines={1}>
+                      {stop.road[app.language]}, {stop.township[app.language]}
+                    </Text>
+                  </RowItem.Content>
+                </RowItem>
+              );
+            }}
+            keyExtractor={(item, index) => `stop-sheet-${item.id}-${index}`}
+            contentContainerStyle={[
+              styles.listContainerStyle,
+              {paddingBottom: insets.bottom + theme.spacing['3']},
+            ]}
+          />
+        </BottomSheet>
+      </Portal>
+      <Portal>
+        <BottomSheet
+          ref={bottomSheetRef}
+          topInset={Constants.HEADER_HEIGHT + insets.top + theme.spacing['3']}
+          index={0}
+          snapPoints={snapPoints}
+          animateOnMount
           backdropComponent={backdropComponent}
           handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
           backgroundStyle={[
@@ -260,7 +336,17 @@ const Map = ({navigation}: Props) => {
           containerStyle={[styles.bottomSheetContainer]}>
           <BottomSheetFlatList
             showsVerticalScrollIndicator={false}
-            data={routesByStop}
+            data={routes}
+            ListHeaderComponent={
+              <HStack
+                pt={theme.spacing['2']}
+                pb={theme.spacing['5']}
+                bg={theme.colors.background}>
+                <Text family="product" size="xl">
+                  Bus Lines
+                </Text>
+              </HStack>
+            }
             ItemSeparatorComponent={itemSeparatorComponent}
             renderItem={({item}) => {
               return (
@@ -288,9 +374,9 @@ const Map = ({navigation}: Props) => {
                 </RowItem>
               );
             }}
-            keyExtractor={item => `sheet-${item.route_id}`}
+            keyExtractor={item => `sheet-item-${item.route_id}`}
             contentContainerStyle={[
-              styles.innerContainer(insets),
+              styles.listContainerStyle,
               {paddingBottom: insets.bottom + theme.spacing['3']},
             ]}
           />
@@ -327,15 +413,24 @@ const Map = ({navigation}: Props) => {
           return (
             <Marker
               key={`marker-${stop.id}`}
+              identifier={`marker-${stop.id}`}
               tracksViewChanges={false}
               coordinate={{latitude: stop.lat, longitude: stop.lng}}
               image={{uri: 'marker'}}>
-              <Callout onPress={() => onPressMarkerHandler(stop)}>
+              <Callout>
                 <Text size="xs">{stop.name[app.language]}</Text>
               </Callout>
             </Marker>
           );
         })}
+
+        {activeRoute && activeRouteGeoJson ? (
+          <Geojson
+            geojson={activeRouteGeoJson}
+            strokeColor={activeRoute.color}
+            strokeWidth={3}
+          />
+        ) : null}
       </MapView>
     </Container>
   );
@@ -348,27 +443,26 @@ const stylesheet = createStyleSheet(theme => ({
   },
   fabContainer: (insets: EdgeInsets) => ({
     position: 'absolute',
+    bottom: SCREEN_HEIGHT * 0.3,
     right: insets.right + theme.spacing['4'],
-    bottom: insets.bottom + TAB_HEIGHT + theme.spacing['10'],
+
     zIndex: 8,
   }),
   disabledButton: (color: string) => ({
     backgroundColor: Color(color).lighten(0.25).string(),
   }),
-  bottomSheetContainer: {
+  stopBottomSheetContainer: {
     zIndex: 15,
   },
-  backdropContainer: {
+  bottomSheetContainer: {
     zIndex: 12,
   },
-  innerContainer: (insets: EdgeInsets) => ({
-    paddingTop: theme.spacing['3'],
-    paddingBottom: insets.bottom + theme.spacing['3'],
+  backdropContainer: {
+    zIndex: 10,
+  },
+  listContainerStyle: {
     paddingHorizontal: theme.spacing['5'],
-  }),
-  bottomSheetView: (insets: EdgeInsets) => ({
-    paddingBottom: insets.bottom + TAB_HEIGHT + theme.spacing['3'],
-  }),
+  },
 }));
 
-export default Map;
+export default Routes;

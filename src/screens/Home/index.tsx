@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ScrollView, View} from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 
 import {useTranslation} from 'react-i18next';
+import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker} from 'react-native-maps';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
@@ -24,6 +24,7 @@ import {
   Text,
   VStack,
 } from '@components/ui';
+import {defaultMapProps} from '@configs/map';
 import {Constants} from '@constants';
 import {useGetNearestStops} from '@hooks/api';
 import {useAppContext} from '@hooks/context';
@@ -33,16 +34,11 @@ import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
 import {useMapStore} from '@store/map';
 import {globalStyles} from '@styles/global';
-import {getDelta} from '@utils/map';
 
 type Props = BottomTabScreenProps<
   RootTabParamsList & RootStackParamsList,
   'Home'
 >;
-
-Geolocation.setRNConfiguration({
-  skipPermissionRequests: true,
-});
 
 const Home = ({navigation}: Props) => {
   const {t} = useTranslation();
@@ -79,10 +75,9 @@ const Home = ({navigation}: Props) => {
         map.setUserLocation({lat: coords.latitude, lng: coords.longitude});
 
         // update last region
-        const region = getDelta(
+        const region = Constants.getDefaultMapDelta(
           coords.latitude,
           coords.longitude,
-          Constants.MAP_CAMERA_HEIGHT,
         );
 
         mapRef.current!.animateToRegion(region);
@@ -92,7 +87,8 @@ const Home = ({navigation}: Props) => {
           setIsLocating(false);
         }, 500);
       },
-      () => {
+      err => {
+        console.log(err);
         setIsLocating(false);
       },
       {
@@ -238,7 +234,7 @@ const Home = ({navigation}: Props) => {
             <RowItem
               bg={theme.colors.blueSoft1}
               style={[styles.rowItemContainer]}
-              onPress={() => navigation.navigate('Search')}>
+              onPress={() => navigation.navigate('Search', {})}>
               <RowItem.Left
                 w={theme.spacing['10']}
                 alignItems="center"
@@ -273,9 +269,8 @@ const Home = ({navigation}: Props) => {
             </RowItem>
             <MapView
               ref={mapRef}
-              showsTraffic
-              showsUserLocation
-              followsUserLocation
+              initialRegion={map.lastRegion || undefined}
+              {...defaultMapProps}
               mapType="standard"
               userInterfaceStyle={themeName}
               style={styles.mapView}>
@@ -296,6 +291,7 @@ const Home = ({navigation}: Props) => {
 
 const stylesheet = createStyleSheet(theme => ({
   container: {
+    paddingVertical: theme.spacing['3'],
     gap: theme.spacing['8'],
   },
   scrollView: (insets: EdgeInsets) => ({

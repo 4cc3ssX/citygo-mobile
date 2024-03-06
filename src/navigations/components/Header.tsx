@@ -1,5 +1,6 @@
-import React, {useCallback} from 'react';
-import {Linking} from 'react-native';
+import React, {useCallback, useMemo} from 'react';
+import {Linking, StyleProp, ViewStyle} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -13,6 +14,11 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
   const {top} = useSafeAreaInsets();
 
   const {styles, theme} = useStyles(stylesheet);
+
+  const headerStyle = useMemo(
+    () => StyleSheet.flatten(options.headerStyle as StyleProp<ViewStyle>),
+    [],
+  );
 
   /* Handlers */
   const onGoBackHandler = useCallback(async () => {
@@ -35,7 +41,7 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
 
   return (
     <HStack
-      maxH={Constants.HEADER_HEIGHT + top}
+      maxH={headerStyle?.maxHeight || Constants.HEADER_HEIGHT + top}
       pt={
         options.presentation === 'modal'
           ? theme.spacing['3']
@@ -44,7 +50,7 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
       pb={theme.spacing['3']}
       px={theme.spacing['4']}
       alignItems="center"
-      bg={theme.colors.surface}
+      bg={headerStyle?.backgroundColor || theme.colors.surface}
       style={[styles.headerContainer, options.headerStyle]}>
       {options.presentation === 'modal' ? (
         <Button size="sm" variant="clear" onPress={onGoBackHandler}>
@@ -56,8 +62,9 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
         </Button>
       ) : (
         <Button
-          size="sm"
-          variant="clear"
+          size={headerStyle?.maxHeight ? 'md' : 'sm'}
+          color="surface"
+          br={theme.radius.full}
           icon={
             <Ionicons
               name="chevron-back-outline"
@@ -65,6 +72,7 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
               color={theme.colors.text}
             />
           }
+          titleStyle={styles.buttonTitle}
           onPress={onGoBackHandler}>
           Back
         </Button>
@@ -80,8 +88,9 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
 
       {(!options.presentation || options.presentation === 'card') && (
         <Button
-          size="sm"
-          variant="clear"
+          size={headerStyle?.maxHeight ? 'md' : 'sm'}
+          color="surface"
+          br={theme.radius.full}
           icon={
             <Ionicons
               name="alert-circle-outline"
@@ -89,6 +98,7 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
               color={theme.colors.text}
             />
           }
+          titleStyle={styles.buttonTitle}
           onPress={onPressHelpHandler}>
           Help
         </Button>
@@ -103,5 +113,9 @@ const stylesheet = createStyleSheet(theme => ({
     top: 0,
     left: 0,
     right: 0,
+    zIndex: 5,
+  },
+  buttonTitle: {
+    color: theme.colors.text,
   },
 }));

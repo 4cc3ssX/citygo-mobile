@@ -1869,7 +1869,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint-community/eslint-utils@npm:^4.2.0":
+"@eslint-community/eslint-utils@npm:^4.2.0, @eslint-community/eslint-utils@npm:^4.4.0":
   version: 4.4.0
   resolution: "@eslint-community/eslint-utils@npm:4.4.0"
   dependencies:
@@ -1911,9 +1911,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gorhom/bottom-sheet@npm:^4":
-  version: 4.6.0
-  resolution: "@gorhom/bottom-sheet@npm:4.6.0"
+"@gorhom/bottom-sheet@npm:5.0.0-alpha.9":
+  version: 5.0.0-alpha.9
+  resolution: "@gorhom/bottom-sheet@npm:5.0.0-alpha.9"
   dependencies:
     "@gorhom/portal": "npm:1.0.14"
     invariant: "npm:^2.2.4"
@@ -1922,18 +1922,18 @@ __metadata:
     "@types/react-native": "*"
     react: "*"
     react-native: "*"
-    react-native-gesture-handler: ">=1.10.1"
-    react-native-reanimated: ">=2.2.0"
+    react-native-gesture-handler: ">=2.14.0"
+    react-native-reanimated: ">=3.6.0"
   peerDependenciesMeta:
     "@types/react":
       optional: true
     "@types/react-native":
       optional: true
-  checksum: 028f71e72da6268e419c33bbad9c8b9518114f26930de1e3a07ae37e39c6b4a432a2e966d6bc4c3e563351a2a10e62af48361a9720355c9af1889d8bf9730402
+  checksum: 0741e118c14e6da49d18a23915906bebd3331a7095aa54c75d8d9229d29750947cd78f506a80fc2ddf621162debd6372297fb3e7a0c81eff7e5c65986fde8b3c
   languageName: node
   linkType: hard
 
-"@gorhom/portal@npm:1.0.14":
+"@gorhom/portal@npm:1.0.14, @gorhom/portal@npm:^1.0.14":
   version: 1.0.14
   resolution: "@gorhom/portal@npm:1.0.14"
   dependencies:
@@ -2376,6 +2376,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@notifee/react-native@npm:^7.8.2":
+  version: 7.8.2
+  resolution: "@notifee/react-native@npm:7.8.2"
+  peerDependencies:
+    react-native: "*"
+  checksum: 1559caa74ccc057aa4a4a6fe15bcaf0fe0371ece045a0923c051fcef312e4c2b3e2f38e5032a15d2be327fd707492d014f2f074405123ed561ba368906413f29
+  languageName: node
+  linkType: hard
+
 "@npmcli/agent@npm:^2.0.0":
   version: 2.2.0
   resolution: "@npmcli/agent@npm:2.2.0"
@@ -2589,16 +2598,6 @@ __metadata:
   bin:
     react-native: build/bin.js
   checksum: 0117a4f212fd0eccf6e03d524c08734c1b9b1796ccabf6aacaa2d4c37313e1bd9c7c0a2d30a65eb361ed47dff52d3c728d5dedee97c36af55c3e36c14a3f6174
-  languageName: node
-  linkType: hard
-
-"@react-native-community/geolocation@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "@react-native-community/geolocation@npm:3.1.0"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: c991f94dd580ee2acd4330261f3a2f5adb116449d76941be93e3f6c3b49068c672d1e27373c3a86544050cac565c8bfabad5b030e97369d7ee275f7b720c1b34
   languageName: node
   linkType: hard
 
@@ -3017,63 +3016,63 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/eslint-plugin-query@npm:^5.17.7":
-  version: 5.17.7
-  resolution: "@tanstack/eslint-plugin-query@npm:5.17.7"
+"@tanstack/eslint-plugin-query@npm:^5.20.1":
+  version: 5.20.1
+  resolution: "@tanstack/eslint-plugin-query@npm:5.20.1"
   dependencies:
-    "@typescript-eslint/utils": "npm:^5.62.0"
+    "@typescript-eslint/utils": "npm:^6.20.0"
   peerDependencies:
     eslint: ^8.0.0
-  checksum: e0c77b05159d8e079238564ef8ae04dd45fd83212388a228ca82f6f4d9e0faaf27b52bd585e038ef01e3fba4b2f77dc903030d85d7f6fac97af5876451c0d5c4
+  checksum: 318bdc734497a126873ac92f6f61b0e2f771b4d339edbc6d9c28c00852a100aba7b424213fb639bbbc6f9768cf1b75392d5c802afa9c1e82567d65fe8d217aeb
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.17.15":
-  version: 5.17.15
-  resolution: "@tanstack/query-core@npm:5.17.15"
-  checksum: 2967963e94ff78c8bf4941efc09c81e6a6a78400322c26cf5d9528b169c3901a399752d679c3f4ab066c2a6e8df712b5a1b2e033e06fbbaa4b29f5be17032ab4
+"@tanstack/query-core@npm:5.24.7":
+  version: 5.24.7
+  resolution: "@tanstack/query-core@npm:5.24.7"
+  checksum: aafb493f16e6ed38ceee99bd0be22ac897d4a9959444c63e979d01c0e228b593fc4b094374f55204b9e8badad62c4ce3bc61daefa635fb81e6878f01acaa3536
   languageName: node
   linkType: hard
 
-"@tanstack/query-persist-client-core@npm:5.17.15":
-  version: 5.17.15
-  resolution: "@tanstack/query-persist-client-core@npm:5.17.15"
+"@tanstack/query-persist-client-core@npm:5.24.7":
+  version: 5.24.7
+  resolution: "@tanstack/query-persist-client-core@npm:5.24.7"
   dependencies:
-    "@tanstack/query-core": "npm:5.17.15"
-  checksum: 0744cb6b9ed459c4c269df4546ed4dcaafcbb8ef0352a06d49f7fa602498a0d581d1a0334f4e4616b7526bd5eb19cd9aafa438918eefb42322a8679871a36e27
+    "@tanstack/query-core": "npm:5.24.7"
+  checksum: 007bf17a27b686ea43ee46932a70ba3d37de3d8dabf19e993fa96241f67bdf46cd5d192a12bf57698fa2e08ba52a95213bcc98f3766495051a19739ba2066aff
   languageName: node
   linkType: hard
 
-"@tanstack/query-sync-storage-persister@npm:^5.17.15":
-  version: 5.17.15
-  resolution: "@tanstack/query-sync-storage-persister@npm:5.17.15"
+"@tanstack/query-sync-storage-persister@npm:^5.24.7":
+  version: 5.24.7
+  resolution: "@tanstack/query-sync-storage-persister@npm:5.24.7"
   dependencies:
-    "@tanstack/query-core": "npm:5.17.15"
-    "@tanstack/query-persist-client-core": "npm:5.17.15"
-  checksum: 49c01030d1c5aff9068dd3ce7ca0bcca344e3334ae7a43ee1cbe7cb6b9fd7056829d345e8c1cb54485ddbfe14b468301028a46b1c129d38df0ca6fdafe721b37
+    "@tanstack/query-core": "npm:5.24.7"
+    "@tanstack/query-persist-client-core": "npm:5.24.7"
+  checksum: e3200fba88844f0d10ea0f2d104004347a7abf95bf41b26c8b850b3db9fa84ca84ef122ebceace61a0ae919b743933c3fd5455238431a60cd564405fcac98686
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-persist-client@npm:^5.17.15":
-  version: 5.17.15
-  resolution: "@tanstack/react-query-persist-client@npm:5.17.15"
+"@tanstack/react-query-persist-client@npm:^5.24.7":
+  version: 5.24.7
+  resolution: "@tanstack/react-query-persist-client@npm:5.24.7"
   dependencies:
-    "@tanstack/query-persist-client-core": "npm:5.17.15"
+    "@tanstack/query-persist-client-core": "npm:5.24.7"
   peerDependencies:
-    "@tanstack/react-query": ^5.17.15
+    "@tanstack/react-query": ^5.24.7
     react: ^18.0.0
-  checksum: 41d245da1d51381966c67033bcb7154fc3425fbbbd525af38811d7ddffa2680b5c4af06256785b2d93364b97a779398a1d59856782e38de87a4a80fe567e1910
+  checksum: 646bb34e43db9d67416ea79de9d10b60ab55e89d95410cbc8d68fc50fc8a43e2ce36094d77badee5acb6873eabe8ce03c7d65c21593cbb82a72f13e60abbb957
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.17.15":
-  version: 5.17.15
-  resolution: "@tanstack/react-query@npm:5.17.15"
+"@tanstack/react-query@npm:^5.24.7":
+  version: 5.24.7
+  resolution: "@tanstack/react-query@npm:5.24.7"
   dependencies:
-    "@tanstack/query-core": "npm:5.17.15"
+    "@tanstack/query-core": "npm:5.24.7"
   peerDependencies:
     react: ^18.0.0
-  checksum: 99e590cc7feb6355541673f48d8e700ef5f8373ed3d431a31bc8836d867d1ee6b7f9cdce54a4fc0b07686e35fe13631755debe7f2f8d228f1b74f06e0aab16de
+  checksum: b1098ef977339405ed48b116a27d78d007f07815cc1f43d2ea35695e02210d0cfdbdae18b78e0f6b391b433b0e63d56cfba217ae6c46a3b50c56e6d37d2b4b6a
   languageName: node
   linkType: hard
 
@@ -3207,7 +3206,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:^7.0.9":
+"@types/json-schema@npm:^7.0.12, @types/json-schema@npm:^7.0.9":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
   checksum: a996a745e6c5d60292f36731dd41341339d4eeed8180bb09226e5c8d23759067692b1d88e5d91d72ee83dfc00d3aca8e7bd43ea120516c17922cbcb7c3e252db
@@ -3304,6 +3303,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/semver@npm:^7.5.0":
+  version: 7.5.8
+  resolution: "@types/semver@npm:7.5.8"
+  checksum: 8663ff927234d1c5fcc04b33062cb2b9fcfbe0f5f351ed26c4d1e1581657deebd506b41ff7fdf89e787e3d33ce05854bc01686379b89e9c49b564c4cfa988efa
+  languageName: node
+  linkType: hard
+
 "@types/stack-utils@npm:^2.0.0":
   version: 2.0.3
   resolution: "@types/stack-utils@npm:2.0.3"
@@ -3387,6 +3393,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/scope-manager@npm:6.21.0":
+  version: 6.21.0
+  resolution: "@typescript-eslint/scope-manager@npm:6.21.0"
+  dependencies:
+    "@typescript-eslint/types": "npm:6.21.0"
+    "@typescript-eslint/visitor-keys": "npm:6.21.0"
+  checksum: eaf868938d811cbbea33e97e44ba7050d2b6892202cea6a9622c486b85ab1cf801979edf78036179a8ba4ac26f1dfdf7fcc83a68c1ff66be0b3a8e9a9989b526
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/type-utils@npm:5.62.0":
   version: 5.62.0
   resolution: "@typescript-eslint/type-utils@npm:5.62.0"
@@ -3411,6 +3427,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/types@npm:6.21.0":
+  version: 6.21.0
+  resolution: "@typescript-eslint/types@npm:6.21.0"
+  checksum: 020631d3223bbcff8a0da3efbdf058220a8f48a3de221563996ad1dcc30d6c08dadc3f7608cc08830d21c0d565efd2db19b557b9528921c78aabb605eef2d74d
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/typescript-estree@npm:5.62.0":
   version: 5.62.0
   resolution: "@typescript-eslint/typescript-estree@npm:5.62.0"
@@ -3429,7 +3452,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/utils@npm:5.62.0, @typescript-eslint/utils@npm:^5.10.0, @typescript-eslint/utils@npm:^5.62.0":
+"@typescript-eslint/typescript-estree@npm:6.21.0":
+  version: 6.21.0
+  resolution: "@typescript-eslint/typescript-estree@npm:6.21.0"
+  dependencies:
+    "@typescript-eslint/types": "npm:6.21.0"
+    "@typescript-eslint/visitor-keys": "npm:6.21.0"
+    debug: "npm:^4.3.4"
+    globby: "npm:^11.1.0"
+    is-glob: "npm:^4.0.3"
+    minimatch: "npm:9.0.3"
+    semver: "npm:^7.5.4"
+    ts-api-utils: "npm:^1.0.1"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: af1438c60f080045ebb330155a8c9bb90db345d5069cdd5d01b67de502abb7449d6c75500519df829f913a6b3f490ade3e8215279b6bdc63d0fb0ae61034df5f
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/utils@npm:5.62.0, @typescript-eslint/utils@npm:^5.10.0":
   version: 5.62.0
   resolution: "@typescript-eslint/utils@npm:5.62.0"
   dependencies:
@@ -3447,6 +3489,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/utils@npm:^6.20.0":
+  version: 6.21.0
+  resolution: "@typescript-eslint/utils@npm:6.21.0"
+  dependencies:
+    "@eslint-community/eslint-utils": "npm:^4.4.0"
+    "@types/json-schema": "npm:^7.0.12"
+    "@types/semver": "npm:^7.5.0"
+    "@typescript-eslint/scope-manager": "npm:6.21.0"
+    "@typescript-eslint/types": "npm:6.21.0"
+    "@typescript-eslint/typescript-estree": "npm:6.21.0"
+    semver: "npm:^7.5.4"
+  peerDependencies:
+    eslint: ^7.0.0 || ^8.0.0
+  checksum: ab2df3833b2582d4e5467a484d08942b4f2f7208f8e09d67de510008eb8001a9b7460f2f9ba11c12086fd3cdcac0c626761c7995c2c6b5657d5fa6b82030a32d
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/visitor-keys@npm:5.62.0":
   version: 5.62.0
   resolution: "@typescript-eslint/visitor-keys@npm:5.62.0"
@@ -3454,6 +3513,16 @@ __metadata:
     "@typescript-eslint/types": "npm:5.62.0"
     eslint-visitor-keys: "npm:^3.3.0"
   checksum: 7c3b8e4148e9b94d9b7162a596a1260d7a3efc4e65199693b8025c71c4652b8042501c0bc9f57654c1e2943c26da98c0f77884a746c6ae81389fcb0b513d995d
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/visitor-keys@npm:6.21.0":
+  version: 6.21.0
+  resolution: "@typescript-eslint/visitor-keys@npm:6.21.0"
+  dependencies:
+    "@typescript-eslint/types": "npm:6.21.0"
+    eslint-visitor-keys: "npm:^3.4.1"
+  checksum: 7395f69739cfa1cb83c1fb2fad30afa2a814756367302fb4facd5893eff66abc807e8d8f63eba94ed3b0fe0c1c996ac9a1680bcbf0f83717acedc3f2bb724fbf
   languageName: node
   linkType: hard
 
@@ -4268,10 +4337,11 @@ __metadata:
     "@baronha/ting": "npm:^1.1.0"
     "@commitlint/cli": "npm:^18.4.4"
     "@commitlint/config-conventional": "npm:^18.4.4"
-    "@gorhom/bottom-sheet": "npm:^4"
+    "@gorhom/bottom-sheet": "npm:5.0.0-alpha.9"
+    "@gorhom/portal": "npm:^1.0.14"
     "@hookform/resolvers": "npm:^3.3.4"
+    "@notifee/react-native": "npm:^7.8.2"
     "@react-native-community/blur": "npm:^4.3.2"
-    "@react-native-community/geolocation": "npm:^3.1.0"
     "@react-native-community/netinfo": "npm:^11.2.1"
     "@react-native/babel-preset": "npm:0.73.21"
     "@react-native/eslint-config": "npm:0.73.2"
@@ -4283,10 +4353,10 @@ __metadata:
     "@react-navigation/native-stack": "npm:^6.9.18"
     "@shopify/flash-list": "npm:^1.6.3"
     "@sigmacomputing/babel-plugin-lodash": "npm:^3.3.5"
-    "@tanstack/eslint-plugin-query": "npm:^5.17.7"
-    "@tanstack/query-sync-storage-persister": "npm:^5.17.15"
-    "@tanstack/react-query": "npm:^5.17.15"
-    "@tanstack/react-query-persist-client": "npm:^5.17.15"
+    "@tanstack/eslint-plugin-query": "npm:^5.20.1"
+    "@tanstack/query-sync-storage-persister": "npm:^5.24.7"
+    "@tanstack/react-query": "npm:^5.24.7"
+    "@tanstack/react-query-persist-client": "npm:^5.24.7"
     "@types/axios": "npm:^0.14.0"
     "@types/color": "npm:^3.0.6"
     "@types/geojson": "npm:^7946.0.14"
@@ -4316,6 +4386,7 @@ __metadata:
     react-native: "npm:0.73.5"
     react-native-avoid-softinput: "npm:^5.0.0"
     react-native-bars: "npm:^2.4.3"
+    react-native-geolocation-service: "npm:^5.3.1"
     react-native-gesture-handler: "npm:^2.14.0"
     react-native-inappbrowser-reborn: "npm:^3.7.0"
     react-native-linear-gradient: "npm:^2.8.3"
@@ -8231,6 +8302,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:9.0.3, minimatch@npm:^9.0.1":
+  version: 9.0.3
+  resolution: "minimatch@npm:9.0.3"
+  dependencies:
+    brace-expansion: "npm:^2.0.1"
+  checksum: 85f407dcd38ac3e180f425e86553911d101455ca3ad5544d6a7cec16286657e4f8a9aa6695803025c55e31e35a91a2252b5dc8e7d527211278b8b65b4dbd5eac
+  languageName: node
+  linkType: hard
+
 "minimatch@npm:^3.0.2, minimatch@npm:^3.0.4, minimatch@npm:^3.0.5, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
   version: 3.1.2
   resolution: "minimatch@npm:3.1.2"
@@ -8246,15 +8326,6 @@ __metadata:
   dependencies:
     brace-expansion: "npm:^2.0.1"
   checksum: 3defdfd230914f22a8da203747c42ee3c405c39d4d37ffda284dac5e45b7e1f6c49aa8be606509002898e73091ff2a3bbfc59c2c6c71d4660609f63aa92f98e3
-  languageName: node
-  linkType: hard
-
-"minimatch@npm:^9.0.1":
-  version: 9.0.3
-  resolution: "minimatch@npm:9.0.3"
-  dependencies:
-    brace-expansion: "npm:^2.0.1"
-  checksum: 85f407dcd38ac3e180f425e86553911d101455ca3ad5544d6a7cec16286657e4f8a9aa6695803025c55e31e35a91a2252b5dc8e7d527211278b8b65b4dbd5eac
   languageName: node
   linkType: hard
 
@@ -9223,6 +9294,13 @@ __metadata:
     react: ">=18.1.0"
     react-native: ">=0.70.0"
   checksum: 9f98a247c66582787c99cb108906320fe94fb1308d9cfbe9c8e18f19124c5fe4b2af023906592d5c440ec3bd6060d565a25acf776af1ed53fb26339962eb6f4e
+  languageName: node
+  linkType: hard
+
+"react-native-geolocation-service@npm:^5.3.1":
+  version: 5.3.1
+  resolution: "react-native-geolocation-service@npm:5.3.1"
+  checksum: 54cbd8b36dcfcbc3d7a6303766d07c944e634cb40ff1f353c3b965f07bfe2d39a3514e05a48e5008d5d2529dde3ef0e6f8bc8ed1f729988fe3497eba29635c90
   languageName: node
   linkType: hard
 
@@ -10668,6 +10746,15 @@ __metadata:
   version: 3.0.1
   resolution: "trim-newlines@npm:3.0.1"
   checksum: 03cfefde6c59ff57138412b8c6be922ecc5aec30694d784f2a65ef8dcbd47faef580b7de0c949345abdc56ec4b4abf64dd1e5aea619b200316e471a3dd5bf1f6
+  languageName: node
+  linkType: hard
+
+"ts-api-utils@npm:^1.0.1":
+  version: 1.2.1
+  resolution: "ts-api-utils@npm:1.2.1"
+  peerDependencies:
+    typescript: ">=4.2.0"
+  checksum: 8ddb493e7ae581d3f57a2e469142feb60b420d4ad8366ab969fe8e36531f8f301f370676b47e8d97f28b5f5fd10d6f2d55f656943a8546ef95e35ce5cf117754
   languageName: node
   linkType: hard
 

@@ -18,7 +18,7 @@ export const useAppStore = create(
     set => ({
       theme: 'light',
       language: 'en',
-      speedLimit: 48,
+      speedLimit: 30,
       setTheme: (theme: IAppTheme) => set({theme}),
       setLanguage: (language: supportedLng) => set({language}),
       setSpeedLimit: (speedLimit: number) => set({speedLimit}),

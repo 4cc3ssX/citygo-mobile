@@ -7,12 +7,17 @@ import {Platform, StatusBar, useColorScheme} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 
 import {useTranslation} from 'react-i18next';
+import {enableLatestRenderer} from 'react-native-maps';
+import {enableScreens} from 'react-native-screens';
 import {UnistylesRuntime} from 'react-native-unistyles';
 
 import {AppContextProvider} from '@hooks/context';
 import Stack from '@navigations/Stack';
 import {useAppStore} from '@store/app';
 import {isSystemTheme} from '@utils/theme';
+
+enableScreens(true);
+enableLatestRenderer();
 
 function Main() {
   const {

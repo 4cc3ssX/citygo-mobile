@@ -3,16 +3,17 @@ import {FlatList} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {useTranslation} from 'react-i18next';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
-import {Container, HStack, Stack, Text} from '@components/ui';
+import {Icon} from '@components/icons';
+import {Container, HStack, Input, Stack, Text, VStack} from '@components/ui';
 import {useFindRoutes} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
 import {globalStyles} from '@styles/global';
 
 import {RouteCard} from './components/RouteCard';
-import {RouteInfoCard} from './components/RouteInfoCard';
 
 type Props = NativeStackScreenProps<RootStackParamsList, 'FindRoute'>;
 
@@ -20,6 +21,7 @@ const FindRoute = ({navigation, route}: Props) => {
   const values = route.params;
 
   const {t} = useTranslation();
+  const insets = useSafeAreaInsets();
   const themeName = useThemeName();
   const {styles, theme} = useStyles(stylesheet);
 
@@ -43,9 +45,24 @@ const FindRoute = ({navigation, route}: Props) => {
 
   return (
     <Container
+      hasHeader
+      containerPaddingTop={theme.spacing['3']}
       barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
       style={[globalStyles.container, styles.container]}>
-      <RouteInfoCard mb={theme.spacing['3']} {...values} />
+      <VStack gap={theme.spacing['2.5']}>
+        <Input
+          editable={false}
+          value={values.from.name}
+          h={theme.spacing['16']}
+          leftElement={<Icon name="gps" color={theme.colors.gray5} />}
+        />
+        <Input
+          editable={false}
+          value={values.to.name}
+          h={theme.spacing['16']}
+          leftElement={<Icon name="pin" color={theme.colors.gray5} />}
+        />
+      </VStack>
       <HStack
         mt={theme.spacing['2']}
         mb={theme.spacing['1']}
