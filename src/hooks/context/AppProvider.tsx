@@ -13,6 +13,7 @@ import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query';
 import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client';
 
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {KeyboardProvider} from 'react-native-keyboard-controller';
 import {
   initialWindowMetrics,
   SafeAreaProvider,
@@ -75,17 +76,19 @@ export const AppContextProvider = ({children}: PropsWithChildren) => {
   return (
     <AppContext.Provider value={{isLocationEnabled, requestPermissions}}>
       <GestureHandlerRootView style={globalStyles.flex}>
-        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <PortalProvider>
-            <BottomSheetModalProvider>
-              <PersistQueryClientProvider
-                client={queryClient}
-                persistOptions={{persister: storagePersister}}>
-                {children}
-              </PersistQueryClientProvider>
-            </BottomSheetModalProvider>
-          </PortalProvider>
-        </SafeAreaProvider>
+        <KeyboardProvider>
+          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+            <PortalProvider>
+              <BottomSheetModalProvider>
+                <PersistQueryClientProvider
+                  client={queryClient}
+                  persistOptions={{persister: storagePersister}}>
+                  {children}
+                </PersistQueryClientProvider>
+              </BottomSheetModalProvider>
+            </PortalProvider>
+          </SafeAreaProvider>
+        </KeyboardProvider>
       </GestureHandlerRootView>
     </AppContext.Provider>
   );

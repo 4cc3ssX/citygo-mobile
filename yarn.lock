@@ -4384,11 +4384,11 @@ __metadata:
     react-hook-form: "npm:^7.50.1"
     react-i18next: "npm:^14.0.0"
     react-native: "npm:0.73.5"
-    react-native-avoid-softinput: "npm:^5.0.0"
     react-native-bars: "npm:^2.4.3"
     react-native-geolocation-service: "npm:^5.3.1"
     react-native-gesture-handler: "npm:^2.14.0"
     react-native-inappbrowser-reborn: "npm:^3.7.0"
+    react-native-keyboard-controller: "npm:^1.11.2"
     react-native-linear-gradient: "npm:^2.8.3"
     react-native-maps: "npm:^1.10.3"
     react-native-mmkv: "npm:^2.11.0"
@@ -9277,16 +9277,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-avoid-softinput@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "react-native-avoid-softinput@npm:5.0.0"
-  peerDependencies:
-    react: ">=18.2.0"
-    react-native: ">=0.71.0"
-  checksum: 004f4dd7ee47c360502cc7d7c8daabe8e8ceb1452927fb4887fdc9ea14a612bc8875325ffa5848c508a99a722c6318427ccb36ef1319d11ebfe88af0ffd47440
-  languageName: node
-  linkType: hard
-
 "react-native-bars@npm:^2.4.3":
   version: 2.4.3
   resolution: "react-native-bars@npm:2.4.3"
@@ -9329,6 +9319,17 @@ __metadata:
   peerDependencies:
     react-native: ">=0.56"
   checksum: b14d564925eec2c95fc6f8931b68f9ae7c418b5ccad2494748282ee9f7460f7094eec3c6e3a6304062124277624c0f6f647f41a7950ab263b7ebb7c6b0d50d4d
+  languageName: node
+  linkType: hard
+
+"react-native-keyboard-controller@npm:^1.11.2":
+  version: 1.11.2
+  resolution: "react-native-keyboard-controller@npm:1.11.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-reanimated: ">=2.3.0"
+  checksum: 50e102938be0e66253a5a62beccb3d2ceccb04b42f2c4d5ab0dcdb4cd39cf5226741d22a178bc1ff240d9405a4c2b4d5fcb95a6bff27eb0502dbd1adf5b120b7
   languageName: node
   linkType: hard
 

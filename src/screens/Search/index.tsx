@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {FlatList, InputAccessoryView, TextInput, View} from 'react-native';
+import {FlatList, TextInput, View} from 'react-native';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
-import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -19,6 +19,7 @@ import {
   FContainer,
   IconButton,
   Input,
+  InputAccessoryView,
   RowItem,
   Separator,
   Text,
@@ -205,7 +206,7 @@ const Search = ({navigation, route}: Props) => {
           {t('ChooseLocationOnMap')}
         </Button>
       </InputAccessoryView>
-      <FContainer style={styles.findRouteContainer(insets)}>
+      <FContainer pb={theme.spacing['2.5']} px={theme.spacing['6']}>
         <Button
           disabled={!isValid}
           size="lg"
@@ -233,9 +234,7 @@ const Search = ({navigation, route}: Props) => {
           <Controller
             control={control}
             render={({field: {value}}) => {
-              const selectedStop = stops?.find(
-                stop => stop.id === value?.preferId,
-              );
+              const selectedStop = stops?.find(st => st.id === value?.preferId);
 
               return (
                 <Input
@@ -255,9 +254,7 @@ const Search = ({navigation, route}: Props) => {
           <Controller
             control={control}
             render={({field: {value}}) => {
-              const selectedStop = stops?.find(
-                stop => stop.id === value?.preferId,
-              );
+              const selectedStop = stops?.find(st => st.id === value?.preferId);
 
               return (
                 <Input
@@ -317,10 +314,7 @@ const stylesheet = createStyleSheet(theme => ({
     alignItems: 'center',
     zIndex: 10,
   },
-  findRouteContainer: (insets: EdgeInsets) => ({
-    paddingBottom: insets.bottom + theme.spacing['3.5'],
-    paddingHorizontal: theme.spacing['6'],
-  }),
+
   listContainer: (bottom: number) => ({
     flexGrow: 1,
     paddingBottom: bottom + theme.spacing['4'],

@@ -1,7 +1,6 @@
-import React, {memo, useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import React, {memo} from 'react';
+import {StatusBar, StyleSheet} from 'react-native';
 
-import {AvoidSoftInput} from 'react-native-avoid-softinput';
 import {NavigationBar, SystemBarStyle} from 'react-native-bars';
 import {
   Edge,
@@ -10,7 +9,7 @@ import {
   SafeAreaViewProps,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import {createStyleSheet, useStyles} from 'react-native-unistyles';
+import {useStyles} from 'react-native-unistyles';
 
 import {Constants} from '@constants';
 
@@ -43,18 +42,7 @@ export const Container = memo(
     ...props
   }: ContainerProps) => {
     const insets = useSafeAreaInsets();
-    const {styles, theme} = useStyles(stylesheet);
-
-    useEffect(() => {
-      if (handleKeyboard) {
-        AvoidSoftInput.setShouldMimicIOSBehavior(true);
-        AvoidSoftInput.setEnabled(true);
-      }
-      return () => {
-        AvoidSoftInput.setShouldMimicIOSBehavior(false);
-        AvoidSoftInput.setEnabled(false);
-      };
-    }, [handleKeyboard]);
+    const {theme} = useStyles();
 
     return (
       <>
@@ -93,8 +81,8 @@ export const Container = memo(
   },
 );
 
-const stylesheet = createStyleSheet(theme => ({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-}));
+});

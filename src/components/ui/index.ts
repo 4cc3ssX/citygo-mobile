@@ -16,3 +16,4 @@ export * from './Input';
 export * from './Separator';
 export * from './EmptyList';
 export * from './CustomBackdrop';
+export * from './InputAccessoryView';
