@@ -3,6 +3,7 @@ import {FlatList, TextInput, View} from 'react-native';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
+import ContentLoader, {Rect} from 'react-content-loader/native';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -47,6 +48,8 @@ const fuseOptions: IFuseOptions<IStop> = {
   ],
 };
 
+const MAX_RESULT = 30;
+
 const chooseOnMapButtonNativeID = 'choose-location-on-map';
 
 const Search = ({navigation, route}: Props) => {
@@ -63,7 +66,7 @@ const Search = ({navigation, route}: Props) => {
   const [searchStops, setSearchStops] = useState<IStop[]>([]);
 
   /* Query */
-  const {data: stops} = useGetStops();
+  const {isFetching: isStopsFetching, data: stops} = useGetStops();
 
   const fuse = useMemo(() => new Fuse(stops || [], fuseOptions), [stops]);
 
@@ -148,11 +151,9 @@ const Search = ({navigation, route}: Props) => {
     (value: string) => {
       const dest = destRef.current;
       if (value) {
-        const fuseResult = fuse.search(value);
+        const fuseResult = fuse.search(value, {limit: MAX_RESULT});
 
-        const filteredStops = fuseResult
-          .slice(0, 20)
-          .map(result => result.item);
+        const filteredStops = fuseResult.map(result => result.item);
 
         setSearchStops(filteredStops);
       } else {
@@ -166,7 +167,7 @@ const Search = ({navigation, route}: Props) => {
   /* Effects */
   useEffect(() => {
     if (stops) {
-      setSearchStops(stops.slice(0, 20));
+      setSearchStops(stops.slice(0, MAX_RESULT));
     }
   }, [stops]);
 
@@ -185,9 +186,40 @@ const Search = ({navigation, route}: Props) => {
   );
 
   const listEmptyComponent = useCallback(() => {
-    return <EmptyList mb={theme.spacing['10']} title="No stops found" />;
+    if (!isStopsFetching && searchStops.length === 0) {
+      return <EmptyList mb={theme.spacing['10']} title="No stops found" />;
+    }
+
+    return (
+      <ContentLoader
+        speed={2}
+        width="100%"
+        height={600}
+        viewBox="0 0 300 600"
+        preserveAspectRatio="none"
+        backgroundColor={theme.colors.background}
+        foregroundColor={theme.colors.gray4}>
+        {Array(6)
+          .fill(0)
+          .map((_value, index) => {
+            const y = (theme.spacing['15'] + theme.spacing['2.5']) * index;
+
+            return (
+              <Rect
+                key={`content-loader-${index}`}
+                x="0"
+                y={`${y}`}
+                rx={`${theme.roundness}`}
+                ry={`${theme.roundness}`}
+                width="100%"
+                height={theme.spacing['14']}
+              />
+            );
+          })}
+      </ContentLoader>
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isStopsFetching, searchStops, theme.colors.background]);
 
   return (
     <Container
@@ -281,7 +313,7 @@ const Search = ({navigation, route}: Props) => {
         ItemSeparatorComponent={itemSeparatorComponent}
         ListEmptyComponent={listEmptyComponent}
         renderItem={({item}) => (
-          <RowItem onPress={() => onSelectStop(item)}>
+          <RowItem h={theme.spacing['15']} onPress={() => onSelectStop(item)}>
             <RowItem.Left bg={theme.colors.background}>
               <Text size="xl" textAlign="center">
                 📍

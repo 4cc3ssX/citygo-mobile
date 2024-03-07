@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {memo, useMemo} from 'react';
 import {Pressable, View} from 'react-native';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 
@@ -20,7 +20,6 @@ export interface ITabItemProps {
   index: number;
   activeIndex: number;
   tabCount: number;
-  isActive: boolean;
   icon?: (props: {
     focused: boolean;
     color: string;
@@ -45,253 +44,264 @@ const TAB_RAIDUS = MIN_TAB_SIZE / 2;
 const SEPARATOR_WIDTH = MIN_TAB_SIZE / 2;
 const SEPARATOR_HEIGHT = 8;
 
-const TabItem = ({
-  isActive,
-  index,
-  activeIndex,
-  tabCount,
-  icon,
-  label,
-  activeTintColor,
-  inactiveTintColor,
-  activeBackgroundColor,
-  inactiveBackgroundColor,
-  containerBackgroundColor,
-  onPress,
-}: ITabItemProps) => {
-  /* Boder Radius States */
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const isFirstItem = useMemo(() => index === 0, []);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const isLastItem = useMemo(() => index === tabCount - 1, []);
-
-  const isNextItem = useMemo(
-    () => index === activeIndex + 1,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activeIndex],
-  );
-  const isPrevItem = useMemo(
-    () => index === activeIndex - 1,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activeIndex],
-  );
-
-  /* Derived Values */
-  const labelPaddingDerivedValue = useDerivedValue(() => {
-    return withTiming(isActive ? spacing['2.5'] : 0, {
-      ...defaultTimingConfig,
-      duration: 400,
-    });
-  }, [isActive]);
-
-  const labelOpacityDerivedValue = useDerivedValue(() => {
-    return withTiming(isActive ? 1 : 0, {
-      ...defaultTimingConfig,
-      duration: isActive ? 800 : 200,
-    });
-  }, [isActive]);
-
-  const iconMarginDerivedValue = useDerivedValue(() => {
-    return withTiming(isActive ? spacing['5'] : 0, {
-      ...defaultTimingConfig,
-      duration: 400,
-    });
-  }, [isActive]);
-
-  const iconContainerWidthDerivedValue = useDerivedValue(() => {
-    return withTiming(
-      isActive ? MIN_TAB_SIZE - spacing['8'] : MIN_TAB_SIZE - spacing['5'],
-      defaultTimingConfig,
+const TabItem = memo(
+  ({
+    index,
+    activeIndex,
+    tabCount,
+    icon,
+    label,
+    activeTintColor,
+    inactiveTintColor,
+    activeBackgroundColor,
+    inactiveBackgroundColor,
+    containerBackgroundColor,
+    onPress,
+  }: ITabItemProps) => {
+    /* Boder Radius States */
+    const isActive = useMemo(
+      () => index === activeIndex,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [activeIndex],
     );
-  }, [isActive]);
 
-  const tabWidthDerivedValue = useDerivedValue(() => {
-    return withSpring(
-      isActive ? MAX_TAB_SIZE : MIN_TAB_SIZE,
-      defaultSpringConfig,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const isFirstItem = useMemo(() => index === 0, []);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const isLastItem = useMemo(() => index === tabCount - 1, []);
+
+    const isNextItem = useMemo(
+      () => index === activeIndex + 1,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [activeIndex],
     );
-  }, [isActive]);
+    const isPrevItem = useMemo(
+      () => index === activeIndex - 1,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [activeIndex],
+    );
 
-  const tabBackgroundDerivedValue = useDerivedValue(() => {
-    return withTiming(isActive ? 1 : 0, {
-      ...defaultTimingConfig,
-      duration: 500,
+    /* Derived Values */
+    const labelPaddingDerivedValue = useDerivedValue(() => {
+      return withTiming(isActive ? spacing['2.5'] : 0, {
+        ...defaultTimingConfig,
+        duration: 400,
+      });
+    }, [isActive]);
+
+    const labelOpacityDerivedValue = useDerivedValue(() => {
+      return withTiming(isActive ? 1 : 0, {
+        ...defaultTimingConfig,
+        duration: isActive ? 800 : 200,
+      });
+    }, [isActive]);
+
+    const iconMarginDerivedValue = useDerivedValue(() => {
+      return withTiming(isActive ? spacing['5'] : 0, {
+        ...defaultTimingConfig,
+        duration: 400,
+      });
+    }, [isActive]);
+
+    const iconContainerWidthDerivedValue = useDerivedValue(() => {
+      return withTiming(
+        isActive ? MIN_TAB_SIZE - spacing['8'] : MIN_TAB_SIZE - spacing['5'],
+        defaultTimingConfig,
+      );
+    }, [isActive]);
+
+    const tabWidthDerivedValue = useDerivedValue(() => {
+      return withSpring(
+        isActive ? MAX_TAB_SIZE : MIN_TAB_SIZE,
+        defaultSpringConfig,
+      );
+    }, [isActive]);
+
+    const tabBackgroundDerivedValue = useDerivedValue(() => {
+      return withTiming(isActive ? 1 : 0, {
+        ...defaultTimingConfig,
+        duration: 500,
+      });
+    }, [isActive]);
+
+    const separatorHeightDerivedValue = useDerivedValue(() => {
+      const isSelected = isActive || isNextItem || isPrevItem;
+      return withTiming(isSelected ? SEPARATOR_HEIGHT : TAB_HEIGHT * 0.7, {
+        ...defaultTimingConfig,
+        duration: isSelected ? 300 : 100,
+      });
+    }, [isActive, isNextItem, isPrevItem]);
+
+    const itemMarginRightDerivedValue = useDerivedValue(() => {
+      const isSelected =
+        isActive || isPrevItem || (isLastItem && activeIndex === tabCount - 1);
+      return withTiming(isSelected ? 6 : 0, {
+        ...defaultTimingConfig,
+        duration: isSelected ? 400 : 50,
+      });
+    }, [isActive, isNextItem, isPrevItem]);
+
+    /* Animated Styles */
+    const labelContainerStyle = useAnimatedStyle(() => {
+      return {
+        opacity: labelOpacityDerivedValue.value,
+      };
     });
-  }, [isActive]);
 
-  const separatorHeightDerivedValue = useDerivedValue(() => {
-    const isSelected = isActive || isNextItem || isPrevItem;
-    return withTiming(isSelected ? SEPARATOR_HEIGHT : TAB_HEIGHT * 0.7, {
-      ...defaultTimingConfig,
-      duration: isSelected ? 300 : 100,
+    const iconContainerStyle = useAnimatedStyle(() => {
+      return {
+        width: iconContainerWidthDerivedValue.value,
+        marginLeft: iconMarginDerivedValue.value,
+      };
     });
-  }, [isActive, isNextItem, isPrevItem]);
 
-  const itemMarginRightDerivedValue = useDerivedValue(() => {
-    const isSelected =
-      isActive || isPrevItem || (isLastItem && activeIndex === tabCount - 1);
-    return withTiming(isSelected ? 6 : 0, {
-      ...defaultTimingConfig,
-      duration: isSelected ? 400 : 50,
+    const tabStyle = useAnimatedStyle(() => {
+      return {
+        width: tabWidthDerivedValue.value,
+        marginRight: itemMarginRightDerivedValue.value,
+        borderTopLeftRadius:
+          isActive || isFirstItem || isNextItem ? TAB_RAIDUS : 0,
+
+        borderBottomLeftRadius:
+          isActive || isFirstItem || isNextItem ? TAB_RAIDUS : 0,
+        borderTopRightRadius:
+          isActive || isLastItem || isPrevItem ? TAB_RAIDUS : 0,
+        borderBottomRightRadius:
+          isActive || isLastItem || isPrevItem ? TAB_RAIDUS : 0,
+      };
     });
-  }, [isActive, isNextItem, isPrevItem]);
 
-  /* Animated Styles */
-  const labelContainerStyle = useAnimatedStyle(() => {
-    return {
-      opacity: labelOpacityDerivedValue.value,
-    };
-  });
+    const tabBackgroundStyle = useAnimatedStyle(() => {
+      return {
+        backgroundColor: interpolateColor(
+          tabBackgroundDerivedValue.value,
+          [0, 1],
+          [inactiveBackgroundColor, activeBackgroundColor],
+        ),
+        paddingRight: labelPaddingDerivedValue.value,
+      };
+    });
 
-  const iconContainerStyle = useAnimatedStyle(() => {
-    return {
-      width: iconContainerWidthDerivedValue.value,
-      marginLeft: iconMarginDerivedValue.value,
-    };
-  });
+    const itemSeparatorStyle = useAnimatedStyle(() => {
+      return {
+        height: separatorHeightDerivedValue.value,
+      };
+    }, []);
 
-  const tabStyle = useAnimatedStyle(() => {
-    return {
-      width: tabWidthDerivedValue.value,
-      marginRight: itemMarginRightDerivedValue.value,
-      borderTopLeftRadius:
-        isActive || isFirstItem || isNextItem ? TAB_RAIDUS : 0,
-
-      borderBottomLeftRadius:
-        isActive || isFirstItem || isNextItem ? TAB_RAIDUS : 0,
-      borderTopRightRadius:
-        isActive || isLastItem || isPrevItem ? TAB_RAIDUS : 0,
-      borderBottomRightRadius:
-        isActive || isLastItem || isPrevItem ? TAB_RAIDUS : 0,
-    };
-  });
-
-  const tabBackgroundStyle = useAnimatedStyle(() => {
-    return {
-      backgroundColor: interpolateColor(
-        tabBackgroundDerivedValue.value,
-        [0, 1],
-        [inactiveBackgroundColor, activeBackgroundColor],
-      ),
-      paddingRight: labelPaddingDerivedValue.value,
-    };
-  });
-
-  const itemSeparatorStyle = useAnimatedStyle(() => {
-    return {
-      height: separatorHeightDerivedValue.value,
-    };
-  }, []);
-
-  return (
-    <Pressable onPress={onPress}>
-      <Animated.View
-        style={[
-          styles.tabItemOuterContianer,
-          {backgroundColor: containerBackgroundColor},
-          tabStyle,
-        ]}>
+    return (
+      <Pressable onPress={onPress}>
         <Animated.View
-          style={[styles.tabItemInnerContainer, tabBackgroundStyle]}>
-          <Animated.View style={[styles.iconContainer, iconContainerStyle]}>
-            {typeof icon === 'function' &&
-              icon({
-                focused: isActive,
-                color: (isActive
-                  ? activeTintColor
-                  : inactiveTintColor) as string,
-                size: 22,
-              })}
-          </Animated.View>
-          <Animated.View style={[styles.labelContainer, labelContainerStyle]}>
-            {typeof label === 'string' && (
-              <Text
-                color={isActive ? activeTintColor : inactiveTintColor}
-                size="md"
-                textAlign="center"
-                numberOfLines={1}>
-                {label}
-              </Text>
-            )}
+          style={[
+            styles.tabItemOuterContianer,
+            {backgroundColor: containerBackgroundColor},
+            tabStyle,
+          ]}>
+          <Animated.View
+            style={[styles.tabItemInnerContainer, tabBackgroundStyle]}>
+            <Animated.View style={[styles.iconContainer, iconContainerStyle]}>
+              {typeof icon === 'function' &&
+                icon({
+                  focused: isActive,
+                  color: (isActive
+                    ? activeTintColor
+                    : inactiveTintColor) as string,
+                  size: 22,
+                })}
+            </Animated.View>
+            <Animated.View style={[styles.labelContainer, labelContainerStyle]}>
+              {typeof label === 'string' && (
+                <Text
+                  color={isActive ? activeTintColor : inactiveTintColor}
+                  size="md"
+                  textAlign="center"
+                  numberOfLines={1}>
+                  {label}
+                </Text>
+              )}
+            </Animated.View>
           </Animated.View>
         </Animated.View>
-      </Animated.View>
-      {!isLastItem && (
-        <View style={styles.itemSeparatorContainer}>
-          <Animated.View
-            style={[
-              styles.itemSeparator,
-              {backgroundColor: containerBackgroundColor},
-              itemSeparatorStyle,
-            ]}
-          />
-        </View>
-      )}
-    </Pressable>
-  );
-};
+        {!isLastItem && (
+          <View style={styles.itemSeparatorContainer}>
+            <Animated.View
+              style={[
+                styles.itemSeparator,
+                {backgroundColor: containerBackgroundColor},
+                itemSeparatorStyle,
+              ]}
+            />
+          </View>
+        )}
+      </Pressable>
+    );
+  },
+);
 
-const CustomTab = ({
-  theme,
-  navigation,
-  state,
-  descriptors,
-  insets,
-}: BottomTabBarProps & {theme: UnistylesTheme}) => {
-  return (
-    <HStack
-      alignItems="center"
-      justifyContent="center"
-      style={[styles.container, {bottom: insets.bottom + theme.spacing['2']}]}>
-      {state.routes.map((route, index) => {
-        const {options} = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
-            : route.name;
+const CustomTab = memo(
+  ({
+    theme,
+    navigation,
+    state,
+    descriptors,
+    insets,
+  }: BottomTabBarProps & {theme: UnistylesTheme}) => {
+    return (
+      <HStack
+        alignItems="center"
+        justifyContent="center"
+        style={[
+          styles.container,
+          {bottom: insets.bottom + theme.spacing['2']},
+        ]}>
+        {state.routes.map((route, index) => {
+          const {options} = descriptors[route.key];
+          const label =
+            options.tabBarLabel !== undefined
+              ? options.tabBarLabel
+              : options.title !== undefined
+              ? options.title
+              : route.name;
 
-        const isFocused = state.index === index;
+          const isFocused = state.index === index;
 
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-            canPreventDefault: true,
-          });
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
 
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
-        };
-
-        return (
-          <TabItem
-            key={`bottom-tab-${index}`}
-            index={index}
-            activeIndex={state.index}
-            tabCount={state.routes.length}
-            isActive={isFocused}
-            icon={options.tabBarIcon}
-            label={label as string}
-            activeTintColor={options.tabBarActiveTintColor as string}
-            inactiveTintColor={options.tabBarInactiveTintColor as string}
-            activeBackgroundColor={
-              options.tabBarActiveBackgroundColor as string
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(route.name);
             }
-            inactiveBackgroundColor={
-              options.tabBarInactiveBackgroundColor as string
-            }
-            containerBackgroundColor={theme.colors.surface}
-            onPress={onPress}
-          />
-        );
-      })}
-    </HStack>
-  );
-};
+          };
+
+          return (
+            <TabItem
+              key={`bottom-tab-${index}`}
+              index={index}
+              activeIndex={state.index}
+              tabCount={state.routes.length}
+              icon={options.tabBarIcon}
+              label={label as string}
+              activeTintColor={options.tabBarActiveTintColor as string}
+              inactiveTintColor={options.tabBarInactiveTintColor as string}
+              activeBackgroundColor={
+                options.tabBarActiveBackgroundColor as string
+              }
+              inactiveBackgroundColor={
+                options.tabBarInactiveBackgroundColor as string
+              }
+              containerBackgroundColor={theme.colors.surface}
+              onPress={onPress}
+            />
+          );
+        })}
+      </HStack>
+    );
+  },
+);
 
 const styles = createStyleSheet({
   container: {

@@ -80,7 +80,7 @@ const Home = ({navigation}: Props) => {
           coords.longitude,
         );
 
-        mapRef.current!.animateToRegion(region);
+        mapRef.current?.animateToRegion(region);
 
         map.setLastRegion(region);
         setTimeout(() => {

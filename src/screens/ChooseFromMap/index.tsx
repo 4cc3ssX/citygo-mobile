@@ -108,7 +108,7 @@ const ChooseFromMap = ({navigation, route}: Props) => {
 
         handleRegionChange(region);
 
-        mapRef.current!.animateToRegion(region);
+        mapRef.current?.animateToRegion(region);
 
         map.setLastRegion(region);
         setTimeout(() => {

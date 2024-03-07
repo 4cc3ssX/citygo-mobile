@@ -124,7 +124,7 @@ const Map = ({navigation}: Props) => {
   );
   const handleRegionChange = useCallback(
     async (region: Region) => {
-      const regionBounds = await mapRef.current!.getMapBoundaries();
+      const regionBounds = await mapRef.current?.getMapBoundaries();
       const bbox = boundingBoxToBbox(regionBounds);
 
       setBounds(bbox);
@@ -153,7 +153,7 @@ const Map = ({navigation}: Props) => {
 
         handleRegionChange(region);
 
-        mapRef.current!.animateToRegion(region);
+        mapRef.current?.animateToRegion(region);
 
         map.setLastRegion(region);
         setTimeout(() => {

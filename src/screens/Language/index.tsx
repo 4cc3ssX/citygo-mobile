@@ -1,5 +1,4 @@
 import React, {useCallback} from 'react';
-import {FlashList} from '@shopify/flash-list';
 
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
@@ -8,6 +7,7 @@ import {useThemeName} from '@hooks/useThemeName';
 import {supportedLanguages, supportedLng} from '@locales/helpers';
 import {useAppStore} from '@store/app';
 import {globalStyles} from '@styles/global';
+import {FlatList} from 'react-native';
 
 const flags = {
   mm: '🇲🇲',
@@ -29,10 +29,9 @@ const Language = () => {
       hasHeader
       barStyle={themeName === 'dark' ? 'light-content' : 'dark-content'}
       style={globalStyles.container}>
-      <FlashList
+      <FlatList
         showsVerticalScrollIndicator={false}
         data={Object.keys(supportedLanguages)}
-        estimatedItemSize={theme.spacing['16']}
         ItemSeparatorComponent={itemSeparatorComponent}
         renderItem={({item: lang}) => {
           const isSelected = app.language === lang;
