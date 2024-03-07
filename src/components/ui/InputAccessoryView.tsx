@@ -26,13 +26,13 @@ export const InputAccessoryView = ({
   const contentHeight = useSharedValue(0);
 
   const containerAnimatedStyle = useAnimatedStyle(() => {
-    const bottom = interpolate(
+    const translateY = interpolate(
       progress.value,
       [0, 1],
-      [height.value - contentHeight.value, -height.value],
+      [height.value + contentHeight.value, height.value],
     );
     return {
-      bottom,
+      transform: [{translateY}],
     };
   });
 
