@@ -2,12 +2,21 @@ import React, {useCallback, useEffect} from 'react';
 import {FlatList} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
+import ContentLoader, {Rect} from 'react-content-loader/native';
 import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
 import {Icon} from '@components/icons';
-import {Container, HStack, Input, Stack, Text, VStack} from '@components/ui';
+import {
+  Container,
+  EmptyList,
+  HStack,
+  Input,
+  Stack,
+  Text,
+  VStack,
+} from '@components/ui';
 import {useFindRoutes} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
@@ -26,7 +35,11 @@ const FindRoute = ({navigation, route}: Props) => {
   const {styles, theme} = useStyles(stylesheet);
 
   /* Query */
-  const {isPending, data: routes, mutate: findRoutes} = useFindRoutes();
+  const {
+    isPending: isFindRoutesPending,
+    data: routes,
+    mutate: findRoutes,
+  } = useFindRoutes();
 
   const onRefresh = useCallback(() => {
     findRoutes(values);
@@ -42,6 +55,42 @@ const FindRoute = ({navigation, route}: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+
+  const listEmptyComponent = useCallback(() => {
+    if (!isFindRoutesPending && routes?.length === 0) {
+      return <EmptyList mb={theme.spacing['10']} title="No available routes" />;
+    }
+
+    return (
+      <ContentLoader
+        speed={2}
+        width="100%"
+        height={600}
+        viewBox="0 0 300 600"
+        preserveAspectRatio="none"
+        backgroundColor={theme.colors.background}
+        foregroundColor={theme.colors.gray4}>
+        {Array(3)
+          .fill(0)
+          .map((_value, index) => {
+            const y = (theme.spacing['44'] + theme.spacing['2.5']) * index;
+
+            return (
+              <Rect
+                key={`content-loader-${index}`}
+                x="0"
+                y={`${y}`}
+                rx={`${theme.roundness}`}
+                ry={`${theme.roundness}`}
+                width="100%"
+                height={theme.spacing['44']}
+              />
+            );
+          })}
+      </ContentLoader>
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFindRoutesPending, routes?.length, theme.colors.background]);
 
   return (
     <Container
@@ -76,6 +125,7 @@ const FindRoute = ({navigation, route}: Props) => {
         data={routes}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={ItemSeparatorComponent}
+        ListEmptyComponent={listEmptyComponent}
         renderItem={({item: transit}) => (
           <RouteCard to={values.to} {...transit} />
         )}
