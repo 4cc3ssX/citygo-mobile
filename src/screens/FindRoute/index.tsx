@@ -73,7 +73,7 @@ const FindRoute = ({navigation, route}: Props) => {
         {Array(3)
           .fill(0)
           .map((_value, index) => {
-            const y = (theme.spacing['44'] + theme.spacing['2.5']) * index;
+            const y = (theme.spacing['44'] + theme.spacing['5']) * index;
 
             return (
               <Rect
