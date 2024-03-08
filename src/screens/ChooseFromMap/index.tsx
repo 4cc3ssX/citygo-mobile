@@ -106,8 +106,6 @@ const ChooseFromMap = ({navigation, route}: Props) => {
           coords.longitude,
         );
 
-        handleRegionChange(region);
-
         mapRef.current?.animateToRegion(region);
 
         map.setLastRegion(region);
@@ -119,12 +117,14 @@ const ChooseFromMap = ({navigation, route}: Props) => {
         setIsLocating(false);
       },
       {
-        enableHighAccuracy: true,
-        timeout: 10000,
+        accuracy: {
+          android: 'balanced',
+          ios: 'best',
+        },
         maximumAge: 5000,
       },
     );
-  }, [handleRegionChange, map]);
+  }, [map]);
 
   useEffect(() => {
     onLocateMe();

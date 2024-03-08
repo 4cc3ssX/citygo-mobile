@@ -219,7 +219,7 @@ const Search = ({navigation, route}: Props) => {
       </ContentLoader>
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isStopsFetching, searchStops, theme.colors.background]);
+  }, [isStopsFetching, searchStops.length, theme.colors.background]);
 
   return (
     <Container

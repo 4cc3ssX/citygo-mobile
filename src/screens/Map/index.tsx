@@ -59,7 +59,7 @@ const Map = ({navigation}: Props) => {
   const map = useMapStore();
 
   /* Query */
-  const {isFetching, data: stops} = useGetStops<
+  const {isFetching: isStopsFetching, data: stops} = useGetStops<
     FeatureCollection<Point, IStop>
   >(ResponseFormat.GEOJSON);
 
@@ -92,7 +92,7 @@ const Map = ({navigation}: Props) => {
     points: stops?.features || [],
     bounds: bounds || undefined,
     zoom,
-    disableRefresh: isFetching,
+    disableRefresh: isStopsFetching,
     options: {
       radius: 40,
       maxZoom: 20,
@@ -122,9 +122,10 @@ const Map = ({navigation}: Props) => {
     },
     [stopBottomSheetRef],
   );
+
   const handleRegionChange = useCallback(
     async (region: Region) => {
-      const regionBounds = await mapRef.current?.getMapBoundaries();
+      const regionBounds = await mapRef.current!.getMapBoundaries();
       const bbox = boundingBoxToBbox(regionBounds);
 
       setBounds(bbox);
@@ -142,7 +143,6 @@ const Map = ({navigation}: Props) => {
 
     Geolocation.getCurrentPosition(
       ({coords}) => {
-        // update user location
         map.setUserLocation({lat: coords.latitude, lng: coords.longitude});
 
         // update last region
@@ -151,8 +151,6 @@ const Map = ({navigation}: Props) => {
           coords.longitude,
         );
 
-        handleRegionChange(region);
-
         mapRef.current?.animateToRegion(region);
 
         map.setLastRegion(region);
@@ -160,16 +158,19 @@ const Map = ({navigation}: Props) => {
           setIsLocating(false);
         }, 500);
       },
-      () => {
+      err => {
+        console.log(err);
         setIsLocating(false);
       },
       {
-        enableHighAccuracy: true,
-        timeout: 10000,
+        accuracy: {
+          android: 'balanced',
+          ios: 'best',
+        },
         maximumAge: 5000,
       },
     );
-  }, [handleRegionChange, map]);
+  }, [map]);
 
   useEffect(() => {
     onLocateMe();

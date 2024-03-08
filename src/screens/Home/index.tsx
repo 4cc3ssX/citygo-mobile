@@ -92,12 +92,15 @@ const Home = ({navigation}: Props) => {
         setIsLocating(false);
       },
       {
-        enableHighAccuracy: true,
-        timeout: 10000,
+        accuracy: {
+          android: 'balanced',
+          ios: 'best',
+        },
         maximumAge: 5000,
       },
     );
-  }, [getNearestStops, map]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getNearestStops]);
 
   const onInitialized = useCallback(async () => {
     await requestPermissions();
@@ -267,21 +270,24 @@ const Home = ({navigation}: Props) => {
                 />
               </RowItem.Right>
             </RowItem>
-            <MapView
-              ref={mapRef}
-              initialRegion={map.lastRegion || undefined}
-              {...defaultMapProps}
-              mapType="standard"
-              userInterfaceStyle={themeName}
-              style={styles.mapView}>
-              {nearestStops?.map(stop => (
-                <Marker
-                  key={stop.id}
-                  coordinate={{latitude: stop.lat, longitude: stop.lng}}
-                  image={{uri: 'marker'}}
-                />
-              ))}
-            </MapView>
+            <View style={styles.mapViewContainer}>
+              <MapView
+                ref={mapRef}
+                initialRegion={map.lastRegion || undefined}
+                zoomEnabled={false}
+                {...defaultMapProps}
+                mapType="standard"
+                userInterfaceStyle={themeName}
+                style={styles.mapView}>
+                {nearestStops?.map(stop => (
+                  <Marker
+                    key={stop.id}
+                    coordinate={{latitude: stop.lat, longitude: stop.lng}}
+                    image={{uri: 'marker'}}
+                  />
+                ))}
+              </MapView>
+            </View>
           </View>
         </Stack>
       </ScrollView>
@@ -312,10 +318,15 @@ const stylesheet = createStyleSheet(theme => ({
     borderRadius: 25,
     gap: theme.spacing['3'],
   },
-  mapView: {
+  mapViewContainer: {
     width: '100%',
     height: theme.spacing['40'],
-    borderRadius: 10,
+    borderRadius: theme.roundness,
+    overflow: 'hidden',
+  },
+  mapView: {
+    width: '100%',
+    height: '100%',
   },
 }));
 

@@ -4,7 +4,6 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetFlatList,
 } from '@gorhom/bottom-sheet';
-import {Portal} from '@gorhom/portal';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import ContentLoader, {Rect} from 'react-content-loader/native';
@@ -88,7 +87,7 @@ const Routes = ({navigation, route}: Props) => {
     FeatureCollection<Point, IStop>
   >(ResponseFormat.GEOJSON);
   const {isFetching: isRoutesFetching, data: routes} = useGetRoutes();
-  const {data: activeRouteGeoJson, mutate: getRouteById} = useGetRouteById<
+  const {data: activeRouteGeoJson, mutateAsync: getRouteById} = useGetRouteById<
     FeatureCollection<LineString, IRoute>
   >(ResponseFormat.GEOJSON);
 
@@ -134,26 +133,36 @@ const Routes = ({navigation, route}: Props) => {
   const onLocateMe = useCallback(() => {
     setIsLocating(true);
 
-    if (map.userLocation) {
-      // update last region
-      const region = Constants.getDefaultMapDelta(
-        map.userLocation.lat,
-        map.userLocation.lng,
-      );
+    Geolocation.getCurrentPosition(
+      ({coords}) => {
+        // update user location
+        map.setUserLocation({lat: coords.latitude, lng: coords.longitude});
 
-      handleRegionChange(region);
+        // update last region
+        const region = Constants.getDefaultMapDelta(
+          coords.latitude,
+          coords.longitude,
+        );
 
-      mapRef.current?.animateToRegion(region);
-    }
+        mapRef.current?.animateToRegion(region);
 
-    setIsLocating(false);
-  }, [handleRegionChange, map]);
-
-  const onCloseStopSheet = useCallback(() => {
-    bottomSheetRef.current?.snapToIndex(0);
-
-    setActiveRoute(null);
-  }, []);
+        map.setLastRegion(region);
+        setTimeout(() => {
+          setIsLocating(false);
+        }, 500);
+      },
+      () => {
+        setIsLocating(false);
+      },
+      {
+        accuracy: {
+          android: 'balanced',
+          ios: 'best',
+        },
+        maximumAge: 5000,
+      },
+    );
+  }, [map]);
 
   const onPressStopItem = useCallback((stop: IStop) => {
     stopBottomSheetRef.current?.snapToIndex(0);
@@ -164,35 +173,37 @@ const Routes = ({navigation, route}: Props) => {
     mapRef.current?.animateToRegion(region);
   }, []);
 
-  const onPressItem = useCallback((selectedRoute: IRoute) => {
-    // fetch route geojson
-    getRouteById({id: selectedRoute.route_id});
+  const onPressItem = useCallback(
+    (selectedRoute: IRoute) => {
+      setActiveRoute(selectedRoute);
 
-    setActiveRoute(selectedRoute);
+      bottomSheetRef.current?.snapToIndex(0);
 
-    bottomSheetRef.current?.close();
+      setTimeout(() => {
+        stopBottomSheetRef.current?.snapToIndex(1);
+      }, 10);
 
-    mapRef.current?.fitToCoordinates(
-      selectedRoute.coordinates.map<LatLng>(coord => ({
-        latitude: coord.lat,
-        longitude: coord.lng,
-      })),
-      {
-        edgePadding: {
-          top: 20,
-          bottom: 60,
-          left: 20,
-          right: 20,
+      // fetch route geojson
+      getRouteById({id: selectedRoute.route_id});
+
+      mapRef.current?.fitToCoordinates(
+        selectedRoute.coordinates.map<LatLng>(coord => ({
+          latitude: coord.lat,
+          longitude: coord.lng,
+        })),
+        {
+          edgePadding: {
+            top: 20,
+            bottom: 60,
+            left: 20,
+            right: 20,
+          },
+          animated: true,
         },
-        animated: true,
-      },
-    );
-
-    setTimeout(() => {
-      stopBottomSheetRef.current?.snapToIndex(1);
-    }, 100);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      );
+    },
+    [getRouteById],
+  );
 
   useEffect(() => {
     if (initialRoute) {
@@ -302,9 +313,8 @@ const Routes = ({navigation, route}: Props) => {
         topInset={Constants.HEADER_HEIGHT + insets.top + theme.spacing['3']}
         index={-1}
         snapPoints={snapPoints}
-        animateOnMount={false}
+        animateOnMount
         enablePanDownToClose
-        onClose={onCloseStopSheet}
         backdropComponent={backdropComponent}
         handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
         backgroundStyle={[
@@ -373,70 +383,65 @@ const Routes = ({navigation, route}: Props) => {
         />
       </BottomSheet>
 
-      <Portal>
-        <BottomSheet
-          ref={bottomSheetRef}
-          topInset={Constants.HEADER_HEIGHT + insets.top + theme.spacing['3']}
-          index={0}
-          snapPoints={snapPoints}
-          animateOnMount
-          backdropComponent={backdropComponent}
-          handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
-          backgroundStyle={[
-            globalStyles.bottomSheetContainer,
-            {backgroundColor: theme.colors.background},
+      <BottomSheet
+        ref={bottomSheetRef}
+        topInset={Constants.HEADER_HEIGHT + insets.top + theme.spacing['3']}
+        index={0}
+        snapPoints={snapPoints}
+        animateOnMount
+        backdropComponent={backdropComponent}
+        handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
+        backgroundStyle={[
+          globalStyles.bottomSheetContainer,
+          {backgroundColor: theme.colors.background},
+        ]}
+        containerStyle={[styles.bottomSheetContainer]}>
+        <BottomSheetFlatList
+          showsVerticalScrollIndicator={false}
+          data={routes || []}
+          initialNumToRender={3}
+          ListHeaderComponent={
+            <HStack
+              pt={theme.spacing['2']}
+              pb={theme.spacing['5']}
+              bg={theme.colors.background}>
+              <Text family="product" size="xl">
+                Bus Lines
+              </Text>
+            </HStack>
+          }
+          ItemSeparatorComponent={itemSeparatorComponent}
+          ListEmptyComponent={routeListEmptyComponent}
+          renderItem={({item}) => {
+            return (
+              <RowItem
+                bg={theme.colors.surface}
+                h={theme.spacing['18']}
+                onPress={() => onPressItem(item)}>
+                <RowItem.Left h="100%" bg={item.color}>
+                  <Text type="semibold" color="white">
+                    {item.route_id.split('-')[0]}
+                  </Text>
+                </RowItem.Left>
+                <Separator h={theme.spacing['8']} direction="vertical" />
+                <RowItem.Content>
+                  <Text size="md" numberOfLines={1}>
+                    {item.agency_id}
+                  </Text>
+                  <Text size="xs" color={theme.colors.gray2} numberOfLines={2}>
+                    {item.name[app.language]}
+                  </Text>
+                </RowItem.Content>
+              </RowItem>
+            );
+          }}
+          keyExtractor={item => `sheet-item-${item.route_id}`}
+          contentContainerStyle={[
+            styles.listContainerStyle,
+            {paddingBottom: insets.bottom + theme.spacing['3']},
           ]}
-          containerStyle={[styles.bottomSheetContainer]}>
-          <BottomSheetFlatList
-            showsVerticalScrollIndicator={false}
-            data={routes || []}
-            initialNumToRender={3}
-            ListHeaderComponent={
-              <HStack
-                pt={theme.spacing['2']}
-                pb={theme.spacing['5']}
-                bg={theme.colors.background}>
-                <Text family="product" size="xl">
-                  Bus Lines
-                </Text>
-              </HStack>
-            }
-            ItemSeparatorComponent={itemSeparatorComponent}
-            ListEmptyComponent={routeListEmptyComponent}
-            renderItem={({item}) => {
-              return (
-                <RowItem
-                  bg={theme.colors.surface}
-                  h={theme.spacing['18']}
-                  onPress={() => onPressItem(item)}>
-                  <RowItem.Left h="100%" bg={item.color}>
-                    <Text type="semibold" color="white">
-                      {item.route_id.split('-')[0]}
-                    </Text>
-                  </RowItem.Left>
-                  <Separator h={theme.spacing['8']} direction="vertical" />
-                  <RowItem.Content>
-                    <Text size="md" numberOfLines={1}>
-                      {item.agency_id}
-                    </Text>
-                    <Text
-                      size="xs"
-                      color={theme.colors.gray2}
-                      numberOfLines={2}>
-                      {item.name[app.language]}
-                    </Text>
-                  </RowItem.Content>
-                </RowItem>
-              );
-            }}
-            keyExtractor={item => `sheet-item-${item.route_id}`}
-            contentContainerStyle={[
-              styles.listContainerStyle,
-              {paddingBottom: insets.bottom + theme.spacing['3']},
-            ]}
-          />
-        </BottomSheet>
-      </Portal>
+        />
+      </BottomSheet>
 
       <VStack style={styles.fabContainer(insets)}>
         <IconButton
