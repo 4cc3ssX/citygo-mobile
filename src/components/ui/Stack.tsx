@@ -44,6 +44,7 @@ export interface IStackProps extends ViewProps, StackStyle {
   pl?: number;
   px?: number;
   py?: number;
+  m?: number;
   mt?: number;
   mb?: number;
   mr?: number;
@@ -71,6 +72,7 @@ export const Stack = memo(
     pl,
     px,
     py,
+    m,
     mt,
     mb,
     mr,
@@ -107,6 +109,7 @@ export const Stack = memo(
               paddingRight: pr,
               paddingHorizontal: px,
               paddingVertical: py,
+              margin: m,
               marginTop: mt,
               marginBottom: mb,
               marginRight: mr,

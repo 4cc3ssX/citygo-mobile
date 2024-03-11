@@ -21,6 +21,7 @@ import {useFindRoutes} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
 import {globalStyles} from '@styles/global';
+import {ITransitRoute} from '@typescript/api/routes';
 
 import {RouteCard} from './components/RouteCard';
 
@@ -41,9 +42,20 @@ const FindRoute = ({navigation, route}: Props) => {
     mutate: findRoutes,
   } = useFindRoutes();
 
+  /* Handlers */
   const onRefresh = useCallback(() => {
     findRoutes(values);
   }, [findRoutes, values]);
+
+  const onPressItem = useCallback(
+    (transitRoute: ITransitRoute) => {
+      navigation.navigate('Directions', {
+        ...values,
+        transitRoute,
+      });
+    },
+    [navigation, values],
+  );
 
   useEffect(() => {
     onRefresh();
@@ -123,11 +135,17 @@ const FindRoute = ({navigation, route}: Props) => {
       </HStack>
       <FlatList
         data={routes}
+        refreshing={isFindRoutesPending}
+        onRefresh={onRefresh}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={ItemSeparatorComponent}
         ListEmptyComponent={listEmptyComponent}
         renderItem={({item: transit}) => (
-          <RouteCard to={values.to} {...transit} />
+          <RouteCard
+            to={values.to}
+            {...transit}
+            onPress={() => onPressItem(transit)}
+          />
         )}
         keyExtractor={(item, index) => `${item.id}-${index}`}
         contentContainerStyle={styles.routeListContainer}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {Pressable, View} from 'react-native';
 
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
@@ -19,14 +19,20 @@ import {calculateTime} from '@utils';
 
 export interface IRouteCardProps extends ITransitRoute {
   to: FindRouteValues['to'];
+  onPress?: () => void;
 }
 
-export const RouteCard = ({to, transitSteps, distance}: IRouteCardProps) => {
+export const RouteCard = ({
+  to,
+  transitSteps,
+  distance,
+  onPress,
+}: IRouteCardProps) => {
   const {speedLimit} = useAppStore();
   const {styles, theme} = useStyles(stylesheet);
 
   return (
-    <View>
+    <Pressable onPress={onPress}>
       <VStack
         bw={1}
         br={theme.roundness}
@@ -82,7 +88,7 @@ export const RouteCard = ({to, transitSteps, distance}: IRouteCardProps) => {
                   overflow="hidden">
                   {transit.type === TransitType.TRANSIT ? (
                     <BusLineCard bg={transit.step.color}>
-                      {transit.step.id.split('-')[0]}
+                      {transit.step.route_id.split('-')[0]}
                     </BusLineCard>
                   ) : (
                     <BusLineCard bg={theme.colors.gray2}>
@@ -134,7 +140,7 @@ export const RouteCard = ({to, transitSteps, distance}: IRouteCardProps) => {
           h={theme.spacing['18']}
         />
       </View>
-    </View>
+    </Pressable>
   );
 };
 

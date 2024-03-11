@@ -33,3 +33,17 @@ export const getStops = async <T = IStop[]>(
 
   return data.data;
 };
+
+export const getPaginatedStops = async (page: number, size: number = 10) => {
+  const {axios} = createRequest();
+
+  const {data} = await axios.get<IResponse<IStop[]>>(
+    `${routes.stops}?page=${page}&size=${size}`,
+  );
+
+  if (data.status !== 'ok') {
+    throw data.error || data.errors;
+  }
+
+  return data;
+};

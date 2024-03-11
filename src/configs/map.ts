@@ -1,6 +1,7 @@
 import {MapViewProps} from 'react-native-maps';
 
 export const defaultMapProps: MapViewProps = {
+  provider: 'google',
   showsTraffic: true,
   showsUserLocation: true,
   followsUserLocation: true,

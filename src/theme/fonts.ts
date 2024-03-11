@@ -38,7 +38,7 @@ export const fonts = {
 
   family: {
     inter: 'Inter',
-    product: 'ProductSans',
+    product: 'ProductSans-Regular',
   },
 
   sizes: {

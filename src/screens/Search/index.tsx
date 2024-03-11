@@ -26,6 +26,7 @@ import {
   Text,
   VStack,
 } from '@components/ui';
+import {Constants} from '@constants';
 import {findRouteSchema, FindRouteValues} from '@helpers/validations';
 import {useGetStops} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
@@ -47,8 +48,6 @@ const fuseOptions: IFuseOptions<IStop> = {
     'township.mm',
   ],
 };
-
-const MAX_RESULT = 30;
 
 const chooseOnMapButtonNativeID = 'choose-location-on-map';
 
@@ -76,7 +75,6 @@ const Search = ({navigation, route}: Props) => {
     setValue,
     getValues,
     resetField,
-
     formState: {isValid},
     handleSubmit,
   } = useForm<FindRouteValues>({
@@ -100,13 +98,21 @@ const Search = ({navigation, route}: Props) => {
   const onChooseLocationOnMap = useCallback(() => {
     const dest = destRef.current;
 
+    const initialStop = stops?.find(s => s.id === getValues()[dest]?.preferId);
+
+    const initialRegion = initialStop
+      ? Constants.getDefaultMapDelta(initialStop.lat, initialStop.lng)
+      : null;
+
     navigation.navigate('ChooseFromMap', {
+      initialRegion,
       prevRouteName: 'Search',
       prevRouteProps: {
         chooseFor: dest,
       },
     });
-  }, [navigation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation, stops]);
 
   const onSelectStop = useCallback(
     (selectedStop: IStop) => {
@@ -151,7 +157,7 @@ const Search = ({navigation, route}: Props) => {
     (value: string) => {
       const dest = destRef.current;
       if (value) {
-        const fuseResult = fuse.search(value, {limit: MAX_RESULT});
+        const fuseResult = fuse.search(value);
 
         const filteredStops = fuseResult.map(result => result.item);
 
@@ -164,10 +170,9 @@ const Search = ({navigation, route}: Props) => {
     [fuse, resetField, stops],
   );
 
-  /* Effects */
   useEffect(() => {
     if (stops) {
-      setSearchStops(stops.slice(0, MAX_RESULT));
+      setSearchStops(stops);
     }
   }, [stops]);
 
@@ -309,6 +314,7 @@ const Search = ({navigation, route}: Props) => {
       <FlatList
         data={searchStops}
         extraData={themeName}
+        initialNumToRender={10}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={itemSeparatorComponent}
         ListEmptyComponent={listEmptyComponent}

@@ -5,6 +5,7 @@ import BottomSheet, {
   BottomSheetFlatList,
 } from '@gorhom/bottom-sheet';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {featureCollection, lineString} from '@turf/helpers';
 
 import ContentLoader, {Rect} from 'react-content-loader/native';
 import {useTranslation} from 'react-i18next';
@@ -21,6 +22,7 @@ import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
 import Color from 'color';
 import {BBox, FeatureCollection, LineString, Point} from 'geojson';
+import {omit} from 'lodash';
 import useSupercluster from 'use-supercluster';
 
 import {Icon} from '@components/icons';
@@ -30,6 +32,7 @@ import {
   EmptyList,
   HStack,
   IconButton,
+  MapCallout,
   RowItem,
   Separator,
   Stack,
@@ -38,7 +41,7 @@ import {
 } from '@components/ui';
 import {defaultMapProps} from '@configs/map';
 import {Constants} from '@constants';
-import {useGetRouteById, useGetRoutes, useGetStops} from '@hooks/api';
+import {useGetRoutes, useGetStops} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
 import {useAppStore} from '@store/app';
@@ -87,11 +90,24 @@ const Routes = ({navigation, route}: Props) => {
     FeatureCollection<Point, IStop>
   >(ResponseFormat.GEOJSON);
   const {isFetching: isRoutesFetching, data: routes} = useGetRoutes();
-  const {data: activeRouteGeoJson, mutateAsync: getRouteById} = useGetRouteById<
-    FeatureCollection<LineString, IRoute>
-  >(ResponseFormat.GEOJSON);
 
   /* Memo */
+  const activeRouteGeoJson = useMemo<
+    FeatureCollection<LineString, Omit<IRoute, 'coordinates'>>
+  >(() => {
+    if (!activeRoute) {
+      return featureCollection([]);
+    }
+    return featureCollection([
+      lineString(
+        activeRoute.coordinates.map(({lng, lat}) => [lng, lat]),
+        omit(activeRoute, ['coordinates']),
+        {
+          id: activeRoute.route_id,
+        },
+      ),
+    ]);
+  }, [activeRoute]);
   const activeRouteStops = useMemo<IStop[]>(() => {
     if (activeRoute && stops) {
       return activeRoute.stops.map(
@@ -102,9 +118,19 @@ const Routes = ({navigation, route}: Props) => {
     return [];
   }, [activeRoute, stops]);
 
+  const activeRouteStopsGeoJSON = useMemo(() => {
+    if (activeRoute && stopsGeoJSON) {
+      return activeRoute.stops.map(stopId =>
+        stopsGeoJSON.features.find(feature => feature.id === stopId),
+      );
+    }
+
+    return stopsGeoJSON?.features || [];
+  }, [activeRoute, stopsGeoJSON]);
+
   /* Hooks */
   const {clusters} = useSupercluster({
-    points: stopsGeoJSON?.features || [],
+    points: activeRouteStopsGeoJSON,
     bounds: bounds || undefined,
     zoom,
     disableRefresh: isStopsFetching,
@@ -173,37 +199,31 @@ const Routes = ({navigation, route}: Props) => {
     mapRef.current?.animateToRegion(region);
   }, []);
 
-  const onPressItem = useCallback(
-    (selectedRoute: IRoute) => {
-      setActiveRoute(selectedRoute);
+  const onPressItem = useCallback((selectedRoute: IRoute) => {
+    setActiveRoute(selectedRoute);
 
-      bottomSheetRef.current?.snapToIndex(0);
-
-      setTimeout(() => {
-        stopBottomSheetRef.current?.snapToIndex(1);
-      }, 10);
-
-      // fetch route geojson
-      getRouteById({id: selectedRoute.route_id});
-
-      mapRef.current?.fitToCoordinates(
-        selectedRoute.coordinates.map<LatLng>(coord => ({
-          latitude: coord.lat,
-          longitude: coord.lng,
-        })),
-        {
-          edgePadding: {
-            top: 20,
-            bottom: 60,
-            left: 20,
-            right: 20,
-          },
-          animated: true,
+    mapRef.current?.fitToCoordinates(
+      selectedRoute.coordinates.map<LatLng>(coord => ({
+        latitude: coord.lat,
+        longitude: coord.lng,
+      })),
+      {
+        edgePadding: {
+          top: 20,
+          bottom: 60,
+          left: 20,
+          right: 20,
         },
-      );
-    },
-    [getRouteById],
-  );
+        animated: true,
+      },
+    );
+
+    bottomSheetRef.current?.snapToIndex(0);
+
+    setTimeout(() => {
+      stopBottomSheetRef.current?.snapToIndex(1);
+    }, 10);
+  }, []);
 
   useEffect(() => {
     if (initialRoute) {
@@ -456,6 +476,7 @@ const Routes = ({navigation, route}: Props) => {
       </VStack>
       <MapView
         ref={mapRef}
+        initialRegion={map.lastRegion || undefined}
         {...defaultMapProps}
         mapType="standard"
         userInterfaceStyle={themeName}
@@ -477,8 +498,10 @@ const Routes = ({navigation, route}: Props) => {
               tracksViewChanges={false}
               coordinate={{latitude: stop.lat, longitude: stop.lng}}
               image={{uri: 'marker'}}>
-              <Callout>
-                <Text size="xs">{stop.name[app.language]}</Text>
+              <Callout tooltip>
+                <MapCallout canPress={false}>
+                  {stop.name[app.language]}
+                </MapCallout>
               </Callout>
             </Marker>
           );
@@ -488,7 +511,7 @@ const Routes = ({navigation, route}: Props) => {
           <Geojson
             geojson={activeRouteGeoJson}
             strokeColor={activeRoute.color}
-            strokeWidth={3}
+            strokeWidth={4}
           />
         ) : null}
       </MapView>

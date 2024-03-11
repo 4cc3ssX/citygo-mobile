@@ -26,6 +26,7 @@
     "@tanstack/query-sync-storage-persister": "^5.24.7",
     "@tanstack/react-query": "^5.24.7",
     "@tanstack/react-query-persist-client": "^5.24.7",
+    "@turf/helpers": "patch:@turf/helpers@npm%3A6.5.0#~/.yarn/patches/@turf-helpers-npm-6.5.0-a40ad42565.patch",
     "axios": "^1.6.5",
     "color": "^4.2.3",
     "dayjs": "^1.11.10",

@@ -77,7 +77,7 @@ export const RecentRouteCard = ({
                 overflow="hidden">
                 {transit.type === TransitType.TRANSIT ? (
                   <BusLineCard bg={transit.step.color}>
-                    {transit.step.id.split('-')[0]}
+                    {transit.step.route_id.split('-')[0]}
                   </BusLineCard>
                 ) : (
                   <BusLineCard bg={theme.colors.gray2}>

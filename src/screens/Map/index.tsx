@@ -21,6 +21,7 @@ import {
   Container,
   CustomBackdrop,
   IconButton,
+  MapCallout,
   RowItem,
   Separator,
   Stack,
@@ -311,6 +312,7 @@ const Map = ({navigation}: Props) => {
       </VStack>
       <MapView
         ref={mapRef}
+        initialRegion={map.lastRegion || undefined}
         {...defaultMapProps}
         mapType="standard"
         userInterfaceStyle={themeName}
@@ -331,8 +333,8 @@ const Map = ({navigation}: Props) => {
               tracksViewChanges={false}
               coordinate={{latitude: stop.lat, longitude: stop.lng}}
               image={{uri: 'marker'}}>
-              <Callout onPress={() => onPressMarkerHandler(stop)}>
-                <Text size="xs">{stop.name[app.language]}</Text>
+              <Callout tooltip onPress={() => onPressMarkerHandler(stop)}>
+                <MapCallout>{stop.name[app.language]}</MapCallout>
               </Callout>
             </Marker>
           );

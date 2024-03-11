@@ -2,16 +2,18 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {useTranslation} from 'react-i18next';
+import {Region} from 'react-native-maps';
 
 import {FindRouteValues} from '@helpers/validations';
 import AppTheme from '@screens/AppTheme';
 import ChooseFromMap from '@screens/ChooseFromMap';
+import Directions from '@screens/Directions';
 import FindRoute from '@screens/FindRoute';
 import Language from '@screens/Language';
 import {NotificationSettings} from '@screens/Notifications';
 import Routes from '@screens/Routes';
 import Search from '@screens/Search';
-import {IRoute} from '@typescript/api/routes';
+import {IRoute, ITransitRoute} from '@typescript/api/routes';
 import {IStop} from '@typescript/api/stops';
 
 import {StackHeader} from './components/Header';
@@ -31,9 +33,13 @@ export type RootStackParamsList = {
     initialRoute: IRoute | null;
   };
   ChooseFromMap: {
+    initialRegion: Region | null;
     prevRouteName: keyof RootStackParamsList;
     prevRouteProps: any;
   };
+  Directions: {
+    transitRoute: ITransitRoute;
+  } & FindRouteValues;
 };
 
 const RNStack = createNativeStackNavigator<RootStackParamsList>();
@@ -93,6 +99,17 @@ function Stack() {
       <RNStack.Screen
         name="ChooseFromMap"
         component={ChooseFromMap}
+        options={{
+          title: '',
+          headerStyle: {
+            backgroundColor: 'transparent',
+            maxHeight: 'auto',
+          } as any,
+        }}
+      />
+      <RNStack.Screen
+        name="Directions"
+        component={Directions}
         options={{
           title: '',
           headerStyle: {

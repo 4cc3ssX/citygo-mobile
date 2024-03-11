@@ -31,9 +31,8 @@ export interface IRoute {
 
 export interface ITransitRoute {
   id: string;
-  route: Omit<IRoute, 'stops' | 'coordinates'>[];
-  transitSteps: ITransitSteps[];
-  coordinates: ICoordinates[];
+  routes: IRoute[];
+  transitSteps: ITransitStep[];
   distance: number;
 }
 
@@ -42,16 +41,13 @@ export enum TransitType {
   WALK = 'walk',
 }
 
-export interface ITransitSteps {
+export interface ITransitStep {
   type: TransitType;
-  step: ITransitStop & ITransitWalk;
+  step: ITransit & ITransitWalk;
+  distance: number;
 }
 
-export interface ITransitStop {
-  id: string;
-  color: string;
-  stops: number[];
-}
+export interface ITransit extends Omit<IRoute, 'stops' | 'coordinates'> {}
 
 export interface ITransitWalk {
   from: ICoordinates;

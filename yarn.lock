@@ -3072,6 +3072,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@turf/helpers@npm:6.5.0":
+  version: 6.5.0
+  resolution: "@turf/helpers@npm:6.5.0"
+  checksum: 786cbe0c0027f85db286fb3a0b7be04bb29bd63ec07760a49735ef32e9c5b4a7c059a8f691fafa31c7e0e9be34c281e014dc24077438bae01a09b492a680fb6f
+  languageName: node
+  linkType: hard
+
+"@turf/helpers@patch:@turf/helpers@npm%3A6.5.0#~/.yarn/patches/@turf-helpers-npm-6.5.0-a40ad42565.patch":
+  version: 6.5.0
+  resolution: "@turf/helpers@patch:@turf/helpers@npm%3A6.5.0#~/.yarn/patches/@turf-helpers-npm-6.5.0-a40ad42565.patch::version=6.5.0&hash=eae9da"
+  checksum: e03c74481513470ec6ee198b9ebae4216d6f6c3423ce153c98750329700c43f4e292c53e8223db72e7ffea7ab306d4d98ceb80b6af52d60d73f07cecdcb109ac
+  languageName: node
+  linkType: hard
+
 "@types/axios@npm:^0.14.0":
   version: 0.14.0
   resolution: "@types/axios@npm:0.14.0"
@@ -4353,6 +4367,7 @@ __metadata:
     "@tanstack/query-sync-storage-persister": "npm:^5.24.7"
     "@tanstack/react-query": "npm:^5.24.7"
     "@tanstack/react-query-persist-client": "npm:^5.24.7"
+    "@turf/helpers": "patch:@turf/helpers@npm%3A6.5.0#~/.yarn/patches/@turf-helpers-npm-6.5.0-a40ad42565.patch"
     "@types/axios": "npm:^0.14.0"
     "@types/color": "npm:^3.0.6"
     "@types/geojson": "npm:^7946.0.14"
