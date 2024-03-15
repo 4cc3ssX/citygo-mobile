@@ -1,7 +1,7 @@
 import {routes} from '@constants/api';
 import {createRequest} from '@helpers/request';
-import {FindRouteValues} from '@helpers/validations';
 import {IResponse, ResponseFormat} from '@typescript/api';
+import {IFindRoutes} from '@typescript/api/request';
 import {IRoute, ITransitRoute} from '@typescript/api/routes';
 
 export const getRoutes = async () => {
@@ -33,7 +33,7 @@ export const getRouteById = async <T = IRoute>(
   return data.data;
 };
 
-export const findRoutes = async (values: FindRouteValues) => {
+export const findRoutes = async (values: IFindRoutes) => {
   const {axios} = createRequest();
 
   const {data} = await axios.post<IResponse<ITransitRoute[]>>(

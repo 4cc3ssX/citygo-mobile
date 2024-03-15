@@ -11,9 +11,9 @@ export const MarkerIcon = ({size = 24, ...props}: IIconProps) => {
         cx={11}
         cy={11}
         r={9.263}
-        fill="#417CEF"
-        stroke="#fff"
-        strokeWidth={2.526}
+        fill="#ffffff"
+        stroke="currentColor"
+        strokeWidth={4}
       />
     </Svg>
   );

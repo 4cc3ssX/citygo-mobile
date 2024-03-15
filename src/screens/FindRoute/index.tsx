@@ -20,6 +20,7 @@ import {
 import {useFindRoutes} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
+import {useMapStore} from '@store/map';
 import {globalStyles} from '@styles/global';
 import {ITransitRoute} from '@typescript/api/routes';
 
@@ -32,8 +33,12 @@ const FindRoute = ({navigation, route}: Props) => {
 
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
+
   const themeName = useThemeName();
   const {styles, theme} = useStyles(stylesheet);
+
+  /* Store */
+  const map = useMapStore();
 
   /* Query */
   const {
@@ -44,8 +49,14 @@ const FindRoute = ({navigation, route}: Props) => {
 
   /* Handlers */
   const onRefresh = useCallback(() => {
-    findRoutes(values);
-  }, [findRoutes, values]);
+    findRoutes({
+      from: {
+        ...values.from,
+        position: map.userLocation || undefined,
+      },
+      to: values.to,
+    });
+  }, [findRoutes, map.userLocation, values.from, values.to]);
 
   const onPressItem = useCallback(
     (transitRoute: ITransitRoute) => {

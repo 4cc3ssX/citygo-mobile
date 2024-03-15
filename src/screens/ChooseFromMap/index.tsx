@@ -98,9 +98,6 @@ const ChooseFromMap = ({navigation, route}: Props) => {
 
     Geolocation.getCurrentPosition(
       ({coords}) => {
-        // update user location
-        map.setUserLocation({lat: coords.latitude, lng: coords.longitude});
-
         const region = Constants.getDefaultMapDelta(
           coords.latitude,
           coords.longitude,
@@ -108,7 +105,6 @@ const ChooseFromMap = ({navigation, route}: Props) => {
 
         mapRef.current?.animateToRegion(region);
 
-        map.setLastRegion(region);
         setTimeout(() => {
           setIsLocating(false);
         }, 500);
@@ -124,7 +120,7 @@ const ChooseFromMap = ({navigation, route}: Props) => {
         maximumAge: 5000,
       },
     );
-  }, [map]);
+  }, []);
 
   useEffect(() => {
     if (!initialRegion) {
@@ -157,7 +153,7 @@ const ChooseFromMap = ({navigation, route}: Props) => {
         userInterfaceStyle={themeName}
         onRegionChangeComplete={handleRegionChange}
         style={styles.mapView}>
-        {clusters?.map(point => {
+        {clusters?.map((point, index) => {
           const properties = point.properties;
 
           if (properties.cluster) {
@@ -169,6 +165,7 @@ const ChooseFromMap = ({navigation, route}: Props) => {
           return (
             <Marker
               key={`marker-${stop.id}`}
+              identifier={`marker-${stop.id}-${index}`}
               tracksViewChanges={false}
               coordinate={{latitude: stop.lat, longitude: stop.lng}}
               image={{uri: 'marker'}}>

@@ -13,11 +13,10 @@ export interface GetNearestStops {
 }
 
 export interface PreferSearch extends Omit<ISearchStops, 'id'> {
-  preferId: number;
+  position?: ICoordinates | undefined;
 }
 
 export interface IFindRoutes {
-  user_position?: ICoordinates | undefined;
   from: PreferSearch;
   to: PreferSearch;
 }

@@ -30,10 +30,9 @@ export interface IRoute {
 }
 
 export interface ITransitRoute {
+  routes: unknown;
   id: string;
-  routes: IRoute[];
   transitSteps: ITransitStep[];
-  distance: number;
 }
 
 export enum TransitType {
@@ -43,11 +42,11 @@ export enum TransitType {
 
 export interface ITransitStep {
   type: TransitType;
-  step: ITransit & ITransitWalk;
+  step: ITransit | ITransitWalk;
   distance: number;
 }
 
-export interface ITransit extends Omit<IRoute, 'stops' | 'coordinates'> {}
+export interface ITransit extends IRoute {}
 
 export interface ITransitWalk {
   from: ICoordinates;

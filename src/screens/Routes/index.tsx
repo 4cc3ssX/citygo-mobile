@@ -482,7 +482,7 @@ const Routes = ({navigation, route}: Props) => {
         userInterfaceStyle={themeName}
         onRegionChangeComplete={handleRegionChange}
         style={styles.mapView}>
-        {clusters?.map(point => {
+        {clusters?.map((point, index) => {
           const properties = point.properties;
 
           if (properties.cluster) {
@@ -493,8 +493,8 @@ const Routes = ({navigation, route}: Props) => {
 
           return (
             <Marker
-              key={`marker-${stop.id}`}
-              identifier={`marker-${stop.id}`}
+              key={`marker-${stop.id}-${index}`}
+              identifier={`marker-${stop.id}-${index}`}
               tracksViewChanges={false}
               coordinate={{latitude: stop.lat, longitude: stop.lng}}
               image={{uri: 'marker'}}>

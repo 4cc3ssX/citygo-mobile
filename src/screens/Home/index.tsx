@@ -279,9 +279,10 @@ const Home = ({navigation}: Props) => {
                 mapType="standard"
                 userInterfaceStyle={themeName}
                 style={styles.mapView}>
-                {nearestStops?.map(stop => (
+                {nearestStops?.map((stop, index) => (
                   <Marker
                     key={stop.id}
+                    identifier={`marker-${stop.id}-${index}`}
                     coordinate={{latitude: stop.lat, longitude: stop.lng}}
                     image={{uri: 'marker'}}
                   />

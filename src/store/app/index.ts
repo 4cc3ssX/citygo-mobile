@@ -8,6 +8,7 @@ import {IAppTheme} from '@theme/themes';
 export interface IAppState {
   theme: IAppTheme;
   language: supportedLng;
+  walkSpeed: number;
   speedLimit: number;
   setTheme: (theme: IAppTheme) => void;
   setLanguage: (language: supportedLng) => void;
@@ -18,7 +19,8 @@ export const useAppStore = create(
     set => ({
       theme: 'light',
       language: 'en',
-      speedLimit: 30,
+      walkSpeed: 3, // mph
+      speedLimit: 25, // mph
       setTheme: (theme: IAppTheme) => set({theme}),
       setLanguage: (language: supportedLng) => set({language}),
       setSpeedLimit: (speedLimit: number) => set({speedLimit}),

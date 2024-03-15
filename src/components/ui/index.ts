@@ -18,3 +18,4 @@ export * from './EmptyList';
 export * from './CustomBackdrop';
 export * from './InputAccessoryView';
 export * from './MapCallout';
+export * from './JointDot';

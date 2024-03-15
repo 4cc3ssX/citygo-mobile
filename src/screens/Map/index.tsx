@@ -318,7 +318,7 @@ const Map = ({navigation}: Props) => {
         userInterfaceStyle={themeName}
         onRegionChangeComplete={handleRegionChange}
         style={styles.mapView}>
-        {clusters?.map(point => {
+        {clusters?.map((point, index) => {
           const properties = point.properties;
 
           if (properties.cluster) {
@@ -330,6 +330,7 @@ const Map = ({navigation}: Props) => {
           return (
             <Marker
               key={`marker-${stop.id}`}
+              identifier={`marker-${stop.id}-${index}`}
               tracksViewChanges={false}
               coordinate={{latitude: stop.lat, longitude: stop.lng}}
               image={{uri: 'marker'}}>

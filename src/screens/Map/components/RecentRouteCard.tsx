@@ -80,7 +80,7 @@ export const RecentRouteCard = ({
                     {transit.step.route_id.split('-')[0]}
                   </BusLineCard>
                 ) : (
-                  <BusLineCard bg={theme.colors.gray2}>
+                  <BusLineCard bg={theme.colors.gray3}>
                     <Icon
                       name="walk"
                       color={theme.colors.gray5}

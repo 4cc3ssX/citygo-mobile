@@ -1,6 +1,6 @@
 import React from 'react';
 import {useCallback} from 'react';
-import {GestureResponderEvent} from 'react-native';
+import {GestureResponderEvent, Pressable} from 'react-native';
 
 import {useStyles} from 'react-native-unistyles';
 
@@ -12,7 +12,7 @@ export interface ILinkProps extends ITextProps {
   to?: string;
 }
 
-export const Link = ({to, onPress, ...rest}: ILinkProps) => {
+export const Link = ({to, onPress, children, ...rest}: ILinkProps) => {
   const {theme} = useStyles();
 
   /* Handlers */
@@ -30,12 +30,14 @@ export const Link = ({to, onPress, ...rest}: ILinkProps) => {
   );
 
   return (
-    <Text
-      size="md"
-      color={theme.colors.primary}
-      underlined
-      {...rest}
-      onPress={onPressHandler}
-    />
+    <Pressable onPress={onPressHandler}>
+      {typeof children === 'string' ? (
+        <Text size="md" color={theme.colors.primary} underlined {...rest}>
+          {children}
+        </Text>
+      ) : (
+        children
+      )}
+    </Pressable>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Pressable, View} from 'react-native';
 
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
@@ -14,7 +14,7 @@ import {
 } from '@components/ui';
 import {FindRouteValues} from '@helpers/validations';
 import {useAppStore} from '@store/app';
-import {ITransitRoute, TransitType} from '@typescript/api/routes';
+import {ITransit, ITransitRoute, TransitType} from '@typescript/api/routes';
 import {calculateTime} from '@utils';
 
 export interface IRouteCardProps extends ITransitRoute {
@@ -22,15 +22,29 @@ export interface IRouteCardProps extends ITransitRoute {
   onPress?: () => void;
 }
 
-export const RouteCard = ({
-  to,
-  transitSteps,
-  distance,
-  onPress,
-}: IRouteCardProps) => {
-  const {speedLimit} = useAppStore();
+export const RouteCard = ({to, transitSteps, onPress}: IRouteCardProps) => {
+  const {walkSpeed, speedLimit} = useAppStore();
   const {styles, theme} = useStyles(stylesheet);
 
+  const duration = useMemo(
+    () =>
+      transitSteps.reduce((prev, curr) => {
+        if (typeof prev === 'number') {
+          return (
+            prev +
+            calculateTime(
+              curr.distance,
+              curr.type === TransitType.TRANSIT ? speedLimit : walkSpeed,
+            )
+          );
+        }
+        return calculateTime(
+          curr.distance,
+          curr.type === TransitType.TRANSIT ? speedLimit : walkSpeed,
+        );
+      }, 0),
+    [speedLimit, transitSteps, walkSpeed],
+  );
   return (
     <Pressable onPress={onPress}>
       <VStack
@@ -87,14 +101,14 @@ export const RouteCard = ({
                   mr={isLast ? theme.spacing['2'] : 0}
                   overflow="hidden">
                   {transit.type === TransitType.TRANSIT ? (
-                    <BusLineCard bg={transit.step.color}>
-                      {transit.step.route_id.split('-')[0]}
+                    <BusLineCard bg={(transit.step as ITransit).color}>
+                      {(transit.step as ITransit).route_id.split('-')[0]}
                     </BusLineCard>
                   ) : (
-                    <BusLineCard bg={theme.colors.gray2}>
+                    <BusLineCard bg={theme.colors.gray3}>
                       <Icon
                         name="walk"
-                        color={theme.colors.gray5}
+                        color={theme.colors.text}
                         size={theme.spacing['6']}
                       />
                     </BusLineCard>
@@ -103,7 +117,11 @@ export const RouteCard = ({
                   <Separator
                     flex={1}
                     size={2}
-                    color={isLast ? theme.colors.gray4 : transit.step.color}
+                    color={
+                      isLast
+                        ? theme.colors.gray4
+                        : (transit.step as ITransit).color
+                    }
                     w={
                       index > 1 && index === transitSteps.length - 2
                         ? theme.spacing['12']
@@ -124,9 +142,7 @@ export const RouteCard = ({
         </HStack>
         <Separator />
         <HStack alignItems="center" justifyContent="space-between">
-          <Text size="xs">
-            Duration: {calculateTime(distance, speedLimit, 'm')} min
-          </Text>
+          <Text size="xs">Duration: {duration} min</Text>
           <Text size="xs">{transitSteps.length} Changes</Text>
         </HStack>
       </VStack>
