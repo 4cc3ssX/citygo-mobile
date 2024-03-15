@@ -39,14 +39,7 @@ type Props = NativeStackScreenProps<RootStackParamsList, 'Search'>;
 
 const fuseOptions: IFuseOptions<IStop> = {
   threshold: 0.2,
-  keys: [
-    'name.en',
-    'name.mm',
-    'road.en',
-    'road.mm',
-    'township.en',
-    'township.mm',
-  ],
+  keys: ['name.en', 'name.mm'],
 };
 
 const chooseOnMapButtonNativeID = 'choose-location-on-map';
@@ -156,7 +149,7 @@ const Search = ({navigation, route}: Props) => {
   const onChangeHandler = useCallback(
     (value: string) => {
       const dest = destRef.current;
-      if (value) {
+      if (value.length > 2) {
         const fuseResult = fuse.search(value);
 
         const filteredStops = fuseResult.map(result => result.item);
@@ -354,7 +347,7 @@ const stylesheet = createStyleSheet(theme => ({
   },
 
   listContainer: (bottom: number) => ({
-    flexGrow: 1,
+    // flexGrow: 1,
     paddingBottom: bottom + theme.spacing['4'],
   }),
 }));
