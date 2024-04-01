@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 import {useStyles} from 'react-native-unistyles';
 
@@ -9,7 +9,7 @@ export interface ISectionProps extends IVStackProps {}
 
 export interface ISectionChildProps extends IVStackProps {}
 
-const Section = ({children, ...rest}: ISectionProps) => {
+export const Section = memo(({children, ...rest}: ISectionProps) => {
   const {theme} = useStyles();
 
   return (
@@ -17,9 +17,9 @@ const Section = ({children, ...rest}: ISectionProps) => {
       {children}
     </VStack>
   );
-};
+});
 
-Section.Title = ({children, ...rest}: ISectionChildProps) => {
+export const SectionTitle = memo(({children, ...rest}: ISectionChildProps) => {
   return (
     <VStack {...rest}>
       {typeof children === 'string' ? (
@@ -31,10 +31,8 @@ Section.Title = ({children, ...rest}: ISectionChildProps) => {
       )}
     </VStack>
   );
-};
+});
 
-Section.Content = ({...rest}: ISectionChildProps) => {
+export const SectionContent = memo(({...rest}: ISectionChildProps) => {
   return <VStack {...rest} />;
-};
-
-export {Section};
+});

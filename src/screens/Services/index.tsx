@@ -35,7 +35,6 @@ const Services = ({navigation}: Props) => {
   return (
     <Container
       edges={['top', 'left', 'right']}
-      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
       style={[globalStyles.container, styles.container]}>
       <Text size="3xl" family="product">
         {t('Services')}

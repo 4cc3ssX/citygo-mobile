@@ -14,29 +14,20 @@ export interface IDirectionRouteDetailsProps {
 }
 
 export const DirectionRouteDetails = ({route}: IDirectionRouteDetailsProps) => {
-  const app = useAppStore();
+  const {speedLimit} = useAppStore();
   const {theme} = useStyles();
 
   const duration = useMemo(
     () =>
-      route.transitSteps.reduce((prev, curr) => {
-        if (typeof prev === 'number') {
-          return (
-            prev +
-            calculateTime(
-              curr.distance,
-              curr.type === TransitType.TRANSIT
-                ? app.speedLimit
-                : app.walkSpeed,
-            )
-          );
-        }
-        return calculateTime(
-          curr.distance,
-          curr.type === TransitType.TRANSIT ? app.speedLimit : app.walkSpeed,
-        );
-      }, 0),
-    [app.speedLimit, app.walkSpeed, route.transitSteps],
+      route.transitSteps
+        .filter(t => t.type === TransitType.TRANSIT)
+        .reduce((prev, curr) => {
+          if (typeof prev === 'number') {
+            return prev + calculateTime(curr.distance, speedLimit);
+          }
+          return calculateTime(curr.distance, speedLimit);
+        }, 0),
+    [route.transitSteps, speedLimit],
   );
 
   return (

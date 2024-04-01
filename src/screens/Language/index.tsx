@@ -1,13 +1,22 @@
 import React, {useCallback} from 'react';
+import {FlatList} from 'react-native';
 
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
-import {Container, Radio, RowItem, Stack, Text} from '@components/ui';
+import {
+  Container,
+  Radio,
+  RowItem,
+  RowItemContent,
+  RowItemLeft,
+  RowItemRight,
+  Stack,
+  Text,
+} from '@components/ui';
 import {useThemeName} from '@hooks/useThemeName';
 import {supportedLanguages, supportedLng} from '@locales/helpers';
 import {useAppStore} from '@store/app';
 import {globalStyles} from '@styles/global';
-import {FlatList} from 'react-native';
 
 const flags = {
   mm: '🇲🇲',
@@ -25,10 +34,7 @@ const Language = () => {
     [],
   );
   return (
-    <Container
-      hasHeader
-      barStyle={themeName === 'dark' ? 'light-content' : 'dark-content'}
-      style={globalStyles.container}>
+    <Container hasHeader style={globalStyles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={Object.keys(supportedLanguages)}
@@ -41,17 +47,17 @@ const Language = () => {
               bc={isSelected ? theme.colors.primary : theme.colors.border}
               bg={theme.colors.background}
               onPress={() => app.setLanguage(lang as supportedLng)}>
-              <RowItem.Left bg={theme.colors.background}>
+              <RowItemLeft bg={theme.colors.background}>
                 <Text size="xl" textAlign="center">
                   {flags[lang as supportedLng]}
                 </Text>
-              </RowItem.Left>
-              <RowItem.Content>
+              </RowItemLeft>
+              <RowItemContent>
                 {supportedLanguages[lang as supportedLng]}
-              </RowItem.Content>
-              <RowItem.Right pr={theme.spacing['3']}>
+              </RowItemContent>
+              <RowItemRight pr={theme.spacing['3']}>
                 <Radio isChecked={isSelected} />
-              </RowItem.Right>
+              </RowItemRight>
             </RowItem>
           );
         }}

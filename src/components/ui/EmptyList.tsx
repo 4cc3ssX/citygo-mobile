@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 import {useStyles} from 'react-native-unistyles';
 
@@ -10,7 +10,7 @@ export interface EmptyViewProps extends IVStackProps {
   message?: string;
 }
 
-export const EmptyList = ({title, message, ...rest}: EmptyViewProps) => {
+export const EmptyList = memo(({title, message, ...rest}: EmptyViewProps) => {
   const {theme} = useStyles();
   return (
     <VStack
@@ -33,4 +33,4 @@ export const EmptyList = ({title, message, ...rest}: EmptyViewProps) => {
       )}
     </VStack>
   );
-};
+});

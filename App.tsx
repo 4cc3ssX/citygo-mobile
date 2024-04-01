@@ -3,12 +3,13 @@ import '@theme/unistyles';
 import '@locales';
 
 import React, {useEffect} from 'react';
-import {Platform, StatusBar, useColorScheme} from 'react-native';
+import {useColorScheme} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 
 import {useTranslation} from 'react-i18next';
+import {SystemBars} from 'react-native-bars';
 import {enableLatestRenderer} from 'react-native-maps';
-import {enableScreens} from 'react-native-screens';
+import {enableFreeze, enableScreens} from 'react-native-screens';
 import {UnistylesRuntime} from 'react-native-unistyles';
 
 import {AppContextProvider} from '@hooks/context';
@@ -17,6 +18,7 @@ import {useAppStore} from '@store/app';
 import {isSystemTheme} from '@utils/theme';
 
 enableScreens(true);
+enableFreeze(true);
 enableLatestRenderer();
 
 function Main() {
@@ -50,15 +52,9 @@ function Main() {
 }
 
 function App(): React.JSX.Element {
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor('rgba(0, 0, 0, 0)');
-      StatusBar.setTranslucent(true);
-    }
-  }, []);
   return (
     <AppContextProvider>
-      <StatusBar barStyle="dark-content" animated />
+      <SystemBars barStyle="dark-content" animated />
       <Main />
     </AppContextProvider>
   );

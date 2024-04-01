@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {useCallback} from 'react';
 import {GestureResponderEvent, Pressable} from 'react-native';
 
@@ -12,7 +12,7 @@ export interface ILinkProps extends ITextProps {
   to?: string;
 }
 
-export const Link = ({to, onPress, children, ...rest}: ILinkProps) => {
+export const Link = memo(({to, onPress, children, ...rest}: ILinkProps) => {
   const {theme} = useStyles();
 
   /* Handlers */
@@ -40,4 +40,4 @@ export const Link = ({to, onPress, children, ...rest}: ILinkProps) => {
       )}
     </Pressable>
   );
-};
+});

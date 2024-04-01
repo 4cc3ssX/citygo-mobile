@@ -17,7 +17,7 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
 
   const headerStyle = useMemo(
     () => StyleSheet.flatten(options.headerStyle as StyleProp<ViewStyle>),
-    [],
+    [options.headerStyle],
   );
 
   /* Handlers */

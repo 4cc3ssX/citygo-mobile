@@ -20,6 +20,7 @@ export const getNearestStops = async (params: GetNearestStops) => {
 
 export const getStops = async <T = IStop[]>(
   format: ResponseFormat = ResponseFormat.JSON,
+  onSuccess?: (data: T) => void,
 ): Promise<T> => {
   const {axios} = createRequest();
 
@@ -29,6 +30,10 @@ export const getStops = async <T = IStop[]>(
 
   if (data.status !== 'ok') {
     throw data.error || data.errors;
+  }
+
+  if (onSuccess) {
+    onSuccess(data.data);
   }
 
   return data.data;

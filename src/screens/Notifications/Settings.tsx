@@ -19,11 +19,7 @@ const NotificationSettings = (props: Props) => {
   const themeName = useThemeName();
   const {styles, theme} = useStyles(stylesheet);
   return (
-    <Container
-      hasHeader
-      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
-      style={[globalStyles.container, styles.container]}
-    />
+    <Container hasHeader style={[globalStyles.container, styles.container]} />
   );
 };
 

@@ -71,6 +71,7 @@ export default function Tab() {
         name="Map"
         component={Map}
         options={{
+          lazy: false,
           tabBarLabel: t('Map'),
           tabBarIcon: ({focused, color, size}) => {
             return (

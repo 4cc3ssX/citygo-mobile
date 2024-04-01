@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 
 import {findRoutes, getRouteById, getRoutes} from '@api/routes';
+import {UnableToFindRoutes} from '@errors/routes';
 import {ResponseError, ResponseErrors, ResponseFormat} from '@typescript/api';
 import {IFindRoutes} from '@typescript/api/request';
 import {IRoute, ITransitRoute} from '@typescript/api/routes';
@@ -28,8 +29,13 @@ export const useGetRouteById = <T = IRoute>(
     mutationKey: ['getRouteById', format],
     mutationFn: ({id}: {id: string}) => getRouteById<T>(id, format),
   });
+
 export const useFindRoutes = (
-  options?: UseMutationOptions<ITransitRoute[], ResponseErrors, IFindRoutes>,
+  options?: UseMutationOptions<
+    ITransitRoute[],
+    UnableToFindRoutes,
+    IFindRoutes
+  >,
 ) =>
   useMutation({
     ...options,

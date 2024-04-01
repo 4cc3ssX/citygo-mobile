@@ -6,7 +6,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {capitalize} from 'lodash';
 
-import {Container, RowItem, Stack} from '@components/ui';
+import {
+  Container,
+  RowItem,
+  RowItemContent,
+  RowItemRight,
+  Stack,
+} from '@components/ui';
 import {useThemeName} from '@hooks/useThemeName';
 import {useAppStore} from '@store/app';
 import {globalStyles} from '@styles/global';
@@ -25,7 +31,6 @@ const AppTheme = () => {
   return (
     <Container
       hasHeader
-      barStyle={themeName === 'dark' ? 'light-content' : 'dark-content'}
       bg={theme.colors.surface}
       style={globalStyles.container}>
       <FlatList
@@ -43,8 +48,8 @@ const AppTheme = () => {
               bg={theme.colors.surface}
               px={theme.spacing['3']}
               onPress={() => app.setTheme(name)}>
-              <RowItem.Content>{capitalize(name)}</RowItem.Content>
-              <RowItem.Right>
+              <RowItemContent>{capitalize(name)}</RowItemContent>
+              <RowItemRight>
                 {isSelected && (
                   <Ionicons
                     name="checkmark"
@@ -52,10 +57,15 @@ const AppTheme = () => {
                     size={24}
                   />
                 )}
-              </RowItem.Right>
+              </RowItemRight>
             </RowItem>
           );
         }}
+        getItemLayout={(data, index) => ({
+          length: theme.spacing['12'],
+          offset: theme.spacing['12'] * index,
+          index,
+        })}
         contentContainerStyle={styles.container}
       />
     </Container>

@@ -20,6 +20,9 @@ import {
   IconButton,
   Link,
   RowItem,
+  RowItemContent,
+  RowItemLeft,
+  RowItemRight,
   Stack,
   Text,
   VStack,
@@ -58,15 +61,12 @@ const Home = ({navigation}: Props) => {
 
   /* Map State */
   const map = useMapStore();
-  const [isLocating, setIsLocating] = useState(false);
 
   /* Ref */
   const mapRef = useRef<MapView>(null);
 
   /* Handlers */
   const onLocateMe = useCallback(() => {
-    setIsLocating(true);
-
     Geolocation.getCurrentPosition(
       ({coords}) => {
         getNearestStops({lat: coords.latitude, lng: coords.longitude});
@@ -83,18 +83,14 @@ const Home = ({navigation}: Props) => {
         mapRef.current?.animateToRegion(region);
 
         map.setLastRegion(region);
-        setTimeout(() => {
-          setIsLocating(false);
-        }, 500);
       },
       err => {
         console.log(err);
-        setIsLocating(false);
       },
       {
         accuracy: {
-          android: 'balanced',
-          ios: 'best',
+          android: 'low',
+          ios: 'bestForNavigation',
         },
         maximumAge: 5000,
       },
@@ -125,7 +121,6 @@ const Home = ({navigation}: Props) => {
   return (
     <Container
       edges={['top', 'left', 'right']}
-      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
       style={[globalStyles.container, styles.container]}>
       <HStack alignItems="center" gap={theme.spacing['3.5']}>
         <Avatar
@@ -174,7 +169,7 @@ const Home = ({navigation}: Props) => {
               bw={1}
               bc={theme.colors.border}
               style={[styles.rowItemContainer]}>
-              <RowItem.Left
+              <RowItemLeft
                 w={theme.spacing['10']}
                 h={theme.spacing['12']}
                 alignItems="center"
@@ -182,8 +177,8 @@ const Home = ({navigation}: Props) => {
                 bg={theme.colors.blueSoft1}
                 br={theme.roundness}>
                 <Text>📍</Text>
-              </RowItem.Left>
-              <RowItem.Content>
+              </RowItemLeft>
+              <RowItemContent>
                 <Text
                   color={theme.colors.gray2}
                   size={theme.fonts.sizes.sm}
@@ -193,16 +188,16 @@ const Home = ({navigation}: Props) => {
                 <Text size="lg" numberOfLines={1}>
                   Junction City Tower
                 </Text>
-              </RowItem.Content>
-              <RowItem.Right>
+              </RowItemContent>
+              <RowItemRight>
                 <BusLineCard>20</BusLineCard>
-              </RowItem.Right>
+              </RowItemRight>
             </RowItem>
             <RowItem
               bw={1}
               bc={theme.colors.border}
               style={[styles.rowItemContainer]}>
-              <RowItem.Left
+              <RowItemLeft
                 w={theme.spacing['10']}
                 h={theme.spacing['12']}
                 alignItems="center"
@@ -210,8 +205,8 @@ const Home = ({navigation}: Props) => {
                 bg={theme.colors.blueSoft1}
                 br={theme.roundness}>
                 <Text>📍</Text>
-              </RowItem.Left>
-              <RowItem.Content>
+              </RowItemLeft>
+              <RowItemContent>
                 <Text
                   color={theme.colors.gray2}
                   size={theme.fonts.sizes.sm}
@@ -221,13 +216,13 @@ const Home = ({navigation}: Props) => {
                 <Text size="lg" numberOfLines={1}>
                   Time City
                 </Text>
-              </RowItem.Content>
-              <RowItem.Right>
+              </RowItemContent>
+              <RowItemRight>
                 <HStack alignItems="center" gap={theme.spacing['1']}>
                   <BusLineCard>61</BusLineCard>
                   <BusLineCard bg={theme.colors.error}>65</BusLineCard>
                 </HStack>
-              </RowItem.Right>
+              </RowItemRight>
             </RowItem>
           </View>
         </Stack>
@@ -238,13 +233,13 @@ const Home = ({navigation}: Props) => {
               bg={theme.colors.blueSoft1}
               style={[styles.rowItemContainer]}
               onPress={() => navigation.navigate('Search', {})}>
-              <RowItem.Left
+              <RowItemLeft
                 w={theme.spacing['10']}
                 alignItems="center"
                 justifyContent="center">
                 <Ionicons name="search-outline" size={23} />
-              </RowItem.Left>
-              <RowItem.Content>
+              </RowItemLeft>
+              <RowItemContent>
                 <Text
                   lineHeight="sm"
                   color={theme.colors.gray2}
@@ -255,8 +250,8 @@ const Home = ({navigation}: Props) => {
                 <Text color={theme.colors.text} size="lg" numberOfLines={1}>
                   Hledan
                 </Text>
-              </RowItem.Content>
-              <RowItem.Right>
+              </RowItemContent>
+              <RowItemRight>
                 <IconButton
                   pointerEvents="none"
                   color="primary"
@@ -268,7 +263,7 @@ const Home = ({navigation}: Props) => {
                     />
                   }
                 />
-              </RowItem.Right>
+              </RowItemRight>
             </RowItem>
             <View style={styles.mapViewContainer}>
               <MapView

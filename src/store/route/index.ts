@@ -6,16 +6,41 @@ import {IRecentRoute} from '@store/types';
 
 export interface IRouteState {
   recentRoutes: IRecentRoute[];
-  setRecentRoute: (recent: IRecentRoute) => void;
+  addRecentRoute: (recent: IRecentRoute) => void;
 }
 
 export const useRouteStore = create(
   persist<IRouteState>(
     set => ({
       recentRoutes: [],
-      setRecentRoute: (recent: IRecentRoute) =>
+      addRecentRoute: (recent: IRecentRoute) =>
+        set(state => {
+          if (
+            state.recentRoutes.some(
+              r =>
+                r.from.id === recent.from.id &&
+                r.to.id === recent.to.id &&
+                r.id === recent.id,
+            )
+          ) {
+            return state;
+          }
+
+          return {
+            recentRoutes: [recent].concat(state.recentRoutes),
+          };
+        }),
+      updateRecentRoute: (id: string, data: Partial<IRecentRoute>) =>
         set(state => ({
-          recentRoutes: [recent].concat(state.recentRoutes),
+          recentRoutes: state.recentRoutes.map(r => {
+            if (r.id === id) {
+              return {
+                ...r,
+                ...data,
+              };
+            }
+            return r;
+          }),
         })),
     }),
     {

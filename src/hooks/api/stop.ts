@@ -1,10 +1,13 @@
 import {
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
   useInfiniteQuery,
   useMutation,
   UseMutationOptions,
   useQuery,
-  UseQueryOptions,
 } from '@tanstack/react-query';
+
+import {Optional} from 'utility-types';
 
 import {getNearestStops, getPaginatedStops, getStops} from '@api/stop';
 import {ResponseError, ResponseFormat} from '@typescript/api';
@@ -22,13 +25,14 @@ export const useGetNearestStops = (
 
 export const useGetStops = <T = IStop[]>(
   format: ResponseFormat = ResponseFormat.JSON,
-  options?: UseQueryOptions<T, ResponseError>,
+  options?: Optional<DefinedInitialDataOptions<T, ResponseError>, 'queryKey'>,
+  onSuccess?: (data: T) => void,
 ) =>
   useQuery({
     ...options,
     queryKey: ['stops', format],
-    queryFn: () => getStops<T>(format),
-  });
+    queryFn: () => getStops<T>(format, onSuccess),
+  }) as DefinedUseQueryResult<T, ResponseError>;
 
 export const useGetPaginatedStops = () =>
   useInfiniteQuery({

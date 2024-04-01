@@ -9,6 +9,7 @@ import {home, homeOutline} from './home';
 import {map, mapOutline} from './map';
 import {marker} from './marker';
 import {pin} from './pin';
+import {rightCircleIcon} from './right-circle';
 import {services, servicesOutline} from './service';
 import {settings, settingsOutline} from './settings';
 import {user} from './user';
@@ -36,6 +37,7 @@ export const icons = {
   bus,
   marker,
   'chevron-right': chevronRightIcon,
+  'right-circle': rightCircleIcon,
 } as const;
 
 export * from './Icon';

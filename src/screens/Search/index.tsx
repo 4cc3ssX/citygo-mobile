@@ -22,6 +22,8 @@ import {
   Input,
   InputAccessoryView,
   RowItem,
+  RowItemContent,
+  RowItemLeft,
   Separator,
   Text,
   VStack,
@@ -32,13 +34,15 @@ import {useGetStops} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
 import {useAppStore} from '@store/app';
+import {useStopStore} from '@store/stop';
 import {globalStyles} from '@styles/global';
+import {ResponseFormat} from '@typescript/api';
 import {IStop} from '@typescript/api/stops';
 
 type Props = NativeStackScreenProps<RootStackParamsList, 'Search'>;
 
 const fuseOptions: IFuseOptions<IStop> = {
-  threshold: 0.2,
+  threshold: 0.1,
   keys: ['name.en', 'name.mm'],
 };
 
@@ -50,7 +54,10 @@ const Search = ({navigation, route}: Props) => {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
   const themeName = useThemeName();
+
+  /* Store */
   const app = useAppStore();
+  const stopStore = useStopStore();
 
   const {styles, theme} = useStyles(stylesheet);
 
@@ -58,7 +65,16 @@ const Search = ({navigation, route}: Props) => {
   const [searchStops, setSearchStops] = useState<IStop[]>([]);
 
   /* Query */
-  const {isFetching: isStopsFetching, data: stops} = useGetStops();
+  const {isFetching: isStopsFetching, data: stops} = useGetStops(
+    ResponseFormat.JSON,
+    {
+      refetchOnWindowFocus: false,
+      initialData: stopStore.stops,
+    },
+    data => {
+      stopStore.setStops(data);
+    },
+  );
 
   const fuse = useMemo(() => new Fuse(stops || [], fuseOptions), [stops]);
 
@@ -184,7 +200,7 @@ const Search = ({navigation, route}: Props) => {
   );
 
   const listEmptyComponent = useCallback(() => {
-    if (!isStopsFetching && searchStops.length === 0) {
+    if (!isStopsFetching || searchStops.length === 0) {
       return <EmptyList mb={theme.spacing['10']} title="No stops found" />;
     }
 
@@ -223,7 +239,6 @@ const Search = ({navigation, route}: Props) => {
     <Container
       hasHeader
       containerPaddingTop={theme.spacing['3']}
-      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
       bg={theme.colors.surface}
       style={[globalStyles.container, styles.container]}>
       <InputAccessoryView nativeID={chooseOnMapButtonNativeID}>
@@ -313,20 +328,25 @@ const Search = ({navigation, route}: Props) => {
         ListEmptyComponent={listEmptyComponent}
         renderItem={({item}) => (
           <RowItem h={theme.spacing['15']} onPress={() => onSelectStop(item)}>
-            <RowItem.Left bg={theme.colors.background}>
+            <RowItemLeft bg={theme.colors.background}>
               <Text size="xl" textAlign="center">
                 📍
               </Text>
-            </RowItem.Left>
-            <RowItem.Content>
+            </RowItemLeft>
+            <RowItemContent>
               <Text size="md">{item.name[app.language]}</Text>
               <Text size="xs" color={theme.colors.gray2} numberOfLines={1}>
                 {item.road[app.language]}, {item.township[app.language]}
               </Text>
-            </RowItem.Content>
+            </RowItemContent>
           </RowItem>
         )}
         keyExtractor={(item, index) => `stop-${item.id}-${index}`}
+        getItemLayout={(data, index) => ({
+          length: theme.spacing['15'],
+          offset: theme.spacing['15'] * index,
+          index,
+        })}
         contentContainerStyle={styles.listContainer(insets.bottom)}
       />
     </Container>

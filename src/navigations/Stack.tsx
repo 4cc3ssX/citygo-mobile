@@ -40,6 +40,9 @@ export type RootStackParamsList = {
   Directions: {
     transitRoute: ITransitRoute;
   } & FindRouteValues;
+  LiveAction: {
+    transitRoute: ITransitRoute;
+  } & FindRouteValues;
 };
 
 const RNStack = createNativeStackNavigator<RootStackParamsList>();

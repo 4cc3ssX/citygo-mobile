@@ -3,7 +3,15 @@ import {Image} from 'react-native';
 
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
-import {IRowItemProps, RowItem, Separator, Text} from '@components/ui';
+import {
+  IRowItemProps,
+  RowItem,
+  RowItemContent,
+  RowItemLeft,
+  RowItemRight,
+  Separator,
+  Text,
+} from '@components/ui';
 import {FindRouteValues} from '@helpers/validations';
 
 export interface IRouteInfoCardProps
@@ -20,7 +28,7 @@ export const RouteInfoCard = ({from, to, ...rest}: IRouteInfoCardProps) => {
       bg={theme.colors.gray3}
       gap={theme.spacing['1.5']}
       {...rest}>
-      <RowItem.Left
+      <RowItemLeft
         bg="transparent"
         minW={theme.spacing['20']}
         maxW={theme.spacing['24']}
@@ -32,8 +40,8 @@ export const RouteInfoCard = ({from, to, ...rest}: IRouteInfoCardProps) => {
         <Text family="product" size="md" textAlign="left" numberOfLines={1}>
           {from.name}
         </Text>
-      </RowItem.Left>
-      <RowItem.Content>
+      </RowItemLeft>
+      <RowItemContent>
         <Separator size={1.5}>
           <Image
             source={require('@assets/images/ybs.png')}
@@ -41,8 +49,8 @@ export const RouteInfoCard = ({from, to, ...rest}: IRouteInfoCardProps) => {
             style={styles.image}
           />
         </Separator>
-      </RowItem.Content>
-      <RowItem.Right
+      </RowItemContent>
+      <RowItemRight
         minW={theme.spacing['20']}
         maxW={theme.spacing['24']}
         alignItems="flex-end"
@@ -53,7 +61,7 @@ export const RouteInfoCard = ({from, to, ...rest}: IRouteInfoCardProps) => {
         <Text family="product" size="md" textAlign="right" numberOfLines={1}>
           {to.name}
         </Text>
-      </RowItem.Right>
+      </RowItemRight>
     </RowItem>
   );
 };

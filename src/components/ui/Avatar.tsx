@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {Image, ImageProps, StyleSheet} from 'react-native';
 
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
@@ -27,30 +27,26 @@ export interface IAvatarProps
   >;
 }
 
-const Avatar = ({
-  source,
-  children,
-  style,
-  imageProps,
-  ...rest
-}: IAvatarProps) => {
-  const {styles} = useStyles(stylesheet);
-  return (
-    <VStack
-      alignItems="center"
-      justifyContent="center"
-      style={[styles.avatarContainer, style]}
-      {...rest}>
-      <Image
-        resizeMode="cover"
-        source={source}
-        {...imageProps}
-        style={[styles.avatarImage, imageProps?.style]}
-      />
-      {children}
-    </VStack>
-  );
-};
+const Avatar = memo(
+  ({source, children, style, imageProps, ...rest}: IAvatarProps) => {
+    const {styles} = useStyles(stylesheet);
+    return (
+      <VStack
+        alignItems="center"
+        justifyContent="center"
+        style={[styles.avatarContainer, style]}
+        {...rest}>
+        <Image
+          resizeMode="cover"
+          source={source}
+          {...imageProps}
+          style={[styles.avatarImage, imageProps?.style]}
+        />
+        {children}
+      </VStack>
+    );
+  },
+);
 
 const stylesheet = createStyleSheet(theme => ({
   avatarContainer: {

@@ -12,7 +12,7 @@ import Animated, {
 import {createStyleSheet} from 'react-native-unistyles';
 import {UnistylesTheme} from 'react-native-unistyles/lib/typescript/src/types';
 
-import {HStack, Text} from '@components/ui';
+import {Text} from '@components/ui';
 import {defaultSpringConfig, defaultTimingConfig} from '@helpers/animation';
 import {spacing} from '@theme/spacing';
 
@@ -247,9 +247,7 @@ const CustomTab = memo(
     insets,
   }: BottomTabBarProps & {theme: UnistylesTheme}) => {
     return (
-      <HStack
-        alignItems="center"
-        justifyContent="center"
+      <View
         style={[
           styles.container,
           {bottom: insets.bottom + theme.spacing['2']},
@@ -298,13 +296,16 @@ const CustomTab = memo(
             />
           );
         })}
-      </HStack>
+      </View>
     );
   },
 );
 
 const styles = createStyleSheet({
   container: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center',
     position: 'absolute',
     left: 0,
     right: 0,

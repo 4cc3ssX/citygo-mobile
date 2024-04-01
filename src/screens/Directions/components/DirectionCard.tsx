@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Pressable, StyleSheet} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 
 import Animated, {FadeInUp, FadeOutDown} from 'react-native-reanimated';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
@@ -16,8 +16,9 @@ import {
   VStack,
 } from '@components/ui';
 import {useAppStore} from '@store/app';
+import {globalStyles} from '@styles/global';
 import {
-  ITransit,
+  ITransitPopulatedStops,
   ITransitStep,
   ITransitWalk,
   TransitType,
@@ -25,13 +26,9 @@ import {
 import {IStop} from '@typescript/api/stops';
 import {calculateTime} from '@utils';
 
-export interface IDirectionTransit extends Omit<ITransit, 'stops'> {
-  stops: IStop[];
-}
-
 export interface IDirectionCardProps {
   transitStep: Omit<ITransitStep, 'step'> & {
-    step: IDirectionTransit & ITransitWalk;
+    step: ITransitPopulatedStops & ITransitWalk;
   };
   isLast: boolean;
   onPress: (stop: IStop) => void;
@@ -64,25 +61,42 @@ export const DirectionCard = ({
           )}
         </BusLineCard>
         {transitStep.type === TransitType.WALK ? (
-          <Text>
-            Walk {calculateTime(transitStep.distance, walkSpeed)} mins{' '}
+          <HStack
+            flex={1}
+            px={theme.spacing['3']}
+            br={10}
+            h={theme.spacing['11']}
+            alignItems="center"
+            justifyContent="center"
+            gap={theme.spacing['1']}>
+            <View style={globalStyles.flex}>
+              <Text size="sm">
+                Walk {calculateTime(transitStep.distance, walkSpeed)} mins{' '}
+              </Text>
+            </View>
             <Text size="xs" color={theme.colors.gray2}>
               {transitStep.distance.toFixed(2)} km
             </Text>
-          </Text>
+          </HStack>
         ) : (
-          <Stack
+          <HStack
             flex={1}
             px={theme.spacing['3']}
-            py={theme.spacing['1.5']}
             bg={theme.colors.gray3}
             br={10}
             h={theme.spacing['11']}
-            justifyContent="center">
-            <Text size="xs" numberOfLines={2}>
-              {transitStep.step.name[language]}
+            alignItems="center"
+            justifyContent="center"
+            gap={theme.spacing['1']}>
+            <View style={globalStyles.flex}>
+              <Text size="xs" numberOfLines={2}>
+                {transitStep.step.name[language]}
+              </Text>
+            </View>
+            <Text size="xs" color={theme.colors.gray2}>
+              {transitStep.distance.toFixed(2)} km
             </Text>
-          </Stack>
+          </HStack>
         )}
       </HStack>
       {transitStep.type === TransitType.TRANSIT ? (
@@ -90,7 +104,9 @@ export const DirectionCard = ({
           <HStack alignItems="center">
             <JoinDot color={transitStep.step.color} />
             <Pressable onPress={() => onPress(transitStep.step.stops.at(0)!)}>
-              <Text>{transitStep.step.stops.at(0)?.name[language]}</Text>
+              <Text size="sm">
+                {transitStep.step.stops.at(0)?.name[language]}
+              </Text>
             </Pressable>
           </HStack>
           {transitStep.step.stops.length > 2 && (

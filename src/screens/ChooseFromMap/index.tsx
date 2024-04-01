@@ -21,6 +21,7 @@ import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
 import {useAppStore} from '@store/app';
 import {useMapStore} from '@store/map';
+import {useStopStore} from '@store/stop';
 import {ResponseFormat} from '@typescript/api';
 import {IStop} from '@typescript/api/stops';
 import {boundingBoxToBbox, convertFeatureToData} from '@utils/map';
@@ -42,11 +43,24 @@ const ChooseFromMap = ({navigation, route}: Props) => {
   /* Store */
   const app = useAppStore();
   const map = useMapStore();
+  const stopStore = useStopStore();
 
   /* Query */
   const {isFetching, data: stops} = useGetStops<
     FeatureCollection<Point, IStop>
-  >(ResponseFormat.GEOJSON);
+  >(
+    ResponseFormat.GEOJSON,
+    {
+      refetchOnWindowFocus: false,
+      initialData: {
+        type: 'FeatureCollection',
+        features: stopStore.geojson,
+      },
+    },
+    data => {
+      stopStore.setGeoJSON(data.features);
+    },
+  );
 
   /* Ref */
   const mapRef = useRef<MapView>(null);
@@ -63,7 +77,7 @@ const ChooseFromMap = ({navigation, route}: Props) => {
     zoom,
     disableRefresh: isFetching,
     options: {
-      radius: 40,
+      radius: 35,
       maxZoom: 20,
     },
   });
@@ -114,8 +128,8 @@ const ChooseFromMap = ({navigation, route}: Props) => {
       },
       {
         accuracy: {
-          android: 'balanced',
-          ios: 'best',
+          android: 'low',
+          ios: 'bestForNavigation',
         },
         maximumAge: 5000,
       },
@@ -132,8 +146,7 @@ const ChooseFromMap = ({navigation, route}: Props) => {
   }, []);
 
   return (
-    <Container
-      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}>
+    <Container>
       <VStack style={styles.fabContainer(insets)}>
         <IconButton
           disabled={isLocating}
@@ -154,7 +167,7 @@ const ChooseFromMap = ({navigation, route}: Props) => {
         onRegionChangeComplete={handleRegionChange}
         style={styles.mapView}>
         {clusters?.map((point, index) => {
-          const properties = point.properties;
+          const properties = point.properties || {};
 
           if (properties.cluster) {
             return null;

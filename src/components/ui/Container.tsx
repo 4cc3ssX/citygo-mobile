@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
-import {StatusBar, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 
-import {NavigationBar, SystemBarStyle} from 'react-native-bars';
+import {SystemBars, SystemBarStyle} from 'react-native-bars';
 import {
   Edge,
   Edges,
@@ -12,13 +12,12 @@ import {
 import {useStyles} from 'react-native-unistyles';
 
 import {Constants} from '@constants';
+import {useThemeName} from '@hooks/useThemeName';
 
 interface ContainerProps extends SafeAreaViewProps {
   containerPaddingTop?: number;
   hasHeader?: boolean;
-  handleKeyboard?: boolean;
   barStyle?: SystemBarStyle;
-  navigationBarStyle?: SystemBarStyle;
   bg?: string;
 }
 
@@ -33,9 +32,7 @@ export const Container = memo(
   ({
     containerPaddingTop,
     hasHeader = false,
-    handleKeyboard,
-    barStyle,
-    navigationBarStyle,
+    barStyle: defaultBarStyle,
     bg,
     edges,
     style,
@@ -44,14 +41,17 @@ export const Container = memo(
     const insets = useSafeAreaInsets();
     const {theme} = useStyles();
 
+    const themeName = useThemeName();
+
     return (
       <>
-        {barStyle ? (
-          <StatusBar barStyle={barStyle} translucent animated />
-        ) : null}
-        {navigationBarStyle ? (
-          <NavigationBar barStyle={navigationBarStyle} />
-        ) : null}
+        <SystemBars
+          barStyle={
+            defaultBarStyle ||
+            (themeName === 'light' ? 'dark-content' : 'light-content')
+          }
+          animated
+        />
 
         <SafeAreaView
           edges={

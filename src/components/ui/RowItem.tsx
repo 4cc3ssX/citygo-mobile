@@ -16,7 +16,7 @@ export interface IRowItemChildProps extends IVStackProps {
   styles?: ReturnType<typeof stylesheet>;
 }
 
-const RowItem = ({style, children, onPress, ...rest}: IRowItemProps) => {
+const RowItem = memo(({style, children, onPress, ...rest}: IRowItemProps) => {
   const {styles, theme} = useStyles(stylesheet);
 
   return (
@@ -37,9 +37,9 @@ const RowItem = ({style, children, onPress, ...rest}: IRowItemProps) => {
       </HStack>
     </Pressable>
   );
-};
+});
 
-RowItem.Left = memo(
+export const RowItemLeft = memo(
   ({children, styles, style, ...rest}: IRowItemChildProps) => {
     return (
       <VStack style={[styles?.rowItemLeftContainer, style]} {...rest}>
@@ -49,7 +49,7 @@ RowItem.Left = memo(
   },
 );
 
-RowItem.Content = memo(
+export const RowItemContent = memo(
   ({styles, children, style, ...rest}: IRowItemChildProps) => {
     return (
       <VStack style={[styles?.rowItemContentContainer, style]} {...rest}>
@@ -65,7 +65,7 @@ RowItem.Content = memo(
   },
 );
 
-RowItem.Right = memo(
+export const RowItemRight = memo(
   ({children, styles, style, ...rest}: IRowItemChildProps) => {
     return (
       <VStack style={[styles?.rowItemRightContainer, style]} {...rest}>

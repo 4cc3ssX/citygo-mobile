@@ -5,6 +5,8 @@ const defaultToastOptions: ToastOptions = {
 };
 
 const defaultAlertOptions: AlertOptions = {
+  blurBackdrop: 15,
+  backdropOpacity: 0.1,
   duration: 1.5,
 };
 
@@ -14,6 +16,6 @@ export const showToast = (options: ToastOptions) => {
   toast(options);
 };
 
-export const showAlert = (options: ToastOptions) => {
+export const showAlert = (options: AlertOptions) => {
   alert(options);
 };

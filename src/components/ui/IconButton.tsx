@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
@@ -6,25 +6,22 @@ import {Button, IButtonProps} from './Button';
 
 export interface IIconButton extends IButtonProps {}
 
-export const IconButton = ({
-  icon,
-  size = 'md',
-  style,
-  ...rest
-}: IIconButton) => {
-  const {styles} = useStyles(stylesheet);
-  return (
-    <Button
-      color="surface"
-      alignItems="center"
-      justifyContent="center"
-      activeOpacity={0.7}
-      style={[styles.container(size), style]}
-      {...rest}>
-      {icon}
-    </Button>
-  );
-};
+export const IconButton = memo(
+  ({icon, size = 'md', style, ...rest}: IIconButton) => {
+    const {styles} = useStyles(stylesheet);
+    return (
+      <Button
+        color="surface"
+        alignItems="center"
+        justifyContent="center"
+        activeOpacity={0.7}
+        style={[styles.container(size), style]}
+        {...rest}>
+        {icon}
+      </Button>
+    );
+  },
+);
 
 const stylesheet = createStyleSheet(theme => ({
   container: (size: IButtonProps['size']) => ({

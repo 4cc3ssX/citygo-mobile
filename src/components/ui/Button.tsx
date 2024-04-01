@@ -1,4 +1,4 @@
-import React, {ReactElement} from 'react';
+import React, {memo, ReactElement} from 'react';
 import {
   StyleProp,
   TextStyle,
@@ -33,73 +33,75 @@ export interface IButtonProps
   disableStyle?: StyleProp<ViewStyle>;
 }
 
-export const Button = ({
-  pointerEvents,
-  size = 'md',
-  w,
-  h,
-  icon,
-  color = 'primary',
-  variant = 'solid',
-  titleStyle,
-  titleProps,
-  disabled = false,
-  activeOpacity = 0.95,
-  onPress,
-  children,
-  style,
-  disableStyle,
-  ...rest
-}: IButtonProps) => {
-  const {styles, theme} = useStyles(stylesheet);
+export const Button = memo(
+  ({
+    pointerEvents,
+    size = 'md',
+    w,
+    h,
+    icon,
+    color = 'primary',
+    variant = 'solid',
+    titleStyle,
+    titleProps,
+    disabled = false,
+    activeOpacity = 0.95,
+    onPress,
+    children,
+    style,
+    disableStyle,
+    ...rest
+  }: IButtonProps) => {
+    const {styles, theme} = useStyles(stylesheet);
 
-  return (
-    <TouchableOpacity
-      activeOpacity={activeOpacity}
-      disabled={pointerEvents === 'none' || disabled}
-      onPress={onPress}>
-      <HStack
-        w={w}
-        h={h}
-        alignItems="center"
-        br={theme.roundness}
-        {...rest}
-        style={[
-          styles.buttonContainer(
-            theme.colors[color as ColorKeys] || color,
-            variant,
-            disabled,
-            size,
-          ),
-          style,
-          disabled && disableStyle,
-        ]}>
-        {icon && <View style={styles.buttonIconContainer}>{icon}</View>}
+    return (
+      <TouchableOpacity
+        activeOpacity={activeOpacity}
+        disabled={pointerEvents === 'none' || disabled}
+        onPress={onPress}>
+        <HStack
+          w={w}
+          h={h}
+          alignItems="center"
+          br={theme.roundness}
+          {...rest}
+          style={[
+            styles.buttonContainer(
+              theme.colors[color as ColorKeys] || color,
+              variant,
+              disabled,
+              size,
+            ),
+            style,
+            disabled && disableStyle,
+          ]}>
+          {icon && <View style={styles.buttonIconContainer}>{icon}</View>}
 
-        <View style={styles.buttonTitleContainer}>
-          {React.Children.toArray(children).map((child, index) => (
-            <React.Fragment key={index}>
-              {typeof child === 'string'
-                ? renderNode(Text, child, {
-                    style: [
-                      styles.buttonTitle(
-                        theme.colors[color as ColorKeys] || color,
-                        variant,
-                        disabled,
-                        size,
-                      ),
-                      titleStyle,
-                    ],
-                    ...titleProps,
-                  })
-                : child}
-            </React.Fragment>
-          ))}
-        </View>
-      </HStack>
-    </TouchableOpacity>
-  );
-};
+          <View style={styles.buttonTitleContainer}>
+            {React.Children.toArray(children).map((child, index) => (
+              <React.Fragment key={index}>
+                {typeof child === 'string'
+                  ? renderNode(Text, child, {
+                      style: [
+                        styles.buttonTitle(
+                          theme.colors[color as ColorKeys] || color,
+                          variant,
+                          disabled,
+                          size,
+                        ),
+                        titleStyle,
+                      ],
+                      ...titleProps,
+                    })
+                  : child}
+              </React.Fragment>
+            ))}
+          </View>
+        </HStack>
+      </TouchableOpacity>
+    );
+  },
+);
 
 const stylesheet = createStyleSheet(theme => ({
   buttonContainer: (

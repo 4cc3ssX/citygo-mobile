@@ -1,5 +1,6 @@
 import {ReplaceValueByType} from '..';
 
+import {IStop} from './stops';
 import {ICoordinates, ILocalizedString} from '.';
 
 export interface IRoute {
@@ -30,7 +31,6 @@ export interface IRoute {
 }
 
 export interface ITransitRoute {
-  routes: unknown;
   id: string;
   transitSteps: ITransitStep[];
 }
@@ -40,13 +40,17 @@ export enum TransitType {
   WALK = 'walk',
 }
 
-export interface ITransitStep {
+export interface ITransitStep<T = ITransit> {
   type: TransitType;
-  step: ITransit | ITransitWalk;
+  step: T | ITransitWalk;
   distance: number;
 }
 
 export interface ITransit extends IRoute {}
+
+export interface ITransitPopulatedStops extends Omit<ITransit, 'stops'> {
+  stops: IStop[];
+}
 
 export interface ITransitWalk {
   from: ICoordinates;

@@ -43,6 +43,8 @@ const FindRoute = ({navigation, route}: Props) => {
   /* Query */
   const {
     isPending: isFindRoutesPending,
+    isError,
+    error,
     data: routes,
     mutate: findRoutes,
   } = useFindRoutes();
@@ -80,8 +82,13 @@ const FindRoute = ({navigation, route}: Props) => {
   );
 
   const listEmptyComponent = useCallback(() => {
-    if (!isFindRoutesPending && routes?.length === 0) {
-      return <EmptyList mb={theme.spacing['10']} title="No available routes" />;
+    if (isError || (!isFindRoutesPending && routes?.length === 0)) {
+      return (
+        <EmptyList
+          mb={theme.spacing['10']}
+          title={isError ? error.message : 'No available routes'}
+        />
+      );
     }
 
     return (
@@ -119,7 +126,6 @@ const FindRoute = ({navigation, route}: Props) => {
     <Container
       hasHeader
       containerPaddingTop={theme.spacing['3']}
-      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
       style={[globalStyles.container, styles.container]}>
       <VStack gap={theme.spacing['2.5']}>
         <Input

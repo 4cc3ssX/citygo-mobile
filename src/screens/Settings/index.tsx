@@ -6,7 +6,15 @@ import {useTranslation} from 'react-i18next';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {Container, RowItem, Stack, Text} from '@components/ui';
+import {
+  Container,
+  RowItem,
+  RowItemContent,
+  RowItemLeft,
+  RowItemRight,
+  Stack,
+  Text,
+} from '@components/ui';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
@@ -38,7 +46,6 @@ const Settings = ({navigation}: Props) => {
   return (
     <Container
       edges={['top', 'left', 'right']}
-      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}
       style={[globalStyles.container, styles.container]}>
       <Text size="3xl" family="product">
         {t('Settings')}
@@ -56,17 +63,17 @@ const Settings = ({navigation}: Props) => {
         ItemSeparatorComponent={itemSeparatorComponent}
         renderItem={({item}) => (
           <RowItem onPress={() => navigation.navigate(item.to as any)}>
-            <RowItem.Left bg={theme.colors.blueSoft1}>
+            <RowItemLeft bg={theme.colors.blueSoft1}>
               {item.icon({color: theme.colors.primary, size: 20})}
-            </RowItem.Left>
-            <RowItem.Content>{t(item.title as any)}</RowItem.Content>
-            <RowItem.Right pr={theme.spacing['3']}>
+            </RowItemLeft>
+            <RowItemContent>{t(item.title as any)}</RowItemContent>
+            <RowItemRight pr={theme.spacing['3']}>
               <Ionicons
                 name="chevron-forward-outline"
                 size={14}
                 color={theme.colors.gray2}
               />
-            </RowItem.Right>
+            </RowItemRight>
           </RowItem>
         )}
         keyExtractor={item => `${item.title}`}

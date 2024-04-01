@@ -23,6 +23,8 @@ import {
   IconButton,
   MapCallout,
   RowItem,
+  RowItemContent,
+  RowItemLeft,
   Separator,
   Stack,
   Text,
@@ -37,6 +39,7 @@ import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
 import {useAppStore} from '@store/app';
 import {useMapStore} from '@store/map';
+import {useStopStore} from '@store/stop';
 import {globalStyles} from '@styles/global';
 import {ResponseFormat} from '@typescript/api';
 import {IRoute} from '@typescript/api/routes';
@@ -58,11 +61,24 @@ const Map = ({navigation}: Props) => {
   /* Store */
   const app = useAppStore();
   const map = useMapStore();
+  const stopStore = useStopStore();
 
   /* Query */
   const {isFetching: isStopsFetching, data: stops} = useGetStops<
     FeatureCollection<Point, IStop>
-  >(ResponseFormat.GEOJSON);
+  >(
+    ResponseFormat.GEOJSON,
+    {
+      refetchOnWindowFocus: false,
+      initialData: {
+        type: 'FeatureCollection',
+        features: stopStore.geojson,
+      },
+    },
+    data => {
+      stopStore.setGeoJSON(data.features);
+    },
+  );
 
   /* Ref */
   const mapRef = useRef<MapView>(null);
@@ -95,7 +111,7 @@ const Map = ({navigation}: Props) => {
     zoom,
     disableRefresh: isStopsFetching,
     options: {
-      radius: 40,
+      radius: 35,
       maxZoom: 20,
     },
   });
@@ -139,42 +155,52 @@ const Map = ({navigation}: Props) => {
     [width],
   );
 
-  const onLocateMe = useCallback(() => {
-    setIsLocating(true);
+  const onLocateMe = useCallback(
+    (initial = false) => {
+      if (!initial) {
+        setIsLocating(true);
+      }
 
-    Geolocation.getCurrentPosition(
-      ({coords}) => {
-        map.setUserLocation({lat: coords.latitude, lng: coords.longitude});
+      Geolocation.getCurrentPosition(
+        ({coords}) => {
+          map.setUserLocation({lat: coords.latitude, lng: coords.longitude});
 
-        // update last region
-        const region = Constants.getDefaultMapDelta(
-          coords.latitude,
-          coords.longitude,
-        );
+          // update last region
+          const region = Constants.getDefaultMapDelta(
+            coords.latitude,
+            coords.longitude,
+          );
 
-        mapRef.current?.animateToRegion(region);
+          if (initial) {
+            handleRegionChange(region);
+          }
 
-        map.setLastRegion(region);
-        setTimeout(() => {
-          setIsLocating(false);
-        }, 500);
-      },
-      err => {
-        console.log(err);
-        setIsLocating(false);
-      },
-      {
-        accuracy: {
-          android: 'balanced',
-          ios: 'best',
+          mapRef.current?.animateToRegion(region);
+
+          map.setLastRegion(region);
+          setTimeout(() => {
+            setIsLocating(false);
+          }, 500);
         },
-        maximumAge: 5000,
-      },
-    );
-  }, [map]);
+        err => {
+          console.log(err);
+          setIsLocating(false);
+        },
+        {
+          accuracy: {
+            android: 'low',
+            ios: 'best',
+          },
+          maximumAge: 5000,
+        },
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   useEffect(() => {
-    onLocateMe();
+    onLocateMe(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -199,8 +225,7 @@ const Map = ({navigation}: Props) => {
   );
 
   return (
-    <Container
-      barStyle={themeName === 'light' ? 'dark-content' : 'light-content'}>
+    <Container>
       {/* <BottomSheet
         ref={bottomSheetRef}
         animateOnMount
@@ -270,13 +295,13 @@ const Map = ({navigation}: Props) => {
                   bg={theme.colors.surface}
                   h={theme.spacing['18']}
                   onPress={() => onPressItem(item)}>
-                  <RowItem.Left h="100%" bg={item.color}>
+                  <RowItemLeft h="100%" bg={item.color}>
                     <Text type="semibold" color="white">
                       {item.route_id.split('-')[0]}
                     </Text>
-                  </RowItem.Left>
+                  </RowItemLeft>
                   <Separator h={theme.spacing['8']} direction="vertical" />
-                  <RowItem.Content>
+                  <RowItemContent>
                     <Text size="md" numberOfLines={1}>
                       {item.agency_id}
                     </Text>
@@ -286,11 +311,16 @@ const Map = ({navigation}: Props) => {
                       numberOfLines={2}>
                       {item.name[app.language]}
                     </Text>
-                  </RowItem.Content>
+                  </RowItemContent>
                 </RowItem>
               );
             }}
             keyExtractor={item => `sheet-${item.route_id}`}
+            getItemLayout={(data, index) => ({
+              length: theme.spacing['18'],
+              offset: theme.spacing['18'] * index,
+              index,
+            })}
             contentContainerStyle={[
               styles.innerContainer(insets),
               {paddingBottom: insets.bottom + theme.spacing['3']},
@@ -307,7 +337,7 @@ const Map = ({navigation}: Props) => {
           color="primary"
           icon={<Icon name="gps" color={theme.colors.white} />}
           disableStyle={styles.disabledButton(theme.colors.primary)}
-          onPress={onLocateMe}
+          onPress={() => onLocateMe()}
         />
       </VStack>
       <MapView
@@ -319,7 +349,7 @@ const Map = ({navigation}: Props) => {
         onRegionChangeComplete={handleRegionChange}
         style={styles.mapView}>
         {clusters?.map((point, index) => {
-          const properties = point.properties;
+          const properties = point.properties || {};
 
           if (properties.cluster) {
             return null;

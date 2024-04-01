@@ -9,4 +9,6 @@ export const defaultMapProps: MapViewProps = {
   showsCompass: false,
   toolbarEnabled: false,
   moveOnMarkerPress: false,
+  userLocationUpdateInterval: 500,
+  userLocationFastestInterval: 1000,
 };

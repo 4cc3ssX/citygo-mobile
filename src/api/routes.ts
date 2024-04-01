@@ -1,4 +1,5 @@
 import {routes} from '@constants/api';
+import {UnableToFindRoutes} from '@errors/routes';
 import {createRequest} from '@helpers/request';
 import {IResponse, ResponseFormat} from '@typescript/api';
 import {IFindRoutes} from '@typescript/api/request';
@@ -42,7 +43,9 @@ export const findRoutes = async (values: IFindRoutes) => {
   );
 
   if (data.status !== 'ok') {
-    throw data.error || data.errors;
+    if (data.error) {
+      throw new UnableToFindRoutes(data.error.message);
+    }
   }
 
   return data.data;

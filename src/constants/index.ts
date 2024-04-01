@@ -14,9 +14,9 @@ export class Constants {
   public static readonly HEADER_HEIGHT = 56;
 
   /*
-   * Map radius in meters
+   * Closest stop threshold in meters
    */
-  public static readonly MAP_SCAN_RADIUS = 500;
+  public static readonly CLOSEST_STOP_THRESHOLD = 80;
 
   public static getDefaultError(name: string) {
     return `Unable to get ${name}.`;

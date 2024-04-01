@@ -23,27 +23,20 @@ export interface IRouteCardProps extends ITransitRoute {
 }
 
 export const RouteCard = ({to, transitSteps, onPress}: IRouteCardProps) => {
-  const {walkSpeed, speedLimit} = useAppStore();
+  const {speedLimit} = useAppStore();
   const {styles, theme} = useStyles(stylesheet);
 
   const duration = useMemo(
     () =>
-      transitSteps.reduce((prev, curr) => {
-        if (typeof prev === 'number') {
-          return (
-            prev +
-            calculateTime(
-              curr.distance,
-              curr.type === TransitType.TRANSIT ? speedLimit : walkSpeed,
-            )
-          );
-        }
-        return calculateTime(
-          curr.distance,
-          curr.type === TransitType.TRANSIT ? speedLimit : walkSpeed,
-        );
-      }, 0),
-    [speedLimit, transitSteps, walkSpeed],
+      transitSteps
+        .filter(t => t.type === TransitType.TRANSIT)
+        .reduce((prev, curr) => {
+          if (typeof prev === 'number') {
+            return prev + calculateTime(curr.distance, speedLimit);
+          }
+          return calculateTime(curr.distance, speedLimit);
+        }, 0),
+    [speedLimit, transitSteps],
   );
   return (
     <Pressable onPress={onPress}>

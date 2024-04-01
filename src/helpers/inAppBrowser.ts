@@ -1,5 +1,6 @@
-import {Linking, StatusBar} from 'react-native';
+import {Linking} from 'react-native';
 
+import {StatusBar} from 'react-native-bars';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 export const openBrowser = async (url: string) => {
