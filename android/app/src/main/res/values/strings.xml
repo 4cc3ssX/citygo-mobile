@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CityGo</string>
+    <string name="google_map_api_key">AIzaSyBVcOTQNWlt6iP0VMYYY3otoydGJ2jjcm4</string>
 </resources>
