@@ -1,21 +1,13 @@
-import {alert, AlertOptions, setup, toast, ToastOptions} from '@baronha/ting';
+import {AlertOptions, setup, ToastOptions} from '@baronha/ting';
 
-const defaultToastOptions: ToastOptions = {
+export const DEFAULT_TOAST_OPTIONS: ToastOptions = {
   duration: 1.5,
 };
 
-const defaultAlertOptions: AlertOptions = {
+export const DEFAULT_ALERT_OPTIONS: AlertOptions = {
   blurBackdrop: 15,
   backdropOpacity: 0.1,
   duration: 1.5,
 };
 
-setup({alert: defaultToastOptions, toast: defaultAlertOptions});
-
-export const showToast = (options: ToastOptions) => {
-  toast(options);
-};
-
-export const showAlert = (options: AlertOptions) => {
-  alert(options);
-};
+setup({alert: DEFAULT_TOAST_OPTIONS, toast: DEFAULT_ALERT_OPTIONS});

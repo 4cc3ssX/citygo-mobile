@@ -1,21 +1,24 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
+import {toast} from '@baronha/ting';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import Geolocation from 'react-native-geolocation-service';
 import MapView, {Callout, Marker, Region} from 'react-native-maps';
-import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {createStyleSheet, useStyles} from 'react-native-unistyles';
+import Animated, {SlideInDown, SlideOutDown} from 'react-native-reanimated';
+import {
+  createStyleSheet,
+  UnistylesRuntime,
+  useStyles,
+} from 'react-native-unistyles';
 
 import Color from 'color';
 import {BBox, FeatureCollection, Point} from 'geojson';
 import useSupercluster from 'use-supercluster';
 
-import {Icon} from '@components/icons';
-import {Container, IconButton, MapCallout, VStack} from '@components/ui';
+import {MapCallout} from '@components/ui';
 import {defaultMapProps} from '@configs/map';
-import {Constants} from '@constants';
 import {useGetStops} from '@hooks/api';
+import {useAppContext} from '@hooks/context';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
@@ -26,6 +29,8 @@ import {ResponseFormat} from '@typescript/api';
 import {IStop} from '@typescript/api/stops';
 import {boundingBoxToBbox, convertFeatureToData} from '@utils/map';
 
+import StopCard from './components/StopCard';
+
 type Props = NativeStackScreenProps<
   RootTabParamsList & RootStackParamsList,
   'ChooseFromMap'
@@ -34,9 +39,10 @@ type Props = NativeStackScreenProps<
 const ChooseFromMap = ({navigation, route}: Props) => {
   const {initialRegion, prevRouteName, prevRouteProps} = route.params;
 
-  const insets = useSafeAreaInsets();
   const themeName = useThemeName();
-  const {styles, theme} = useStyles(stylesheet);
+  const {styles} = useStyles(stylesheet);
+
+  const {locatePosition} = useAppContext();
 
   const {width} = useWindowDimensions();
 
@@ -66,9 +72,10 @@ const ChooseFromMap = ({navigation, route}: Props) => {
   const mapRef = useRef<MapView>(null);
 
   /* State */
-  const [isLocating, setIsLocating] = useState(false);
   const [bounds, setBounds] = useState<BBox | null>(null);
   const [zoom, setZoom] = useState(0);
+
+  const [currentStop, setCurrentStop] = useState<IStop | null>(null);
 
   /* Hooks */
   const {clusters} = useSupercluster({
@@ -83,7 +90,7 @@ const ChooseFromMap = ({navigation, route}: Props) => {
   });
 
   /* Handlers */
-  const onPressMarkerHandler = useCallback(
+  const onConfirm = useCallback(
     (stop: IStop) => {
       navigation.navigate(prevRouteName, {
         ...prevRouteProps,
@@ -92,6 +99,11 @@ const ChooseFromMap = ({navigation, route}: Props) => {
     },
     [navigation, prevRouteName, prevRouteProps],
   );
+
+  const onPressMarkerHandler = useCallback((stop: IStop) => {
+    setCurrentStop(stop);
+  }, []);
+
   const handleRegionChange = useCallback(
     async (region: Region) => {
       const regionBounds = await mapRef.current!.getMapBoundaries();
@@ -107,34 +119,17 @@ const ChooseFromMap = ({navigation, route}: Props) => {
     [width],
   );
 
-  const onLocateMe = useCallback(() => {
-    setIsLocating(true);
+  const onLocateMe = useCallback(async () => {
+    toast({
+      title: 'Loading...',
+      preset: 'spinner',
+      duration: 0.5,
+    });
 
-    Geolocation.getCurrentPosition(
-      ({coords}) => {
-        const region = Constants.getDefaultMapDelta(
-          coords.latitude,
-          coords.longitude,
-        );
+    const {region} = await locatePosition();
 
-        mapRef.current?.animateToRegion(region);
-
-        setTimeout(() => {
-          setIsLocating(false);
-        }, 500);
-      },
-      () => {
-        setIsLocating(false);
-      },
-      {
-        accuracy: {
-          android: 'low',
-          ios: 'bestForNavigation',
-        },
-        maximumAge: 5000,
-      },
-    );
-  }, []);
+    mapRef.current?.animateToRegion(region);
+  }, [locatePosition]);
 
   useEffect(() => {
     if (!initialRegion) {
@@ -146,18 +141,7 @@ const ChooseFromMap = ({navigation, route}: Props) => {
   }, []);
 
   return (
-    <Container>
-      <VStack style={styles.fabContainer(insets)}>
-        <IconButton
-          disabled={isLocating}
-          w={theme.spacing['12']}
-          h={theme.spacing['14']}
-          color="primary"
-          icon={<Icon name="gps" color={theme.colors.white} />}
-          disableStyle={styles.disabledButton(theme.colors.primary)}
-          onPress={onLocateMe}
-        />
-      </VStack>
+    <>
       <MapView
         ref={mapRef}
         initialRegion={map.lastRegion || undefined}
@@ -165,7 +149,7 @@ const ChooseFromMap = ({navigation, route}: Props) => {
         mapType="standard"
         userInterfaceStyle={themeName}
         onRegionChangeComplete={handleRegionChange}
-        style={styles.mapView}>
+        style={StyleSheet.absoluteFill}>
         {clusters?.map((point, index) => {
           const properties = point.properties || {};
 
@@ -181,32 +165,43 @@ const ChooseFromMap = ({navigation, route}: Props) => {
               identifier={`marker-${stop.id}-${index}`}
               tracksViewChanges={false}
               coordinate={{latitude: stop.lat, longitude: stop.lng}}
-              image={{uri: 'marker'}}>
-              <Callout tooltip onPress={() => onPressMarkerHandler(stop)}>
-                <MapCallout>{stop.name[app.language]}</MapCallout>
+              image={{uri: 'marker'}}
+              onSelect={() => onPressMarkerHandler(stop)}
+              onDeselect={() => setCurrentStop(null)}>
+              <Callout tooltip>
+                <MapCallout canPress={false}>
+                  {stop.name[app.language]}
+                </MapCallout>
               </Callout>
             </Marker>
           );
         })}
       </MapView>
-    </Container>
+      {currentStop ? (
+        <Animated.View
+          entering={SlideInDown}
+          exiting={SlideOutDown}
+          style={styles.bottomActionContainer}>
+          <StopCard stop={currentStop} onPress={onConfirm} />
+        </Animated.View>
+      ) : null}
+    </>
   );
 };
 
 const stylesheet = createStyleSheet(theme => ({
-  mapView: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 0,
-  },
-  fabContainer: (insets: EdgeInsets) => ({
-    position: 'absolute',
-    right: insets.right + theme.spacing['4'],
-    bottom: insets.bottom + theme.spacing['10'],
-    zIndex: 8,
-  }),
   disabledButton: (color: string) => ({
     backgroundColor: Color(color).lighten(0.25).string(),
   }),
+  bottomActionContainer: {
+    position: 'absolute',
+    right: 0,
+    left: 0,
+    bottom: 0,
+    paddingHorizontal: theme.spacing['6'],
+    paddingBottom: UnistylesRuntime.insets.bottom + theme.spacing['2'],
+    zIndex: 999,
+  },
 }));
 
 export default ChooseFromMap;
