@@ -1,0 +1,12 @@
+diff --git a/ios/Ting.mm b/ios/Ting.mm
+index 2ae7778f02d1a42fc029761a27f0f7c4d6225f85..3673dcf75eb95044891ae3a44c906a0e644a9e78 100644
+--- a/ios/Ting.mm
++++ b/ios/Ting.mm
+@@ -1,6 +1,6 @@
+ #import "Ting.h"
+ 
+-#import <ting-Swift.h>
++#import <Ting/Ting-Swift.h>
+ 
+ @implementation Ting
+ 
