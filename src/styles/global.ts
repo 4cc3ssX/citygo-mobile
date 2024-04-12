@@ -10,14 +10,20 @@ export const globalStyles = StyleSheet.create({
   flex: {
     flex: 1,
   },
-  bottomSheetContainer: {
+  bottomSheetBackground: {
     borderRadius: spacing['11'],
+  },
+  bottomSheetContainer: {
+    zIndex: 12,
   },
   bottomSheetHandleIndicator: {
     width: spacing['12'],
     backgroundColor: lightColors.gray5,
   },
   bottomSheetView: {
-    gap: spacing['4'],
+    paddingHorizontal: spacing['5'],
+  },
+  bottomSheetBackdrop: {
+    zIndex: 8,
   },
 });

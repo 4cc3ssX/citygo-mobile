@@ -1,12 +1,14 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {ScrollView, View} from 'react-native';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 
 import {useTranslation} from 'react-i18next';
-import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker} from 'react-native-maps';
-import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {createStyleSheet, useStyles} from 'react-native-unistyles';
+import {
+  createStyleSheet,
+  UnistylesRuntime,
+  useStyles,
+} from 'react-native-unistyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import dayjs from 'dayjs';
@@ -14,7 +16,6 @@ import dayjs from 'dayjs';
 import {Icon} from '@components/icons';
 import {
   Avatar,
-  BusLineCard,
   Container,
   HStack,
   IconButton,
@@ -36,7 +37,10 @@ import {TAB_HEIGHT} from '@navigations/components';
 import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
 import {useMapStore} from '@store/map';
+import {useUserStore} from '@store/user';
 import {globalStyles} from '@styles/global';
+
+import {FavoriteRouteCard} from './components/FavoriteRouteCard';
 
 type Props = BottomTabScreenProps<
   RootTabParamsList & RootStackParamsList,
@@ -45,78 +49,40 @@ type Props = BottomTabScreenProps<
 
 const Home = ({navigation}: Props) => {
   const {t} = useTranslation();
-  const insets = useSafeAreaInsets();
 
   const themeName = useThemeName();
   const {styles, theme} = useStyles(stylesheet);
 
   /* Context */
-  const {isLocationEnabled, requestPermissions} = useAppContext();
+  const {isLocationEnabled} = useAppContext();
 
   /* Query */
   const {data: nearestStops, mutate: getNearestStops} = useGetNearestStops();
 
-  /* State */
-  const [isReady, setIsReady] = useState(false);
-
   /* Map State */
-  const map = useMapStore();
+  const mapStore = useMapStore();
+  const {bookmarks} = useUserStore();
 
   /* Ref */
   const mapRef = useRef<MapView>(null);
 
   /* Handlers */
-  const onLocateMe = useCallback(() => {
-    Geolocation.getCurrentPosition(
-      ({coords}) => {
-        getNearestStops({lat: coords.latitude, lng: coords.longitude});
-
-        // update user location
-        map.setUserLocation({lat: coords.latitude, lng: coords.longitude});
-
-        // update last region
-        const region = Constants.getDefaultMapDelta(
-          coords.latitude,
-          coords.longitude,
-        );
-
-        mapRef.current?.animateToRegion(region);
-
-        map.setLastRegion(region);
-      },
-      err => {
-        console.log(err);
-      },
-      {
-        accuracy: {
-          android: 'low',
-          ios: 'bestForNavigation',
-        },
-        maximumAge: 5000,
-      },
-    );
+  const onLocateMe = useCallback(async () => {
+    if (mapStore.userLocation && mapStore.lastRegion) {
+      // get nearest stops
+      getNearestStops(mapStore.userLocation);
+      mapRef.current?.animateToRegion(mapStore.lastRegion);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getNearestStops]);
-
-  const onInitialized = useCallback(async () => {
-    await requestPermissions();
-
-    setIsReady(true);
-  }, [requestPermissions]);
+  }, [mapStore.lastRegion, mapStore.userLocation]);
 
   /* Effects */
-
   useEffect(() => {
-    if (isLocationEnabled && isReady) {
+    if (isLocationEnabled) {
       onLocateMe();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLocationEnabled, isReady]);
-
-  useEffect(() => {
-    onInitialized();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isLocationEnabled]);
 
   return (
     <Container
@@ -153,7 +119,7 @@ const Home = ({navigation}: Props) => {
       </HStack>
 
       <ScrollView
-        contentContainerStyle={[styles.container, styles.scrollView(insets)]}
+        contentContainerStyle={[styles.container, styles.scrollView]}
         showsVerticalScrollIndicator={false}>
         <Stack gap={theme.spacing['4']}>
           <HStack justifyContent="space-between" alignItems="center">
@@ -165,65 +131,12 @@ const Home = ({navigation}: Props) => {
             </Link>
           </HStack>
           <View style={styles.cardContainer}>
-            <RowItem
-              bw={1}
-              bc={theme.colors.border}
-              style={[styles.rowItemContainer]}>
-              <RowItemLeft
-                w={theme.spacing['10']}
-                h={theme.spacing['12']}
-                alignItems="center"
-                justifyContent="center"
-                bg={theme.colors.blueSoft1}
-                br={theme.roundness}>
-                <Text>📍</Text>
-              </RowItemLeft>
-              <RowItemContent>
-                <Text
-                  color={theme.colors.gray2}
-                  size={theme.fonts.sizes.sm}
-                  numberOfLines={1}>
-                  Work
-                </Text>
-                <Text size="lg" numberOfLines={1}>
-                  Junction City Tower
-                </Text>
-              </RowItemContent>
-              <RowItemRight>
-                <BusLineCard>20</BusLineCard>
-              </RowItemRight>
-            </RowItem>
-            <RowItem
-              bw={1}
-              bc={theme.colors.border}
-              style={[styles.rowItemContainer]}>
-              <RowItemLeft
-                w={theme.spacing['10']}
-                h={theme.spacing['12']}
-                alignItems="center"
-                justifyContent="center"
-                bg={theme.colors.blueSoft1}
-                br={theme.roundness}>
-                <Text>📍</Text>
-              </RowItemLeft>
-              <RowItemContent>
-                <Text
-                  color={theme.colors.gray2}
-                  size={theme.fonts.sizes.sm}
-                  numberOfLines={1}>
-                  Place
-                </Text>
-                <Text size="lg" numberOfLines={1}>
-                  Time City
-                </Text>
-              </RowItemContent>
-              <RowItemRight>
-                <HStack alignItems="center" gap={theme.spacing['1']}>
-                  <BusLineCard>61</BusLineCard>
-                  <BusLineCard bg={theme.colors.error}>65</BusLineCard>
-                </HStack>
-              </RowItemRight>
-            </RowItem>
+            {bookmarks.slice(0, 2).map(bookmark => (
+              <FavoriteRouteCard
+                key={`${bookmark.id}-${bookmark.groupId}-${bookmark.from.id}-${bookmark.to.id}`}
+                {...bookmark}
+              />
+            ))}
           </View>
         </Stack>
         <Stack gap={theme.spacing['4']}>
@@ -268,10 +181,10 @@ const Home = ({navigation}: Props) => {
             <View style={styles.mapViewContainer}>
               <MapView
                 ref={mapRef}
-                initialRegion={map.lastRegion || undefined}
-                zoomEnabled={false}
+                initialRegion={mapStore.lastRegion || undefined}
+                scrollEnabled={false}
+                liteMode
                 {...defaultMapProps}
-                mapType="standard"
                 userInterfaceStyle={themeName}
                 style={styles.mapView}>
                 {nearestStops?.map((stop, index) => (
@@ -296,10 +209,11 @@ const stylesheet = createStyleSheet(theme => ({
     paddingVertical: theme.spacing['3'],
     gap: theme.spacing['8'],
   },
-  scrollView: (insets: EdgeInsets) => ({
-    paddingBottom: insets.bottom + TAB_HEIGHT + theme.spacing['10'], // extra padding for scroll
+  scrollView: {
+    paddingBottom:
+      UnistylesRuntime.insets.bottom + TAB_HEIGHT + theme.spacing['10'], // extra padding for scroll
     flexGrow: 1,
-  }),
+  },
   favoriteRouteTitle: {
     ...globalStyles.flex,
   },

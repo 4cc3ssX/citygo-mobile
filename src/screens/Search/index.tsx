@@ -6,8 +6,11 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import ContentLoader, {Rect} from 'react-content-loader/native';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {createStyleSheet, useStyles} from 'react-native-unistyles';
+import {
+  createStyleSheet,
+  UnistylesRuntime,
+  useStyles,
+} from 'react-native-unistyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Fuse, {IFuseOptions} from 'fuse.js';
@@ -52,7 +55,6 @@ const Search = ({navigation, route}: Props) => {
   const {chooseFor, stop} = route.params;
 
   const {t} = useTranslation();
-  const insets = useSafeAreaInsets();
   const themeName = useThemeName();
 
   /* Store */
@@ -347,7 +349,7 @@ const Search = ({navigation, route}: Props) => {
           offset: theme.spacing['15'] * index,
           index,
         })}
-        contentContainerStyle={styles.listContainer(insets.bottom)}
+        contentContainerStyle={styles.listContainer}
       />
     </Container>
   );
@@ -366,10 +368,10 @@ const stylesheet = createStyleSheet(theme => ({
     zIndex: 10,
   },
 
-  listContainer: (bottom: number) => ({
+  listContainer: {
     // flexGrow: 1,
-    paddingBottom: bottom + theme.spacing['4'],
-  }),
+    paddingBottom: UnistylesRuntime.insets.bottom + theme.spacing['4'],
+  },
 }));
 
 export default Search;

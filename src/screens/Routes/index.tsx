@@ -4,7 +4,7 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
-import {dismissAlert} from '@baronha/ting';
+import {alert, dismissAlert} from '@baronha/ting';
 import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetFlatList,
@@ -22,7 +22,11 @@ import MapView, {
   Region,
 } from 'react-native-maps';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {createStyleSheet, useStyles} from 'react-native-unistyles';
+import {
+  createStyleSheet,
+  UnistylesRuntime,
+  useStyles,
+} from 'react-native-unistyles';
 
 import Color from 'color';
 import {BBox, FeatureCollection, LineString, Point} from 'geojson';
@@ -30,7 +34,6 @@ import {omit} from 'lodash';
 import useSupercluster from 'use-supercluster';
 
 import {
-  Container,
   CustomBackdrop,
   EmptyList,
   HStack,
@@ -45,7 +48,6 @@ import {
 } from '@components/ui';
 import {defaultMapProps} from '@configs/map';
 import {Constants} from '@constants';
-import {showAlert} from '@helpers/toast';
 import {useGetRoutes, useGetStops} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
@@ -212,7 +214,7 @@ const Routes = ({navigation, route}: Props) => {
     }));
 
     // fit to coordinates took longer sometimes
-    showAlert({
+    alert({
       title: 'Loading...',
       preset: 'spinner',
       shouldDismissByTap: false,
@@ -398,7 +400,48 @@ const Routes = ({navigation, route}: Props) => {
   );
 
   return (
-    <Container>
+    <>
+      <MapView
+        ref={mapRef}
+        initialRegion={map.lastRegion || undefined}
+        {...defaultMapProps}
+        mapType="standard"
+        userInterfaceStyle={themeName}
+        onRegionChangeComplete={handleRegionChange}
+        style={StyleSheet.absoluteFill}>
+        {clusters?.map((point, index) => {
+          const properties = point.properties || {};
+
+          if (properties.cluster) {
+            return null;
+          }
+
+          const stop = convertFeatureToData<IStop>(point);
+
+          return (
+            <Marker
+              key={`marker-${stop.id}-${index}`}
+              identifier={`marker-${stop.id}-${index}`}
+              tracksViewChanges={false}
+              coordinate={{latitude: stop.lat, longitude: stop.lng}}
+              image={{uri: 'marker'}}>
+              <Callout tooltip>
+                <MapCallout canPress={false}>
+                  {stop.name[app.language]}
+                </MapCallout>
+              </Callout>
+            </Marker>
+          );
+        })}
+
+        {activeRoute && activeRouteGeoJson ? (
+          <Geojson
+            geojson={activeRouteGeoJson}
+            strokeColor={activeRoute.color}
+            strokeWidth={4}
+          />
+        ) : null}
+      </MapView>
       <BottomSheet
         ref={stopBottomSheetRef}
         topInset={Constants.HEADER_HEIGHT + insets.top + theme.spacing['3']}
@@ -409,7 +452,7 @@ const Routes = ({navigation, route}: Props) => {
         backdropComponent={backdropComponent}
         handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
         backgroundStyle={[
-          globalStyles.bottomSheetContainer,
+          globalStyles.bottomSheetBackground,
           {backgroundColor: theme.colors.background},
         ]}
         containerStyle={[styles.stopBottomSheetContainer]}>
@@ -427,10 +470,7 @@ const Routes = ({navigation, route}: Props) => {
             offset: theme.spacing['15'] * index,
             index,
           })}
-          contentContainerStyle={[
-            styles.listContainerStyle,
-            {paddingBottom: insets.bottom + theme.spacing['3']},
-          ]}
+          contentContainerStyle={[styles.listContainerStyle]}
         />
       </BottomSheet>
 
@@ -443,7 +483,7 @@ const Routes = ({navigation, route}: Props) => {
         backdropComponent={backdropComponent}
         handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
         backgroundStyle={[
-          globalStyles.bottomSheetContainer,
+          globalStyles.bottomSheetBackground,
           {backgroundColor: theme.colors.background},
         ]}
         containerStyle={[styles.bottomSheetContainer]}>
@@ -492,63 +532,14 @@ const Routes = ({navigation, route}: Props) => {
             offset: theme.spacing['18'] * index,
             index,
           })}
-          contentContainerStyle={[
-            styles.listContainerStyle,
-            {paddingBottom: insets.bottom + theme.spacing['3']},
-          ]}
+          contentContainerStyle={[styles.listContainerStyle]}
         />
       </BottomSheet>
-
-      <MapView
-        ref={mapRef}
-        initialRegion={map.lastRegion || undefined}
-        {...defaultMapProps}
-        mapType="standard"
-        userInterfaceStyle={themeName}
-        onRegionChangeComplete={handleRegionChange}
-        style={styles.mapView}>
-        {clusters?.map((point, index) => {
-          const properties = point.properties || {};
-
-          if (properties.cluster) {
-            return null;
-          }
-
-          const stop = convertFeatureToData<IStop>(point);
-
-          return (
-            <Marker
-              key={`marker-${stop.id}-${index}`}
-              identifier={`marker-${stop.id}-${index}`}
-              tracksViewChanges={false}
-              coordinate={{latitude: stop.lat, longitude: stop.lng}}
-              image={{uri: 'marker'}}>
-              <Callout tooltip>
-                <MapCallout canPress={false}>
-                  {stop.name[app.language]}
-                </MapCallout>
-              </Callout>
-            </Marker>
-          );
-        })}
-
-        {activeRoute && activeRouteGeoJson ? (
-          <Geojson
-            geojson={activeRouteGeoJson}
-            strokeColor={activeRoute.color}
-            strokeWidth={4}
-          />
-        ) : null}
-      </MapView>
-    </Container>
+    </>
   );
 };
 
 const stylesheet = createStyleSheet(theme => ({
-  mapView: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 0,
-  },
   disabledButton: (color: string) => ({
     backgroundColor: Color(color).lighten(0.25).string(),
   }),
@@ -563,6 +554,7 @@ const stylesheet = createStyleSheet(theme => ({
   },
   listContainerStyle: {
     paddingHorizontal: theme.spacing['5'],
+    paddingBottom: UnistylesRuntime.insets.bottom + theme.spacing['3'],
   },
 }));
 

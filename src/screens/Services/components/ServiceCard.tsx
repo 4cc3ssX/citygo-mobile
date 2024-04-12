@@ -8,6 +8,7 @@ import {HStack, IVStackProps, Stack, Text, VStack} from '@components/ui';
 
 export interface IServiceCardProps extends IVStackProps {
   icon: ReactNode;
+  iconBg?: string;
   title: string;
   subtitle: string;
   badge?: number | string;
@@ -16,6 +17,7 @@ export interface IServiceCardProps extends IVStackProps {
 
 export const ServiceCard = ({
   icon,
+  iconBg,
   title,
   subtitle,
   badge,
@@ -23,6 +25,7 @@ export const ServiceCard = ({
   ...rest
 }: IServiceCardProps) => {
   const {styles, theme} = useStyles(stylesheet);
+
   return (
     <Pressable style={styles.serviceCardContainer} onPress={onPress}>
       <VStack
@@ -36,7 +39,7 @@ export const ServiceCard = ({
           <Stack
             w={theme.spacing['10']}
             h={theme.spacing['10']}
-            bg={theme.colors.blueSoft1}
+            bg={iconBg || theme.colors.blueSoft1}
             br={theme.spacing['3']}
             justifyContent="center"
             alignItems="center">

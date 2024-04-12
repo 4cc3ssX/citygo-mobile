@@ -21,12 +21,7 @@ export const settings: ISettingData[] = [
     title: 'Preferences',
     data: [
       {
-        title: 'Language',
-        icon: ({color, size}) => <Icon name="book" color={color} size={size} />,
-        to: 'Language',
-      },
-      {
-        title: 'AppTheme',
+        title: 'DarkMode',
         icon: ({color, size}) => (
           <Ionicons name="moon" color={color} size={size} />
         ),
@@ -36,6 +31,11 @@ export const settings: ISettingData[] = [
         title: 'Notifications',
         icon: ({color, size}) => <Icon name="bell" color={color} size={size} />,
         to: 'NotificationSettings',
+      },
+      {
+        title: 'Language',
+        icon: ({color, size}) => <Icon name="book" color={color} size={size} />,
+        to: 'Language',
       },
     ],
   },

@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {useTranslation} from 'react-i18next';
@@ -9,10 +9,12 @@ import AppTheme from '@screens/AppTheme';
 import ChooseFromMap from '@screens/ChooseFromMap';
 import Directions from '@screens/Directions';
 import FindRoute from '@screens/FindRoute';
+import History, {HistoryDetails} from '@screens/History';
 import Language from '@screens/Language';
 import {NotificationSettings} from '@screens/Notifications';
 import Routes from '@screens/Routes';
 import Search from '@screens/Search';
+import {IRecentRoute} from '@store/types';
 import {IRoute, ITransitRoute} from '@typescript/api/routes';
 import {IStop} from '@typescript/api/stops';
 
@@ -43,6 +45,9 @@ export type RootStackParamsList = {
   LiveAction: {
     transitRoute: ITransitRoute;
   } & FindRouteValues;
+  History: undefined;
+  HistoryDetails: IRecentRoute;
+  Bookmarks: undefined;
 };
 
 const RNStack = createNativeStackNavigator<RootStackParamsList>();
@@ -63,21 +68,23 @@ function Stack() {
           title: 'Home', // back native button title
         }}
       />
-      <RNStack.Screen
-        name="Language"
-        component={Language}
-        options={{title: t('Language')}}
-      />
-      <RNStack.Screen
-        name="NotificationSettings"
-        component={NotificationSettings}
-        options={{title: t('Notifications')}}
-      />
-      <RNStack.Screen
-        name="AppTheme"
-        component={AppTheme}
-        options={{title: t('AppTheme')}}
-      />
+      <RNStack.Group>
+        <RNStack.Screen
+          name="Language"
+          component={Language}
+          options={{title: t('Language')}}
+        />
+        <RNStack.Screen
+          name="NotificationSettings"
+          component={NotificationSettings}
+          options={{title: t('Notifications')}}
+        />
+        <RNStack.Screen
+          name="AppTheme"
+          component={AppTheme}
+          options={{title: t('DarkMode')}}
+        />
+      </RNStack.Group>
       <RNStack.Screen
         name="Search"
         component={Search}
@@ -121,8 +128,22 @@ function Stack() {
           } as any,
         }}
       />
+      <RNStack.Screen
+        name="History"
+        component={History}
+        options={{title: t('History')}}
+      />
+      <RNStack.Screen
+        name="HistoryDetails"
+        component={HistoryDetails}
+        options={{
+          title: t('Details'),
+          headerBackVisible: false,
+          presentation: 'modal',
+        }}
+      />
     </RNStack.Navigator>
   );
 }
 
-export default memo(Stack);
+export default Stack;

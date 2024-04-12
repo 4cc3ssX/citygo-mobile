@@ -1,18 +1,43 @@
 import React from 'react';
+import {Pressable, View} from 'react-native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {Icon} from '@components/icons';
 import {BusLineCard, HStack, Separator, Text, VStack} from '@components/ui';
+import {RootStackParamsList} from '@navigations/Stack';
 import {useAppStore} from '@store/app';
-import {ITransitRoute, TransitType} from '@typescript/api/routes';
-import {IStop} from '@typescript/api/stops';
+import {IRecentRoute} from '@store/types';
+import {ITransit, TransitType} from '@typescript/api/routes';
 
-export interface IRecentRouteCardProps extends Omit<ITransitRoute, 'distance'> {
-  from: IStop;
-  to: IStop;
-}
+export interface IRecentRouteCardProps extends IRecentRoute {}
+
+export const RecentRouteCardPlaceholder = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+  const {styles, theme} = useStyles(stylesheet);
+
+  return (
+    <Pressable onPress={() => navigation.navigate('Search', {})}>
+      <View style={[styles.container, styles.placeholderContainer]}>
+        <HStack
+          alignItems="center"
+          justifyContent="center"
+          gap={theme.spacing['1']}>
+          <Ionicons name="add" color={theme.colors.primary} size={24} />
+          <Text
+            type="medium"
+            size="md"
+            color={theme.colors.primary}
+            textAlign="center">
+            Start your next route
+          </Text>
+        </HStack>
+      </View>
+    </Pressable>
+  );
+};
 
 export const RecentRouteCard = ({
   from,
@@ -23,13 +48,7 @@ export const RecentRouteCard = ({
   const {styles, theme} = useStyles(stylesheet);
 
   return (
-    <VStack
-      bw={1}
-      br={theme.roundness}
-      bc={theme.colors.border}
-      py={theme.spacing['4']}
-      px={theme.spacing['6']}
-      gap={theme.spacing['3']}>
+    <View style={styles.container}>
       <HStack
         gap={theme.spacing['2']}
         justifyContent="space-between"
@@ -76,14 +95,14 @@ export const RecentRouteCard = ({
                 mr={isLast ? theme.spacing['2'] : 0}
                 overflow="hidden">
                 {transit.type === TransitType.TRANSIT ? (
-                  <BusLineCard bg={transit.step.color}>
-                    {transit.step.route_id.split('-')[0]}
+                  <BusLineCard bg={(transit.step as ITransit).color}>
+                    {(transit.step as ITransit).route_id}
                   </BusLineCard>
                 ) : (
                   <BusLineCard bg={theme.colors.gray3}>
                     <Icon
                       name="walk"
-                      color={theme.colors.gray5}
+                      color={theme.colors.text}
                       size={theme.spacing['6']}
                     />
                   </BusLineCard>
@@ -92,7 +111,11 @@ export const RecentRouteCard = ({
                 <Separator
                   flex={1}
                   size={2}
-                  color={isLast ? theme.colors.gray4 : transit.step.color}
+                  color={
+                    isLast
+                      ? theme.colors.gray4
+                      : (transit.step as ITransit).color
+                  }
                   w={
                     index > 1 && index === transitSteps.length - 2
                       ? theme.spacing['12']
@@ -107,18 +130,26 @@ export const RecentRouteCard = ({
         </HStack>
         <Icon name="pin" color={theme.colors.gray5} size={theme.spacing['6']} />
       </HStack>
-    </VStack>
+    </View>
   );
 };
 
 const stylesheet = createStyleSheet(theme => ({
-  indicatorContainer: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
+  container: {
+    borderWidth: 1,
+    borderRadius: theme.roundness,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
+    paddingVertical: theme.spacing['4'],
+    paddingHorizontal: theme.spacing['6'],
+    gap: theme.spacing['3'],
+  },
+  placeholderContainer: {
+    borderColor: theme.colors.primary,
+    borderStyle: 'dashed',
+    backgroundColor: theme.colors.blueSoft1,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 999,
+    height: theme.spacing['32'],
   },
 }));

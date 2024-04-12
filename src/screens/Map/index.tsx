@@ -3,24 +3,29 @@ import {StyleSheet, useWindowDimensions} from 'react-native';
 import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetFlatList,
+  BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import {Portal} from '@gorhom/portal';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import Geolocation from 'react-native-geolocation-service';
 import MapView, {Callout, Marker, Region} from 'react-native-maps';
-import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {createStyleSheet, useStyles} from 'react-native-unistyles';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {
+  createStyleSheet,
+  UnistylesRuntime,
+  useStyles,
+} from 'react-native-unistyles';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Color from 'color';
 import {BBox, FeatureCollection, Point} from 'geojson';
 import useSupercluster from 'use-supercluster';
 
-import {Icon} from '@components/icons';
 import {
-  Container,
+  Button,
   CustomBackdrop,
-  IconButton,
+  HStack,
+  Link,
   MapCallout,
   RowItem,
   RowItemContent,
@@ -28,11 +33,10 @@ import {
   Separator,
   Stack,
   Text,
-  VStack,
 } from '@components/ui';
 import {defaultMapProps} from '@configs/map';
-import {Constants} from '@constants';
 import {useGetRoutes, useGetStops} from '@hooks/api';
+import {useAppContext} from '@hooks/context';
 import {useThemeName} from '@hooks/useThemeName';
 import {TAB_HEIGHT} from '@navigations/components';
 import {RootStackParamsList} from '@navigations/Stack';
@@ -40,11 +44,18 @@ import {RootTabParamsList} from '@navigations/Tab';
 import {useAppStore} from '@store/app';
 import {useMapStore} from '@store/map';
 import {useStopStore} from '@store/stop';
+import {useUserStore} from '@store/user';
 import {globalStyles} from '@styles/global';
 import {ResponseFormat} from '@typescript/api';
 import {IRoute} from '@typescript/api/routes';
 import {IStop} from '@typescript/api/stops';
 import {boundingBoxToBbox, convertFeatureToData} from '@utils/map';
+import {getShortenRouteName} from '@utils/route';
+
+import {
+  RecentRouteCard,
+  RecentRouteCardPlaceholder,
+} from './components/RecentRouteCard';
 
 type Props = NativeStackScreenProps<
   RootTabParamsList & RootStackParamsList,
@@ -56,12 +67,15 @@ const Map = ({navigation}: Props) => {
   const themeName = useThemeName();
   const {styles, theme} = useStyles(stylesheet);
 
+  const {locatePosition} = useAppContext();
+
   const {width} = useWindowDimensions();
 
   /* Store */
   const app = useAppStore();
   const map = useMapStore();
   const stopStore = useStopStore();
+  const userStore = useUserStore();
 
   /* Query */
   const {isFetching: isStopsFetching, data: stops} = useGetStops<
@@ -90,7 +104,6 @@ const Map = ({navigation}: Props) => {
 
   /* State */
   const [selectedStop, setSelectedStop] = useState<IStop | null>(null);
-  const [isLocating, setIsLocating] = useState(false);
   const [bounds, setBounds] = useState<BBox | null>(null);
   const [zoom, setZoom] = useState(0);
 
@@ -103,6 +116,11 @@ const Map = ({navigation}: Props) => {
     }
     return [];
   }, [routes, selectedStop]);
+
+  const recentRoute = useMemo(
+    () => userStore.recentRoutes[0],
+    [userStore.recentRoutes],
+  );
 
   /* Hooks */
   const {clusters} = useSupercluster({
@@ -134,8 +152,8 @@ const Map = ({navigation}: Props) => {
       setSelectedStop(stop);
 
       setTimeout(() => {
-        stopBottomSheetRef.current?.snapToIndex(1);
-      }, 0);
+        stopBottomSheetRef.current?.expand();
+      }, 100);
     },
     [stopBottomSheetRef],
   );
@@ -155,52 +173,14 @@ const Map = ({navigation}: Props) => {
     [width],
   );
 
-  const onLocateMe = useCallback(
-    (initial = false) => {
-      if (!initial) {
-        setIsLocating(true);
-      }
+  const onLocateMe = useCallback(async () => {
+    const {region} = await locatePosition();
 
-      Geolocation.getCurrentPosition(
-        ({coords}) => {
-          map.setUserLocation({lat: coords.latitude, lng: coords.longitude});
-
-          // update last region
-          const region = Constants.getDefaultMapDelta(
-            coords.latitude,
-            coords.longitude,
-          );
-
-          if (initial) {
-            handleRegionChange(region);
-          }
-
-          mapRef.current?.animateToRegion(region);
-
-          map.setLastRegion(region);
-          setTimeout(() => {
-            setIsLocating(false);
-          }, 500);
-        },
-        err => {
-          console.log(err);
-          setIsLocating(false);
-        },
-        {
-          accuracy: {
-            android: 'low',
-            ios: 'best',
-          },
-          maximumAge: 5000,
-        },
-      );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+    mapRef.current?.animateToRegion(region);
+  }, [locatePosition]);
 
   useEffect(() => {
-    onLocateMe(true);
+    onLocateMe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -215,8 +195,8 @@ const Map = ({navigation}: Props) => {
       <CustomBackdrop
         {...props}
         style={styles.backdropContainer}
-        appearsOnIndex={1}
-        disappearsOnIndex={0}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
         opacity={0.1}
       />
     ),
@@ -225,121 +205,7 @@ const Map = ({navigation}: Props) => {
   );
 
   return (
-    <Container>
-      {/* <BottomSheet
-        ref={bottomSheetRef}
-        animateOnMount
-        enableDynamicSizing
-        handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
-        backgroundStyle={[
-          globalStyles.bottomSheetContainer,
-          {backgroundColor: theme.colors.background},
-        ]}
-        containerStyle={[styles.bottomSheetContainer]}>
-        <BottomSheetView
-          style={[
-            styles.innerContainer(insets),
-            styles.bottomSheetView(insets),
-            globalStyles.bottomSheetView,
-          ]}>
-          <Button
-            size="lg"
-            icon={
-              <Ionicons
-                name="home-sharp"
-                color={theme.colors.white}
-                size={theme.spacing['6']}
-              />
-            }>
-            Get me to home
-          </Button>
-          <HStack justifyContent="space-between" alignItems="center">
-            <Text size="xl">Your recent route</Text>
-            <Link underlined={false}>Filter</Link>
-          </HStack>
-          {selectedStop && (
-            <RecentRouteCard
-              from={selectedStop}
-              to={selectedStop}
-              id={''}
-              route={[]}
-              transitSteps={[]}
-              coordinates={[]}
-            />
-          )}
-        </BottomSheetView>
-      </BottomSheet> */}
-
-      <Portal>
-        <BottomSheet
-          ref={stopBottomSheetRef}
-          topInset={insets.top + theme.spacing['3']}
-          index={-1}
-          snapPoints={snapPoints}
-          animateOnMount={false}
-          enablePanDownToClose
-          backdropComponent={backdropComponent}
-          handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
-          backgroundStyle={[
-            globalStyles.bottomSheetContainer,
-            {backgroundColor: theme.colors.background},
-          ]}
-          containerStyle={[styles.bottomSheetContainer]}>
-          <BottomSheetFlatList
-            showsVerticalScrollIndicator={false}
-            data={routesByStop}
-            ItemSeparatorComponent={itemSeparatorComponent}
-            renderItem={({item}) => {
-              return (
-                <RowItem
-                  bg={theme.colors.surface}
-                  h={theme.spacing['18']}
-                  onPress={() => onPressItem(item)}>
-                  <RowItemLeft h="100%" bg={item.color}>
-                    <Text type="semibold" color="white">
-                      {item.route_id.split('-')[0]}
-                    </Text>
-                  </RowItemLeft>
-                  <Separator h={theme.spacing['8']} direction="vertical" />
-                  <RowItemContent>
-                    <Text size="md" numberOfLines={1}>
-                      {item.agency_id}
-                    </Text>
-                    <Text
-                      size="xs"
-                      color={theme.colors.gray2}
-                      numberOfLines={2}>
-                      {item.name[app.language]}
-                    </Text>
-                  </RowItemContent>
-                </RowItem>
-              );
-            }}
-            keyExtractor={item => `sheet-${item.route_id}`}
-            getItemLayout={(data, index) => ({
-              length: theme.spacing['18'],
-              offset: theme.spacing['18'] * index,
-              index,
-            })}
-            contentContainerStyle={[
-              styles.innerContainer(insets),
-              {paddingBottom: insets.bottom + theme.spacing['3']},
-            ]}
-          />
-        </BottomSheet>
-      </Portal>
-
-      <VStack style={styles.fabContainer(insets)}>
-        <IconButton
-          disabled={isLocating}
-          w={theme.spacing['12']}
-          h={theme.spacing['14']}
-          color="primary"
-          icon={<Icon name="gps" color={theme.colors.white} />}
-          disableStyle={styles.disabledButton(theme.colors.primary)}
-          onPress={() => onLocateMe()}
-        />
-      </VStack>
+    <>
       <MapView
         ref={mapRef}
         initialRegion={map.lastRegion || undefined}
@@ -347,7 +213,7 @@ const Map = ({navigation}: Props) => {
         mapType="standard"
         userInterfaceStyle={themeName}
         onRegionChangeComplete={handleRegionChange}
-        style={styles.mapView}>
+        style={StyleSheet.absoluteFill}>
         {clusters?.map((point, index) => {
           const properties = point.properties || {};
 
@@ -371,21 +237,107 @@ const Map = ({navigation}: Props) => {
           );
         })}
       </MapView>
-    </Container>
+      <BottomSheet
+        ref={bottomSheetRef}
+        animateOnMount
+        enableDynamicSizing
+        handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
+        backgroundStyle={[
+          globalStyles.bottomSheetBackground,
+          {backgroundColor: theme.colors.background},
+        ]}>
+        <BottomSheetView
+          style={[
+            styles.innerContainer,
+            styles.bottomSheetView,
+            globalStyles.bottomSheetView,
+          ]}>
+          <Button
+            size="lg"
+            icon={
+              <Ionicons
+                name="home-sharp"
+                color={theme.colors.white}
+                size={theme.spacing['6']}
+              />
+            }>
+            Get me to home
+          </Button>
+
+          <HStack justifyContent="space-between" alignItems="center">
+            <Text size="xl">Your recent route</Text>
+            <Link color={theme.colors.text} underlined={false}>
+              Filter
+            </Link>
+          </HStack>
+          {recentRoute ? (
+            <RecentRouteCard {...recentRoute} />
+          ) : (
+            <RecentRouteCardPlaceholder />
+          )}
+        </BottomSheetView>
+      </BottomSheet>
+
+      <Portal>
+        <BottomSheet
+          ref={stopBottomSheetRef}
+          topInset={insets.top + theme.spacing['3']}
+          index={-1}
+          snapPoints={snapPoints}
+          animateOnMount={false}
+          enablePanDownToClose
+          backdropComponent={backdropComponent}
+          handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
+          backgroundStyle={[
+            globalStyles.bottomSheetBackground,
+            {backgroundColor: theme.colors.background},
+          ]}
+          containerStyle={globalStyles.bottomSheetContainer}>
+          <BottomSheetFlatList
+            showsVerticalScrollIndicator={false}
+            data={routesByStop}
+            ItemSeparatorComponent={itemSeparatorComponent}
+            renderItem={({item}) => {
+              return (
+                <RowItem
+                  bg={theme.colors.surface}
+                  h={theme.spacing['18']}
+                  onPress={() => onPressItem(item)}>
+                  <RowItemLeft h="100%" bg={item.color}>
+                    <Text type="semibold" color="white">
+                      {getShortenRouteName(item.route_id)}
+                    </Text>
+                  </RowItemLeft>
+                  <Separator h={theme.spacing['8']} direction="vertical" />
+                  <RowItemContent>
+                    <Text size="md" numberOfLines={1}>
+                      {item.agency_id}
+                    </Text>
+                    <Text
+                      size="xs"
+                      color={theme.colors.gray2}
+                      numberOfLines={2}>
+                      {item.name[app.language]}
+                    </Text>
+                  </RowItemContent>
+                </RowItem>
+              );
+            }}
+            keyExtractor={item => `sheet-${item.route_id}`}
+            getItemLayout={(data, index) => ({
+              length: theme.spacing['18'],
+              offset: theme.spacing['18'] * index,
+              index,
+            })}
+            contentContainerStyle={[styles.innerContainer]}
+          />
+        </BottomSheet>
+      </Portal>
+    </>
   );
 };
 
 const stylesheet = createStyleSheet(theme => ({
-  mapView: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 0,
-  },
-  fabContainer: (insets: EdgeInsets) => ({
-    position: 'absolute',
-    right: insets.right + theme.spacing['4'],
-    bottom: insets.bottom + TAB_HEIGHT + theme.spacing['10'],
-    zIndex: 8,
-  }),
   disabledButton: (color: string) => ({
     backgroundColor: Color(color).lighten(0.25).string(),
   }),
@@ -395,14 +347,16 @@ const stylesheet = createStyleSheet(theme => ({
   backdropContainer: {
     zIndex: 12,
   },
-  innerContainer: (insets: EdgeInsets) => ({
+  innerContainer: {
     paddingTop: theme.spacing['3'],
-    paddingBottom: insets.bottom + theme.spacing['3'],
+    paddingBottom: UnistylesRuntime.insets.bottom + theme.spacing['3'],
     paddingHorizontal: theme.spacing['5'],
-  }),
-  bottomSheetView: (insets: EdgeInsets) => ({
-    paddingBottom: insets.bottom + TAB_HEIGHT + theme.spacing['3'],
-  }),
+  },
+  bottomSheetView: {
+    paddingBottom:
+      UnistylesRuntime.insets.bottom + TAB_HEIGHT + theme.spacing['3'],
+    gap: theme.spacing['4'],
+  },
 }));
 
 export default Map;
