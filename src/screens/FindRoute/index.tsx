@@ -4,7 +4,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import ContentLoader, {Rect} from 'react-content-loader/native';
 import {useTranslation} from 'react-i18next';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 
 import {Icon} from '@components/icons';
@@ -18,7 +17,6 @@ import {
   VStack,
 } from '@components/ui';
 import {useFindRoutes} from '@hooks/api';
-import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
 import {useMapStore} from '@store/map';
 import {globalStyles} from '@styles/global';
@@ -32,9 +30,7 @@ const FindRoute = ({navigation, route}: Props) => {
   const values = route.params;
 
   const {t} = useTranslation();
-  const insets = useSafeAreaInsets();
 
-  const themeName = useThemeName();
   const {styles, theme} = useStyles(stylesheet);
 
   /* Store */

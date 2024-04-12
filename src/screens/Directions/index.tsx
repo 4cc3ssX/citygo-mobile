@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
-import {dismissAlert} from '@baronha/ting';
+import {alert, dismissAlert} from '@baronha/ting';
 import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetScrollView,
@@ -9,7 +9,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import distance from '@turf/distance';
 import {featureCollection, lineString, point} from '@turf/helpers';
 
-import Geolocation from 'react-native-geolocation-service';
 import MapView, {
   Callout,
   Geojson,
@@ -18,10 +17,14 @@ import MapView, {
   Region,
   UserLocationChangeEvent,
 } from 'react-native-maps';
-import Animated, {SlideInDown, SlideOutDown} from 'react-native-reanimated';
-import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {createStyleSheet, useStyles} from 'react-native-unistyles';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {
+  createStyleSheet,
+  UnistylesRuntime,
+  useStyles,
+} from 'react-native-unistyles';
 
+import dayjs from 'dayjs';
 import {BBox, FeatureCollection, Point} from 'geojson';
 import {omit} from 'lodash';
 import useSupercluster from 'use-supercluster';
@@ -29,7 +32,6 @@ import useSupercluster from 'use-supercluster';
 import {Icon} from '@components/icons';
 import {
   Button,
-  Container,
   CustomBackdrop,
   Input,
   MapCallout,
@@ -38,7 +40,6 @@ import {
 } from '@components/ui';
 import {defaultMapProps} from '@configs/map';
 import {Constants} from '@constants';
-import {showAlert} from '@helpers/toast';
 import {useGetStops} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
@@ -46,6 +47,7 @@ import {RootTabParamsList} from '@navigations/Tab';
 import {useAppStore} from '@store/app';
 import {useMapStore} from '@store/map';
 import {useStopStore} from '@store/stop';
+import {useUserStore} from '@store/user';
 import {globalStyles} from '@styles/global';
 import {ResponseFormat} from '@typescript/api';
 import {
@@ -80,6 +82,7 @@ const Directions = ({navigation, route}: Props) => {
   const app = useAppStore();
   const stopStore = useStopStore();
   const {setUserLocation, lastRegion, userLocation} = useMapStore();
+  const userStore = useUserStore();
 
   /* Query */
   const {data: stops} = useGetStops(
@@ -232,7 +235,7 @@ const Directions = ({navigation, route}: Props) => {
     // mapRef could be null on mount
     setTimeout(() => {
       // fit to coordinates took longer sometimes
-      showAlert({
+      alert({
         title: 'Loading...',
         preset: 'spinner',
         shouldDismissByTap: false,
@@ -331,21 +334,13 @@ const Directions = ({navigation, route}: Props) => {
           },
         );
 
+        // TODO: need to check (closestStopIndex < routeStops.length - 1)
         // Update current stop based on closest stop and threshold
         if (distanceToStop <= Constants.CLOSEST_STOP_THRESHOLD) {
           setCurrentStop(closestStop);
         } else if (closestStopIndex < routeStops.length - 1) {
           // fallback to previous stop
           setCurrentStop(routeStops[closestStopIndex - 1]);
-        } else {
-          if (closestStopIndex === routeStops.length - 1) {
-            // If closest stop is the last stop
-            // Reached the destination
-            console.log('Reached destination!'); // Or any specific action you want to do
-            return;
-          }
-          // Handle edge cases where user might be past the last stop
-          console.warn('User might be past the last stop');
         }
       }
     },
@@ -363,6 +358,13 @@ const Directions = ({navigation, route}: Props) => {
         });
 
         if (isStarted) {
+          const region = Constants.getDefaultMapDelta(
+            coordinate.latitude,
+            coordinate.longitude,
+          );
+
+          mapRef.current?.animateToRegion(region);
+
           onPositionUpdate(
             {
               latitude: coordinate.latitude,
@@ -374,7 +376,7 @@ const Directions = ({navigation, route}: Props) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isStarted, onPositionUpdate],
+    [isStarted],
   );
 
   const onStart = useCallback(() => {
@@ -390,6 +392,7 @@ const Directions = ({navigation, route}: Props) => {
       longitude: userLocation!.lng,
     });
 
+    // animate to user location
     const region = Constants.getDefaultMapDelta(
       userLocation!.lat,
       userLocation!.lng,
@@ -397,8 +400,17 @@ const Directions = ({navigation, route}: Props) => {
 
     mapRef.current?.animateToRegion(region);
 
+    userStore.addRecentRoute({
+      ...transitRoute,
+      from: stops.find(stop => stop.id === from.preferId)!,
+      to: stops.find(stop => stop.id === to.preferId)!,
+      startTime: dayjs().unix(),
+      endTime: null,
+    });
+
     setStarted(true);
-  }, [isStarted, onPositionUpdate, onStop, userLocation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isStarted, userLocation]);
 
   useEffect(() => {
     handleTransits();
@@ -419,11 +431,53 @@ const Directions = ({navigation, route}: Props) => {
   );
 
   return (
-    <View>
-      <Animated.View
-        entering={SlideInDown}
-        exiting={SlideOutDown}
-        style={styles.bottomActionContainer(insets)}>
+    <>
+      <MapView
+        ref={mapRef}
+        initialRegion={lastRegion || undefined}
+        {...defaultMapProps}
+        userInterfaceStyle={themeName}
+        onRegionChangeComplete={handleRegionChange}
+        onUserLocationChange={onUserLocationChange}
+        style={StyleSheet.absoluteFill}>
+        {clusters?.map((clusterPoint, index) => {
+          const properties = clusterPoint.properties || {};
+
+          if (properties.cluster) {
+            return null;
+          }
+
+          const stop = convertFeatureToData<IStop>(clusterPoint);
+
+          return (
+            <Marker
+              key={`marker-${stop.id}-${index}`}
+              identifier={`marker-${stop.id}-${index}`}
+              tracksViewChanges={false}
+              coordinate={{latitude: stop.lat, longitude: stop.lng}}
+              image={{uri: 'marker'}}>
+              <Callout tooltip>
+                <MapCallout canPress={false}>
+                  {stop.name[app.language]}
+                </MapCallout>
+              </Callout>
+            </Marker>
+          );
+        })}
+        {transitRoutesGeoJSON.map((geojson, index) => (
+          <Geojson
+            key={`geojson-transit-${index}`}
+            geojson={geojson}
+            strokeColor={
+              isStarted
+                ? theme.colors.warning
+                : geojson.features[0].properties.color
+            }
+            strokeWidth={isStarted ? 10 : 5}
+          />
+        ))}
+      </MapView>
+      <View style={styles.bottomActionContainer}>
         <VStack gap={theme.spacing['2.5']}>
           {isStarted && currentTransitStep ? (
             <ActionCard
@@ -443,7 +497,7 @@ const Directions = ({navigation, route}: Props) => {
             {isStarted ? 'Stop Live Action' : 'Start'}
           </Button>
         </VStack>
-      </Animated.View>
+      </View>
       <BottomSheet
         ref={bottomSheetRef}
         topInset={Constants.HEADER_HEIGHT + insets.top + theme.spacing['3']}
@@ -453,13 +507,13 @@ const Directions = ({navigation, route}: Props) => {
         backdropComponent={backdropComponent}
         handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
         backgroundStyle={[
-          globalStyles.bottomSheetContainer,
+          globalStyles.bottomSheetBackground,
           {backgroundColor: theme.colors.background},
         ]}
         containerStyle={[styles.bottomSheetContainer]}>
         <BottomSheetScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollViewContainerStyle(insets)}>
+          contentContainerStyle={styles.scrollViewContainerStyle}>
           <VStack mb={theme.spacing['5']} gap={theme.spacing['6']}>
             <VStack gap={theme.spacing['2.5']}>
               <Input
@@ -506,79 +560,31 @@ const Directions = ({navigation, route}: Props) => {
           </VStack>
         </BottomSheetScrollView>
       </BottomSheet>
-      <MapView
-        ref={mapRef}
-        initialRegion={lastRegion || undefined}
-        {...defaultMapProps}
-        userInterfaceStyle={themeName}
-        onRegionChangeComplete={handleRegionChange}
-        onUserLocationChange={onUserLocationChange}
-        style={styles.mapView}>
-        {clusters?.map((clusterPoint, index) => {
-          const properties = clusterPoint.properties || {};
-
-          if (properties.cluster) {
-            return null;
-          }
-
-          const stop = convertFeatureToData<IStop>(clusterPoint);
-
-          return (
-            <Marker
-              key={`marker-${stop.id}-${index}`}
-              identifier={`marker-${stop.id}-${index}`}
-              tracksViewChanges={false}
-              coordinate={{latitude: stop.lat, longitude: stop.lng}}
-              image={{uri: 'marker'}}>
-              <Callout tooltip>
-                <MapCallout canPress={false}>
-                  {stop.name[app.language]}
-                </MapCallout>
-              </Callout>
-            </Marker>
-          );
-        })}
-        {transitRoutesGeoJSON.map((geojson, index) => (
-          <Geojson
-            key={`geojson-transit-${index}`}
-            geojson={geojson}
-            strokeColor={
-              isStarted
-                ? theme.colors.warning
-                : geojson.features[0].properties.color
-            }
-            strokeWidth={isStarted ? 10 : 5}
-          />
-        ))}
-      </MapView>
-    </View>
+    </>
   );
 };
 
 const stylesheet = createStyleSheet(theme => ({
-  mapView: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 0,
-  },
-  scrollViewContainerStyle: (insets: EdgeInsets) => ({
+  scrollViewContainerStyle: {
     paddingHorizontal: theme.spacing['5'],
-    paddingBottom: insets.bottom + theme.spacing['5'] + theme.spacing['14'],
-  }),
+    paddingBottom:
+      UnistylesRuntime.insets.bottom + theme.spacing['5'] + theme.spacing['14'],
+  },
   bottomSheetContainer: {
     zIndex: 12,
   },
   backdropContainer: {
     zIndex: 10,
   },
-  bottomActionContainer: (insets: EdgeInsets) => ({
+  bottomActionContainer: {
     position: 'absolute',
     right: 0,
     left: 0,
     bottom: 0,
     paddingHorizontal: theme.spacing['6'],
-    paddingBottom: insets.bottom + theme.spacing['2'],
+    paddingBottom: UnistylesRuntime.insets.bottom + theme.spacing['2'],
     zIndex: 999,
-  }),
+  },
   stopActionButtonTitle: {
     color: theme.colors.error,
   },

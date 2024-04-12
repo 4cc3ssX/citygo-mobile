@@ -95,7 +95,7 @@ export const RouteCard = ({to, transitSteps, onPress}: IRouteCardProps) => {
                   overflow="hidden">
                   {transit.type === TransitType.TRANSIT ? (
                     <BusLineCard bg={(transit.step as ITransit).color}>
-                      {(transit.step as ITransit).route_id.split('-')[0]}
+                      {(transit.step as ITransit).route_id}
                     </BusLineCard>
                   ) : (
                     <BusLineCard bg={theme.colors.gray3}>

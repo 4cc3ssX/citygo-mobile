@@ -68,7 +68,7 @@ export const ActionCard = ({
               : (step as ITransitPopulatedStops).color
           }>
           {type === TransitType.TRANSIT ? (
-            (step as ITransitPopulatedStops).route_id.split(' - ')[0]
+            (step as ITransitPopulatedStops).route_id
           ) : (
             <Icon name="walk" color={theme.colors.text} size={24} />
           )}

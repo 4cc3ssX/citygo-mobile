@@ -46,7 +46,7 @@ export const DirectionCard = ({
   const [viewStops, setViewStops] = useState(false);
 
   return (
-    <VStack>
+    <>
       <HStack alignItems="center" gap={theme.spacing['2']}>
         <BusLineCard
           bg={
@@ -57,7 +57,7 @@ export const DirectionCard = ({
           {transitStep.type === TransitType.WALK ? (
             <Icon name="walk" color={theme.colors.text} size={22} />
           ) : (
-            transitStep.step.route_id.split('-')[0]
+            transitStep.step.route_id
           )}
         </BusLineCard>
         {transitStep.type === TransitType.WALK ? (
@@ -178,7 +178,7 @@ export const DirectionCard = ({
           </HStack>
         </>
       ) : null}
-    </VStack>
+    </>
   );
 };
 

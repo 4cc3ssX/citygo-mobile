@@ -3,6 +3,8 @@ import {Linking} from 'react-native';
 import {StatusBar} from 'react-native-bars';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
+export const LOG_TAG = '[ IN_APP_BROWSER ]';
+
 export const openBrowser = async (url: string) => {
   try {
     if (await InAppBrowser.isAvailable()) {
@@ -47,6 +49,6 @@ export const openBrowser = async (url: string) => {
       Linking.openURL(url);
     }
   } catch (error) {
-    console.log('[ BROWSER ] - In-app browser error -', error);
+    console.log(LOG_TAG, 'Error', error);
   }
 };

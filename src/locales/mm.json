@@ -10,11 +10,13 @@
   "SearchOnMap": "မြေပုံပေါ်တွင်ရှာမည်",
   "WelcomeToApp": "{{appName}} မှကြိုဆိုပါတယ်။",
   "Notifications": "အသိပေးချက်များ",
-  "AppTheme": "အက်ပ်အပြင်အဆင်",
+  "DarkMode": "Dark Mode",
   "Search": "ရှာရန်",
   "ChooseLocationOnMap": "Choose location on map",
   "FindTheBestRoute": "Find the Best Route",
   "FindRoute": "Find Route",
   "AvailableRoutes": "Available routes",
-  "OtherFeatures": "Other Features"
+  "OtherFeatures": "Other Features",
+  "History": "History",
+  "Details": "Details"
 }

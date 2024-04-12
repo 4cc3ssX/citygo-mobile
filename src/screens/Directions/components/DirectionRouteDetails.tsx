@@ -45,7 +45,7 @@ export const DirectionRouteDetails = ({route}: IDirectionRouteDetailsProps) => {
                   (transit.step as ITransit).route_id
                 }`}
                 bg={(transit.step as ITransit).color}>
-                {(transit.step as ITransit).route_id.split('-')[0]}
+                {(transit.step as ITransit).route_id}
               </BusLineCard>
             ) : (
               <BusLineCard

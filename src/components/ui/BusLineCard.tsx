@@ -1,15 +1,21 @@
 import React, {memo} from 'react';
+import {ColorValue} from 'react-native';
 
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
+
+import {getShortenRouteName} from '@utils/route';
 
 import {Text} from './Text';
 import {IVStackProps, VStack} from './VStack';
 
-export interface IBusLineCardProps extends IVStackProps {}
+export interface IBusLineCardProps extends IVStackProps {
+  color?: ColorValue;
+}
 
 export const BusLineCard = memo(
-  ({children, style, ...rest}: IBusLineCardProps) => {
+  ({color, children, style, ...rest}: IBusLineCardProps) => {
     const {styles, theme} = useStyles(stylesheet);
+
     return (
       <VStack
         alignItems="center"
@@ -23,10 +29,10 @@ export const BusLineCard = memo(
           <Text
             type="semibold"
             size="sm"
-            color={theme.colors.white}
+            color={color || theme.colors.white}
             textAlign="center"
             numberOfLines={1}>
-            {children}
+            {getShortenRouteName(children)}
           </Text>
         ) : (
           children

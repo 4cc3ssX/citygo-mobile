@@ -127,7 +127,7 @@ const stylesheet = createStyleSheet(theme => ({
       ? variant === 'solid'
         ? color
         : variant === 'ghost'
-        ? color
+        ? 'transparent'
         : 'transparent'
       : theme.colors.disabledBackground,
     borderWidth: variant === 'outline' ? StyleSheet.hairlineWidth : 0,

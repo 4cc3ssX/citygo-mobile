@@ -53,13 +53,15 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
       bg={headerStyle?.backgroundColor || theme.colors.surface}
       style={[styles.headerContainer, options.headerStyle]}>
       {options.presentation === 'modal' ? (
-        <Button size="sm" variant="clear" onPress={onGoBackHandler}>
-          <Ionicons
-            name="chevron-back-outline"
-            size={theme.spacing['6']}
-            color={theme.colors.text}
-          />
-        </Button>
+        options.headerBackVisible && (
+          <Button size="sm" variant="clear" onPress={onGoBackHandler}>
+            <Ionicons
+              name="chevron-back-outline"
+              size={theme.spacing['6']}
+              color={theme.colors.text}
+            />
+          </Button>
+        )
       ) : (
         <Button
           size={headerStyle?.maxHeight ? 'md' : 'sm'}
