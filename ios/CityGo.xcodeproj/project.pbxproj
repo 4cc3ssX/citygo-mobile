@@ -17,6 +17,7 @@
 		9AF6B1E62CB847E9778EF511 /* Pods_CityGo_CityGoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB073B7142B3B0BC10D26365 /* Pods_CityGo_CityGoTests.framework */; };
 		EA6471DC2B56242A00F84D47 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA6471DB2B56242A00F84D47 /* MaterialCommunityIcons.ttf */; };
 		EA684CEB2B8B12B300A4F7B4 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA684CEA2B8B12B300A4F7B4 /* Ionicons.ttf */; };
+		EAAD0DC72BC7FCB70079686F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EAAD0DC62BC7FCB70079686F /* PrivacyInfo.xcprivacy */; };
 		EAC400022BA4972E00F05B7C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EAC400012BA4972E00F05B7C /* GoogleService-Info.plist */; };
 		EADCDEA02B98B66F004A9587 /* CityGo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADCDE9F2B98B66F004A9587 /* CityGo.swift */; };
 		F6B05944AD49421180CE5518 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0FC8F95D1B50437D998EDF0F /* Inter.ttf */; };
@@ -54,6 +55,7 @@
 		EA6471DB2B56242A00F84D47 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		EA6471DD2B562CA200F84D47 /* CityGo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = CityGo.entitlements; path = CityGo/CityGo.entitlements; sourceTree = "<group>"; };
 		EA684CEA2B8B12B300A4F7B4 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		EAAD0DC62BC7FCB70079686F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = CityGo/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		EAC400012BA4972E00F05B7C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EADCDE9E2B98B66E004A9587 /* CityGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CityGo-Bridging-Header.h"; sourceTree = "<group>"; };
 		EADCDE9F2B98B66F004A9587 /* CityGo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityGo.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 		13B07FAE1A68108700A75B9A /* CityGo */ = {
 			isa = PBXGroup;
 			children = (
+				EAAD0DC62BC7FCB70079686F /* PrivacyInfo.xcprivacy */,
 				EAC400012BA4972E00F05B7C /* GoogleService-Info.plist */,
 				EA6471DD2B562CA200F84D47 /* CityGo.entitlements */,
 				EA0EB7532B516CE200AFD89A /* Fonts */,
@@ -286,6 +289,7 @@
 				EA6471DC2B56242A00F84D47 /* MaterialCommunityIcons.ttf in Resources */,
 				F6B05944AD49421180CE5518 /* Inter.ttf in Resources */,
 				8ADC2BF2F40943E7BF7C9728 /* ProductSans.ttf in Resources */,
+				EAAD0DC72BC7FCB70079686F /* PrivacyInfo.xcprivacy in Resources */,
 				EAC400022BA4972E00F05B7C /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
