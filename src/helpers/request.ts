@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-import {Configs} from '@configs';
+import {Configs} from '@configs/app';
 
 import {Storage} from './storage';
 

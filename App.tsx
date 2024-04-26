@@ -16,8 +16,9 @@ import {enableFreeze, enableScreens} from 'react-native-screens';
 import {UnistylesRuntime} from 'react-native-unistyles';
 
 import {logScreenView} from '@helpers/analytics';
+import {linking} from '@helpers/linking';
 import {AppContextProvider} from '@hooks/context';
-import Stack from '@navigations/Stack';
+import Stack, {RootStackParamsList} from '@navigations/Stack';
 import {useAppStore} from '@store/app';
 import {isSystemTheme} from '@utils/theme';
 
@@ -31,7 +32,7 @@ function Main() {
 
   /* Ref */
   const routeNameRef = useRef<string>();
-  const navigationRef = useNavigationContainerRef();
+  const navigationRef = useNavigationContainerRef<RootStackParamsList>();
 
   /* State */
   const app = useAppStore();
@@ -54,6 +55,7 @@ function Main() {
   return (
     <NavigationContainer
       ref={navigationRef}
+      linking={linking}
       onReady={() => {
         routeNameRef.current = navigationRef.getCurrentRoute()?.name;
       }}

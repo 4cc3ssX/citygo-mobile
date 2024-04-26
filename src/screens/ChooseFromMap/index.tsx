@@ -21,7 +21,6 @@ import {useGetStops} from '@hooks/api';
 import {useAppContext} from '@hooks/context';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
-import {RootTabParamsList} from '@navigations/Tab';
 import {useAppStore} from '@store/app';
 import {useMapStore} from '@store/map';
 import {useStopStore} from '@store/stop';
@@ -31,10 +30,7 @@ import {boundingBoxToBbox, convertFeatureToData} from '@utils/map';
 
 import StopCard from './components/StopCard';
 
-type Props = NativeStackScreenProps<
-  RootTabParamsList & RootStackParamsList,
-  'ChooseFromMap'
->;
+type Props = NativeStackScreenProps<RootStackParamsList, 'ChooseFromMap'>;
 
 const ChooseFromMap = ({navigation, route}: Props) => {
   const {initialRegion, prevRouteName, prevRouteProps} = route.params;

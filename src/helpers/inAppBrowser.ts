@@ -3,16 +3,18 @@ import {Linking} from 'react-native';
 import {StatusBar} from 'react-native-bars';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
-export const LOG_TAG = '[ IN_APP_BROWSER ]';
+export const LOG_TAG = '[ In-App Browser ]';
 
 export const openBrowser = async (url: string) => {
-  try {
-    if (await InAppBrowser.isAvailable()) {
-      const oldStyle = StatusBar.pushStackEntry({
-        barStyle: 'light-content',
-        animated: false,
-      });
+  const oldStyle = StatusBar.pushStackEntry({
+    barStyle: 'light-content',
+    animated: true,
+  });
 
+  const isAvailable = await InAppBrowser.isAvailable();
+
+  try {
+    if (isAvailable && url.match(/^https?:\/\//)) {
       await InAppBrowser.open(url, {
         // iOS Properties
         dismissButtonStyle: 'cancel',
@@ -24,6 +26,7 @@ export const openBrowser = async (url: string) => {
         modalTransitionStyle: 'coverVertical',
         modalEnabled: true,
         enableBarCollapsing: false,
+
         // Android Properties
         showTitle: true,
         toolbarColor: '#000000',
@@ -34,6 +37,7 @@ export const openBrowser = async (url: string) => {
         forceCloseOnRedirection: true,
         showInRecents: true,
         includeReferrer: true,
+
         // Specify full animation resource identifier(package:anim/name)
         // or only resource name(in case of animation bundled with app).
         animations: {
@@ -43,12 +47,12 @@ export const openBrowser = async (url: string) => {
           endExit: 'slide_out_right',
         },
       });
-
-      StatusBar.popStackEntry(oldStyle);
     } else {
-      Linking.openURL(url);
+      await Linking.openURL(url);
     }
   } catch (error) {
     console.log(LOG_TAG, 'Error', error);
+  } finally {
+    StatusBar.popStackEntry(oldStyle);
   }
 };

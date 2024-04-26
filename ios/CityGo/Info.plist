@@ -31,8 +31,23 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>citygo</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>citygo</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FirebaseAutomaticScreenReportingEnabled</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MKDirectionsApplicationSupportedModes</key>
@@ -50,6 +65,8 @@
 	<string>This app needs access to your location to find nearest stops and routes.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to your location to find nearest stops and routes.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Allow us to track your app usage to improve your app experience.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>
@@ -77,10 +94,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>Allow us to track your app usage to improve your app experience.</string>
-	<key>FirebaseAutomaticScreenReportingEnabled</key>
 	<false/>
 </dict>
 </plist>

@@ -1,4 +1,5 @@
 import React from 'react';
+import {NavigatorScreenParams} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {useTranslation} from 'react-i18next';
@@ -19,10 +20,10 @@ import {IRoute, ITransitRoute} from '@typescript/api/routes';
 import {IStop} from '@typescript/api/stops';
 
 import {StackHeader} from './components/Header';
-import Tab from './Tab';
+import Tab, {RootTabParamsList} from './Tab';
 
 export type RootStackParamsList = {
-  MainTab: undefined;
+  MainTab: NavigatorScreenParams<RootTabParamsList>;
   Language: undefined;
   NotificationSettings: undefined;
   AppTheme: undefined;
@@ -48,7 +49,7 @@ export type RootStackParamsList = {
   History: undefined;
   HistoryDetails: IRecentRoute;
   Bookmarks: undefined;
-  FindOnMap: undefined
+  FindOnMap: undefined;
 };
 
 const RNStack = createNativeStackNavigator<RootStackParamsList>();

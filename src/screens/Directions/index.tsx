@@ -43,7 +43,6 @@ import {Constants} from '@constants';
 import {useGetStops} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
-import {RootTabParamsList} from '@navigations/Tab';
 import {useAppStore} from '@store/app';
 import {useMapStore} from '@store/map';
 import {useStopStore} from '@store/stop';
@@ -64,10 +63,7 @@ import {ActionCard} from './components/ActionCard';
 import {DirectionCard} from './components/DirectionCard';
 import {DirectionRouteDetails} from './components/DirectionRouteDetails';
 
-type Props = NativeStackScreenProps<
-  RootTabParamsList & RootStackParamsList,
-  'Directions'
->;
+type Props = NativeStackScreenProps<RootStackParamsList, 'Directions'>;
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
@@ -402,6 +398,7 @@ const Directions = ({navigation, route}: Props) => {
 
     userStore.addRecentRoute({
       ...transitRoute,
+      groupId: null,
       from: stops.find(stop => stop.id === from.preferId)!,
       to: stops.find(stop => stop.id === to.preferId)!,
       startTime: dayjs().unix(),

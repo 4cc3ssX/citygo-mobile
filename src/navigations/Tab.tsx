@@ -27,6 +27,7 @@ export default function Tab() {
   const {theme} = useStyles();
   return (
     <RNTab.Navigator
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: theme.colors.primary,

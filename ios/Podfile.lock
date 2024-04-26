@@ -1,7 +1,4 @@
 PODS:
-  - BlastedImage (0.0.14):
-    - React-Core
-    - SDWebImage
   - boost (1.83.0)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.74.0)
@@ -1466,9 +1463,6 @@ PODS:
     - Yoga
   - RNSVG (15.2.0):
     - React-Core
-  - SDWebImage (5.19.1):
-    - SDWebImage/Core (= 5.19.1)
-  - SDWebImage/Core (5.19.1)
   - SocketRocket (0.7.0)
   - SPAlert (4.2.0)
   - Ting (1.2.0):
@@ -1477,7 +1471,6 @@ PODS:
   - Yoga (0.0.0)
 
 DEPENDENCIES:
-  - BlastedImage (from `../node_modules/react-native-blasted-image`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -1576,13 +1569,10 @@ SPEC REPOS:
     - MMKVCore
     - nanopb
     - PromisesObjC
-    - SDWebImage
     - SocketRocket
     - SPAlert
 
 EXTERNAL SOURCES:
-  BlastedImage:
-    :path: "../node_modules/react-native-blasted-image"
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
@@ -1740,7 +1730,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  BlastedImage: 6acc9b6f3ef15784f627dccabb0cfcbd559ac0de
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: 026c8f4ae67b06e088ae01baa2271ef8a26c0e8c
@@ -1832,7 +1821,6 @@ SPEC CHECKSUMS:
   RNReanimated: 7b73d797c924df2e110691d18e09764b9cd7f8ee
   RNScreens: 30249f9331c3b00ae7cb7922e11f58b3ed369c07
   RNSVG: 43b64ed39c14ce830d840903774154ca0c1f27ec
-  SDWebImage: 40b0b4053e36c660a764958bff99eed16610acbb
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   SPAlert: 735da1f16a887e294719217572ce1f936d8c8782
   Ting: 5957f73e6c095a507257519faf8fa95df3701f48
