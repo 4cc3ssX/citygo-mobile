@@ -4620,7 +4620,6 @@ __metadata:
     react-i18next: "npm:^14.1.1"
     react-native: "npm:0.74.0"
     react-native-bars: "npm:^2.4.3"
-    react-native-blasted-image: "https://github.com/fijit-club/react-native-blasted-image#main"
     react-native-bundle-visualizer: "npm:3.1.0"
     react-native-geolocation-service: "npm:^5.3.1"
     react-native-gesture-handler: "npm:^2.16.0"
@@ -9686,15 +9685,6 @@ __metadata:
     react: ">=18.1.0"
     react-native: ">=0.70.0"
   checksum: 10c0/9f98a247c66582787c99cb108906320fe94fb1308d9cfbe9c8e18f19124c5fe4b2af023906592d5c440ec3bd6060d565a25acf776af1ed53fb26339962eb6f4e
-  languageName: node
-  linkType: hard
-
-"react-native-blasted-image@https://github.com/fijit-club/react-native-blasted-image#main":
-  version: 0.0.14
-  resolution: "react-native-blasted-image@https://github.com/fijit-club/react-native-blasted-image.git#commit=458e9914b52ef66f1fc9e59fbcfb0e9083001b0d"
-  peerDependencies:
-    react-native: ">=0.60.0"
-  checksum: 10c0/46c4d1282dd7bf9397fa862fd8eca614009ea2b594e4339c05899cf86f79808418afaaefc6bc9802c5a0d0b4b387fef86ab41f774c54ffe9b1a39f1434a27b1d
   languageName: node
   linkType: hard
 

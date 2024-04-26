@@ -1,6 +1,5 @@
 import React, {forwardRef} from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
-import BlastedImage from 'react-native-blasted-image';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 
 import Animated, {
   Extrapolation,
@@ -38,7 +37,7 @@ export const CarouselCard = ({image, onPress}: ICarouselCardProps) => {
         {backgroundColor: theme.colors.surface},
       ]}
       onPress={onPress}>
-      <BlastedImage
+      <Image
         source={{uri: image.url}}
         resizeMode="stretch"
         style={StyleSheet.absoluteFillObject}
