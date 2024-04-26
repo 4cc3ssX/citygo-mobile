@@ -46,7 +46,8 @@ const storagePersister = createSyncStoragePersister({
 onlineManager.setEventListener(setOnline => {
   return NetInfo.addEventListener(state => {
     // no internet connection
-    if (!state.isConnected || !state.isInternetReachable) {
+    // isInternetReachable can be null
+    if (!state.isConnected || state.isInternetReachable === false) {
       toast({
         title: 'No Internet Connection',
         preset: 'error',
