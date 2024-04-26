@@ -15,7 +15,7 @@ import {
 } from '@components/ui';
 import {useThemeName} from '@hooks/useThemeName';
 import {useAppStore} from '@store/app';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 import {appThemes} from '@theme/themes';
 
 const AppTheme = () => {
@@ -32,7 +32,7 @@ const AppTheme = () => {
     <Container
       hasHeader
       bg={theme.colors.surface}
-      style={globalStyles.container}>
+      style={appStyles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={appThemes}

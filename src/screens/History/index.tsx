@@ -8,7 +8,6 @@ import {Portal} from '@gorhom/portal';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {FlashList} from '@shopify/flash-list';
 
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   createStyleSheet,
   UnistylesRuntime,
@@ -17,7 +16,6 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {isEqual} from 'lodash';
-import {useShallow} from 'zustand/react/shallow';
 
 import {
   Container,
@@ -30,7 +28,7 @@ import {
 import {RootStackParamsList} from '@navigations/Stack';
 import {IRecentRoute} from '@store/types';
 import {useUserStore} from '@store/user';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 
 import HistoryCard from './component/HistoryCard';
 import {Details} from './Details';
@@ -47,7 +45,7 @@ const History = ({navigation}: Props) => {
     removeRecentRoute,
     addToBookmark,
     removeFromBookmark,
-  } = useUserStore(useShallow(state => state));
+  } = useUserStore();
 
   /* State */
   const [activeItem, setActiveItem] = useState<IRecentRoute | null>(null);
@@ -136,7 +134,7 @@ const History = ({navigation}: Props) => {
     (props: BottomSheetBackdropProps) => (
       <CustomBackdrop
         {...props}
-        style={globalStyles.bottomSheetBackdrop}
+        style={appStyles.bottomSheetBackdrop}
         appearsOnIndex={0}
         disappearsOnIndex={-1}
         opacity={0.1}
@@ -147,10 +145,7 @@ const History = ({navigation}: Props) => {
   );
 
   return (
-    <Container
-      hasHeader
-      bg={theme.colors.surface}
-      style={globalStyles.container}>
+    <Container hasHeader bg={theme.colors.surface} style={appStyles.container}>
       <FlashList
         estimatedItemSize={120}
         data={recentRoutes}
@@ -172,11 +167,11 @@ const History = ({navigation}: Props) => {
           enablePanDownToClose
           enableDynamicSizing
           backdropComponent={backdropComponent}
-          handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
-          backgroundStyle={[globalStyles.bottomSheetBackground]}
-          containerStyle={[globalStyles.bottomSheetContainer]}>
+          handleIndicatorStyle={appStyles.bottomSheetHandleIndicator}
+          backgroundStyle={[appStyles.bottomSheetBackground]}
+          containerStyle={[appStyles.bottomSheetContainer]}>
           <BottomSheetView
-            style={[globalStyles.bottomSheetView, styles.bottomSheetView]}>
+            style={[appStyles.bottomSheetView, styles.bottomSheetView]}>
             <RowItem
               br={theme.spacing['3']}
               h={theme.spacing['12']}

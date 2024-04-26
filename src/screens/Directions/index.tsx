@@ -48,7 +48,7 @@ import {useAppStore} from '@store/app';
 import {useMapStore} from '@store/map';
 import {useStopStore} from '@store/stop';
 import {useUserStore} from '@store/user';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 import {ResponseFormat} from '@typescript/api';
 import {
   ITransit,
@@ -505,9 +505,9 @@ const Directions = ({navigation, route}: Props) => {
         snapPoints={snapPoints}
         animateOnMount
         backdropComponent={backdropComponent}
-        handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
+        handleIndicatorStyle={appStyles.bottomSheetHandleIndicator}
         backgroundStyle={[
-          globalStyles.bottomSheetBackground,
+          appStyles.bottomSheetBackground,
           {backgroundColor: theme.colors.background},
         ]}
         containerStyle={[styles.bottomSheetContainer]}>

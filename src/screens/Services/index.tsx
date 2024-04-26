@@ -21,7 +21,7 @@ import {useGetRoutes} from '@hooks/api';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 import {getReadableBadgeCount} from '@utils';
 
 import {ServiceCard} from './components/ServiceCard';
@@ -41,7 +41,7 @@ const Services = ({navigation}: Props) => {
   return (
     <Container
       edges={['top', 'left', 'right']}
-      style={[globalStyles.container, styles.container]}>
+      style={[appStyles.container, styles.container]}>
       <Text size="3xl" family="product">
         {t('Services')}
       </Text>

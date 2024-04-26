@@ -45,7 +45,7 @@ import {useAppStore} from '@store/app';
 import {useMapStore} from '@store/map';
 import {useStopStore} from '@store/stop';
 import {useUserStore} from '@store/user';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 import {ResponseFormat} from '@typescript/api';
 import {IRoute} from '@typescript/api/routes';
 import {IStop} from '@typescript/api/stops';
@@ -54,7 +54,7 @@ import {getShortenRouteName} from '@utils/route';
 
 import {
   RecentRouteCard,
-  RecentRouteCardPlaceholder,
+  RouteCardPlaceholder,
 } from './components/RecentRouteCard';
 
 type Props = NativeStackScreenProps<
@@ -241,16 +241,16 @@ const Map = ({navigation}: Props) => {
         ref={bottomSheetRef}
         animateOnMount
         enableDynamicSizing
-        handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
+        handleIndicatorStyle={appStyles.bottomSheetHandleIndicator}
         backgroundStyle={[
-          globalStyles.bottomSheetBackground,
+          appStyles.bottomSheetBackground,
           {backgroundColor: theme.colors.background},
         ]}>
         <BottomSheetView
           style={[
             styles.innerContainer,
             styles.bottomSheetView,
-            globalStyles.bottomSheetView,
+            appStyles.bottomSheetView,
           ]}>
           <Button
             size="lg"
@@ -273,7 +273,7 @@ const Map = ({navigation}: Props) => {
           {recentRoute ? (
             <RecentRouteCard {...recentRoute} />
           ) : (
-            <RecentRouteCardPlaceholder />
+            <RouteCardPlaceholder />
           )}
         </BottomSheetView>
       </BottomSheet>
@@ -287,12 +287,12 @@ const Map = ({navigation}: Props) => {
           animateOnMount={false}
           enablePanDownToClose
           backdropComponent={backdropComponent}
-          handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
+          handleIndicatorStyle={appStyles.bottomSheetHandleIndicator}
           backgroundStyle={[
-            globalStyles.bottomSheetBackground,
+            appStyles.bottomSheetBackground,
             {backgroundColor: theme.colors.background},
           ]}
-          containerStyle={globalStyles.bottomSheetContainer}>
+          containerStyle={appStyles.bottomSheetContainer}>
           <BottomSheetFlatList
             showsVerticalScrollIndicator={false}
             data={routesByStop}

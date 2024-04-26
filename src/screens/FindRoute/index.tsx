@@ -19,7 +19,7 @@ import {
 import {useFindRoutes} from '@hooks/api';
 import {RootStackParamsList} from '@navigations/Stack';
 import {useMapStore} from '@store/map';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 import {ITransitRoute} from '@typescript/api/routes';
 
 import {RouteCard} from './components/RouteCard';
@@ -122,7 +122,7 @@ const FindRoute = ({navigation, route}: Props) => {
     <Container
       hasHeader
       containerPaddingTop={theme.spacing['3']}
-      style={[globalStyles.container, styles.container]}>
+      style={[appStyles.container, styles.container]}>
       <VStack gap={theme.spacing['2.5']}>
         <Input
           editable={false}

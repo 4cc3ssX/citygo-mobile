@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {lightColors} from '@theme/colors';
 import {spacing} from '@theme/spacing';
 
-export const globalStyles = StyleSheet.create({
+export const appStyles = StyleSheet.create({
   container: {
     paddingHorizontal: spacing['6'],
   },
@@ -25,5 +25,16 @@ export const globalStyles = StyleSheet.create({
   },
   bottomSheetBackdrop: {
     zIndex: 8,
+  },
+  carouselContainer: {
+    height: 160,
+    alignItems: 'center',
+  },
+  carouselCardContainer: {
+    width: '100%',
+    height: 150,
+    overflow: 'hidden',
+    borderRadius: 12,
+    backgroundColor: '#222',
   },
 });

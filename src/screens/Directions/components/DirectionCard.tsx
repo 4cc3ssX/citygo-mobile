@@ -16,7 +16,7 @@ import {
   VStack,
 } from '@components/ui';
 import {useAppStore} from '@store/app';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 import {
   ITransitPopulatedStops,
   ITransitStep,
@@ -69,7 +69,7 @@ export const DirectionCard = ({
             alignItems="center"
             justifyContent="center"
             gap={theme.spacing['1']}>
-            <View style={globalStyles.flex}>
+            <View style={appStyles.flex}>
               <Text size="sm">
                 Walk {calculateTime(transitStep.distance, walkSpeed)} mins{' '}
               </Text>
@@ -88,7 +88,7 @@ export const DirectionCard = ({
             alignItems="center"
             justifyContent="center"
             gap={theme.spacing['1']}>
-            <View style={globalStyles.flex}>
+            <View style={appStyles.flex}>
               <Text size="xs" numberOfLines={2}>
                 {transitStep.step.name[language]}
               </Text>

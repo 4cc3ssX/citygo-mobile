@@ -19,7 +19,7 @@ export const useGetNearestStops = (
 ) =>
   useMutation({
     ...options,
-    mutationKey: ['nearestStops'],
+    mutationKey: ['getNearestStops'],
     mutationFn: getNearestStops,
   });
 
@@ -30,13 +30,13 @@ export const useGetStops = <T = IStop[]>(
 ) =>
   useQuery({
     ...options,
-    queryKey: ['stops', format],
+    queryKey: ['getStops', format],
     queryFn: () => getStops<T>(format, onSuccess),
   }) as DefinedUseQueryResult<T, ResponseError>;
 
 export const useGetPaginatedStops = () =>
   useInfiniteQuery({
-    queryKey: ['stops', 'pagination'],
+    queryKey: ['getPaginatedStops'],
     queryFn: ({pageParam}) => getPaginatedStops(pageParam as number),
     initialPageParam: 1,
     getNextPageParam: lastPage => lastPage.metadata?.nextPage,

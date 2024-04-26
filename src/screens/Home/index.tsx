@@ -1,9 +1,10 @@
 import React, {useCallback, useEffect, useRef} from 'react';
-import {ScrollView, View} from 'react-native';
+import {ScrollView, useWindowDimensions, View} from 'react-native';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 
 import {useTranslation} from 'react-i18next';
 import MapView, {Marker} from 'react-native-maps';
+import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/lib/typescript/types';
 import {
   createStyleSheet,
   UnistylesRuntime,
@@ -16,6 +17,8 @@ import dayjs from 'dayjs';
 import {Icon} from '@components/icons';
 import {
   Avatar,
+  Carousel,
+  CarouselCard,
   Container,
   HStack,
   IconButton,
@@ -30,7 +33,9 @@ import {
 } from '@components/ui';
 import {defaultMapProps} from '@configs/map';
 import {Constants} from '@constants';
+import {openBrowser} from '@helpers/inAppBrowser';
 import {useGetNearestStops} from '@hooks/api';
+import {useGetAds} from '@hooks/api/ads';
 import {useAppContext} from '@hooks/context';
 import {useThemeName} from '@hooks/useThemeName';
 import {TAB_HEIGHT} from '@navigations/components';
@@ -38,7 +43,8 @@ import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
 import {useMapStore} from '@store/map';
 import {useUserStore} from '@store/user';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
+import {IAds} from '@typescript/api/ads';
 
 import {FavoriteRouteCard} from './components/FavoriteRouteCard';
 
@@ -52,12 +58,13 @@ const Home = ({navigation}: Props) => {
 
   const themeName = useThemeName();
   const {styles, theme} = useStyles(stylesheet);
-
+  const {width} = useWindowDimensions();
   /* Context */
   const {isLocationEnabled} = useAppContext();
 
   /* Query */
   const {data: nearestStops, mutate: getNearestStops} = useGetNearestStops();
+  const {data: ads = []} = useGetAds();
 
   /* Map State */
   const mapStore = useMapStore();
@@ -87,7 +94,7 @@ const Home = ({navigation}: Props) => {
   return (
     <Container
       edges={['top', 'left', 'right']}
-      style={[globalStyles.container, styles.container]}>
+      style={[appStyles.container, styles.container]}>
       <HStack alignItems="center" gap={theme.spacing['3.5']}>
         <Avatar
           w={theme.spacing['14']}
@@ -121,24 +128,40 @@ const Home = ({navigation}: Props) => {
       <ScrollView
         contentContainerStyle={[styles.container, styles.scrollView]}
         showsVerticalScrollIndicator={false}>
-        <Stack gap={theme.spacing['4']}>
-          <HStack justifyContent="space-between" alignItems="center">
-            <Stack flex={2}>
-              <Text size="xl">{t('FavoriteRoute')}</Text>
-            </Stack>
-            <Link size="lg" color={theme.colors.gray} underlined={false}>
-              Add more
-            </Link>
-          </HStack>
-          <View style={styles.cardContainer}>
-            {bookmarks.slice(0, 2).map(bookmark => (
-              <FavoriteRouteCard
-                key={`${bookmark.id}-${bookmark.groupId}-${bookmark.from.id}-${bookmark.to.id}`}
-                {...bookmark}
+        {bookmarks.length > 0 ? (
+          <Stack gap={theme.spacing['4']}>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Stack flex={2}>
+                <Text size="xl">{t('FavoriteRoute')}</Text>
+              </Stack>
+              <Link size="lg" color={theme.colors.gray} underlined={false}>
+                Add more
+              </Link>
+            </HStack>
+            <View style={styles.cardContainer}>
+              {bookmarks.slice(0, 2).map(bookmark => (
+                <FavoriteRouteCard
+                  key={`${bookmark.id}-${bookmark.groupId}-${bookmark.from.id}-${bookmark.to.id}`}
+                  {...bookmark}
+                />
+              ))}
+            </View>
+          </Stack>
+        ) : null}
+        <Carousel
+          data={ads}
+          width={width - theme.spacing['6'] * 2}
+          loop={false}
+          renderItem={({item}: CarouselRenderItemInfo<IAds>) => {
+            return (
+              <CarouselCard
+                image={item.image}
+                onPress={() => openBrowser(item.url)}
               />
-            ))}
-          </View>
-        </Stack>
+            );
+          }}
+        />
+
         <Stack gap={theme.spacing['4']}>
           <Text size="xl">{t('SearchOnMap')}</Text>
           <View style={styles.cardContainer}>
@@ -215,7 +238,7 @@ const stylesheet = createStyleSheet(theme => ({
     flexGrow: 1,
   },
   favoriteRouteTitle: {
-    ...globalStyles.flex,
+    ...appStyles.flex,
   },
   rowItemContainer: {
     padding: theme.spacing['1.5'],

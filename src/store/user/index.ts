@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
+import {useShallow} from 'zustand/react/shallow';
 
 import {DEFAULT_BOOKMARK} from '@constants/bookmark';
 import {Storage} from '@helpers/storage';
@@ -20,7 +21,7 @@ export interface IUserState {
   removeRecentRoute: (item: IRecentRoute) => void;
 }
 
-export const useUserStore = create(
+const userStore = create(
   persist<IUserState>(
     (set, get) => ({
       /* Groups */
@@ -110,3 +111,5 @@ export const useUserStore = create(
     },
   ),
 );
+
+export const useUserStore = () => userStore(useShallow(state => state));

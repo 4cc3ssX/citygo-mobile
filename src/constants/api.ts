@@ -6,4 +6,8 @@ export const routes = {
 
   routes: '/routes',
   findRoutes: '/routes/find',
+
+  recharge: '/recharge',
+
+  ads: '/ads',
 } as const;

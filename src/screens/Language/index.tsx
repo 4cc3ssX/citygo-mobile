@@ -16,7 +16,7 @@ import {
 import {useThemeName} from '@hooks/useThemeName';
 import {supportedLanguages, supportedLng} from '@locales/helpers';
 import {useAppStore} from '@store/app';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 
 const flags = {
   mm: '🇲🇲',
@@ -34,7 +34,7 @@ const Language = () => {
     [],
   );
   return (
-    <Container hasHeader style={globalStyles.container}>
+    <Container hasHeader style={appStyles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={Object.keys(supportedLanguages)}

@@ -20,3 +20,4 @@ export * from './InputAccessoryView';
 export * from './MapCallout';
 export * from './JointDot';
 export * from './StopProgress';
+export * from './Carousel';

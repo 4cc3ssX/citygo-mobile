@@ -16,7 +16,7 @@ export const useGetRoutes = (
 ) =>
   useQuery<IRoute[], ResponseError>({
     ...options,
-    queryKey: ['routes'],
+    queryKey: ['getRoutes'],
     queryFn: getRoutes,
   });
 

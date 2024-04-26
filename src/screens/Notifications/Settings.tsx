@@ -7,7 +7,7 @@ import {createStyleSheet, useStyles} from 'react-native-unistyles';
 import {Container} from '@components/ui';
 import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 
 type Props = NativeStackScreenProps<
   RootStackParamsList,
@@ -19,7 +19,7 @@ const NotificationSettings = (props: Props) => {
   const themeName = useThemeName();
   const {styles, theme} = useStyles(stylesheet);
   return (
-    <Container hasHeader style={[globalStyles.container, styles.container]} />
+    <Container hasHeader style={[appStyles.container, styles.container]} />
   );
 };
 

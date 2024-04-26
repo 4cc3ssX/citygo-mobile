@@ -54,7 +54,7 @@ import {RootStackParamsList} from '@navigations/Stack';
 import {useAppStore} from '@store/app';
 import {useMapStore} from '@store/map';
 import {useStopStore} from '@store/stop';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 import {ResponseFormat} from '@typescript/api';
 import {IRoute} from '@typescript/api/routes';
 import {IStop} from '@typescript/api/stops';
@@ -450,9 +450,9 @@ const Routes = ({navigation, route}: Props) => {
         animateOnMount
         enablePanDownToClose
         backdropComponent={backdropComponent}
-        handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
+        handleIndicatorStyle={appStyles.bottomSheetHandleIndicator}
         backgroundStyle={[
-          globalStyles.bottomSheetBackground,
+          appStyles.bottomSheetBackground,
           {backgroundColor: theme.colors.background},
         ]}
         containerStyle={[styles.stopBottomSheetContainer]}>
@@ -481,9 +481,9 @@ const Routes = ({navigation, route}: Props) => {
         snapPoints={snapPoints}
         animateOnMount
         backdropComponent={backdropComponent}
-        handleIndicatorStyle={globalStyles.bottomSheetHandleIndicator}
+        handleIndicatorStyle={appStyles.bottomSheetHandleIndicator}
         backgroundStyle={[
-          globalStyles.bottomSheetBackground,
+          appStyles.bottomSheetBackground,
           {backgroundColor: theme.colors.background},
         ]}
         containerStyle={[styles.bottomSheetContainer]}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Pressable, View} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
@@ -14,12 +14,26 @@ import {ITransit, TransitType} from '@typescript/api/routes';
 
 export interface IRecentRouteCardProps extends IRecentRoute {}
 
-export const RecentRouteCardPlaceholder = () => {
+export interface IRouteCardPlaceholderProps {
+  onPress?: () => void;
+}
+
+export const RouteCardPlaceholder = ({onPress}: IRouteCardPlaceholderProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const {styles, theme} = useStyles(stylesheet);
 
+  /* Handler */
+  const onPressHandler = useCallback(() => {
+    if (!onPress) {
+      navigation.navigate('Search', {});
+      return;
+    }
+
+    onPress();
+  }, [navigation, onPress]);
+
   return (
-    <Pressable onPress={() => navigation.navigate('Search', {})}>
+    <Pressable onPress={onPressHandler}>
       <View style={[styles.container, styles.placeholderContainer]}>
         <HStack
           alignItems="center"

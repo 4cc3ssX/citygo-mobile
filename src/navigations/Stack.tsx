@@ -48,6 +48,7 @@ export type RootStackParamsList = {
   History: undefined;
   HistoryDetails: IRecentRoute;
   Bookmarks: undefined;
+  FindOnMap: undefined
 };
 
 const RNStack = createNativeStackNavigator<RootStackParamsList>();

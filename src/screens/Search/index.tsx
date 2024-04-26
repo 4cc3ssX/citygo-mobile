@@ -38,7 +38,7 @@ import {useThemeName} from '@hooks/useThemeName';
 import {RootStackParamsList} from '@navigations/Stack';
 import {useAppStore} from '@store/app';
 import {useStopStore} from '@store/stop';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 import {ResponseFormat} from '@typescript/api';
 import {IStop} from '@typescript/api/stops';
 
@@ -242,7 +242,7 @@ const Search = ({navigation, route}: Props) => {
       hasHeader
       containerPaddingTop={theme.spacing['3']}
       bg={theme.colors.surface}
-      style={[globalStyles.container, styles.container]}>
+      style={[appStyles.container, styles.container]}>
       <InputAccessoryView nativeID={chooseOnMapButtonNativeID}>
         <Button
           br={0}

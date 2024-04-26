@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import {AppState, AppStateStatus, Platform} from 'react-native';
-import {alert} from '@baronha/ting';
+import {alert, toast} from '@baronha/ting';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {PortalProvider} from '@gorhom/portal';
 import NetInfo from '@react-native-community/netinfo';
@@ -27,7 +27,7 @@ import {Constants} from '@constants';
 import {checkLocationPermission} from '@helpers/permissions';
 import {Storage} from '@helpers/storage';
 import {useMapStore} from '@store/map';
-import {globalStyles} from '@styles/global';
+import {appStyles} from '@styles/app';
 
 import {AppContext} from '.';
 
@@ -45,7 +45,16 @@ const storagePersister = createSyncStoragePersister({
 
 onlineManager.setEventListener(setOnline => {
   return NetInfo.addEventListener(state => {
-    setOnline(!!state.isConnected);
+    // no internet connection
+    if (!state.isConnected || !state.isInternetReachable) {
+      toast({
+        title: 'No Internet Connection',
+        preset: 'error',
+        haptic: 'error',
+      });
+    }
+
+    setOnline(!!(state.isConnected || state.isInternetReachable));
   });
 });
 
@@ -159,7 +168,7 @@ export const AppContextProvider = ({children}: PropsWithChildren) => {
         isLocating,
         locatePosition,
       }}>
-      <GestureHandlerRootView style={globalStyles.flex}>
+      <GestureHandlerRootView style={appStyles.flex}>
         <KeyboardProvider>
           <SafeAreaProvider initialMetrics={initialWindowMetrics}>
             <PortalProvider>
