@@ -2,6 +2,7 @@ import React, {
   PropsWithChildren,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -9,7 +10,7 @@ import {AppState, AppStateStatus, Platform} from 'react-native';
 import {alert, toast} from '@baronha/ting';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {PortalProvider} from '@gorhom/portal';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
 import {createSyncStoragePersister} from '@tanstack/query-sync-storage-persister';
 import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query';
 import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client';
@@ -69,6 +70,14 @@ export const AppContextProvider = ({children}: PropsWithChildren) => {
   /* State */
   const [isLocating, setIsLocating] = useState(false);
   const [isLocationEnabled, setLocationEnabled] = useState(false);
+
+  /* NetInfo */
+  const netInfo = useNetInfo();
+  /* Memo */
+  const isOnline = useMemo(
+    () => !!(netInfo.isConnected && netInfo.isInternetReachable),
+    [netInfo.isConnected, netInfo.isInternetReachable],
+  );
 
   /* Handlers */
   // MARK: locatePosition
@@ -164,6 +173,7 @@ export const AppContextProvider = ({children}: PropsWithChildren) => {
   return (
     <AppContext.Provider
       value={{
+        isOnline,
         isLocationEnabled,
         requestPermissions,
         isLocating,

@@ -21,6 +21,7 @@ export interface IStopProgress extends IStackProps {
   totalStops: number;
 }
 
+// TODO: refactor to skia later
 export const StopProgress = memo(
   ({color, remainingStops, totalStops, ...props}: IStopProgress) => {
     const {theme, styles} = useStyles(stylesheet);

@@ -10,4 +10,6 @@ export const routes = {
   recharge: '/recharge',
 
   ads: '/ads',
+
+  suggestions: '/suggestions',
 } as const;

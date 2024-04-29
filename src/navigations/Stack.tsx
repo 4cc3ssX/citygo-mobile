@@ -12,7 +12,7 @@ import Directions from '@screens/Directions';
 import FindRoute from '@screens/FindRoute';
 import History, {HistoryDetails} from '@screens/History';
 import Language from '@screens/Language';
-import {NotificationSettings} from '@screens/Notifications';
+import Notifications, {NotificationSettings} from '@screens/Notifications';
 import Routes from '@screens/Routes';
 import Search from '@screens/Search';
 import {IRecentRoute} from '@store/types';
@@ -25,6 +25,7 @@ import Tab, {RootTabParamsList} from './Tab';
 export type RootStackParamsList = {
   MainTab: NavigatorScreenParams<RootTabParamsList>;
   Language: undefined;
+  Notifications: undefined;
   NotificationSettings: undefined;
   AppTheme: undefined;
   Search: {
@@ -143,6 +144,11 @@ function Stack() {
           headerBackVisible: false,
           presentation: 'modal',
         }}
+      />
+      <RNStack.Screen
+        name="Notifications"
+        component={Notifications}
+        options={{title: t('Notifications')}}
       />
     </RNStack.Navigator>
   );

@@ -45,7 +45,7 @@ import {IStop} from '@typescript/api/stops';
 type Props = NativeStackScreenProps<RootStackParamsList, 'Search'>;
 
 const fuseOptions: IFuseOptions<IStop> = {
-  threshold: 0.1,
+  threshold: 0.2,
   keys: ['name.en', 'name.mm'],
 };
 

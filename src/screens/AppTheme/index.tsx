@@ -29,10 +29,7 @@ const AppTheme = () => {
     [],
   );
   return (
-    <Container
-      hasHeader
-      bg={theme.colors.surface}
-      style={appStyles.container}>
+    <Container hasHeader bg={theme.colors.surface} style={appStyles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={appThemes}

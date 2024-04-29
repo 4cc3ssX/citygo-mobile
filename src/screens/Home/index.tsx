@@ -13,6 +13,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import dayjs from 'dayjs';
+import {random} from 'lodash';
 
 import {Icon} from '@components/icons';
 import {
@@ -36,11 +37,13 @@ import {Constants} from '@constants';
 import {openBrowser} from '@helpers/inAppBrowser';
 import {useGetNearestStops} from '@hooks/api';
 import {useGetAds} from '@hooks/api/ads';
+import {useGetSuggestions} from '@hooks/api/suggestions';
 import {useAppContext} from '@hooks/context';
 import {useThemeName} from '@hooks/useThemeName';
 import {TAB_HEIGHT} from '@navigations/components';
 import {RootStackParamsList} from '@navigations/Stack';
 import {RootTabParamsList} from '@navigations/Tab';
+import {useAppStore} from '@store/app';
 import {useMapStore} from '@store/map';
 import {useUserStore} from '@store/user';
 import {appStyles} from '@styles/app';
@@ -65,8 +68,10 @@ const Home = ({navigation}: Props) => {
   /* Query */
   const {data: nearestStops, mutate: getNearestStops} = useGetNearestStops();
   const {data: ads = []} = useGetAds();
+  const {data: suggestions} = useGetSuggestions();
 
   /* Map State */
+  const appStore = useAppStore();
   const mapStore = useMapStore();
   const {bookmarks} = useUserStore();
 
@@ -121,6 +126,7 @@ const Home = ({navigation}: Props) => {
                 size={theme.spacing['5']}
               />
             }
+            onPress={() => navigation.navigate('Notifications')}
           />
         </HStack>
       </HStack>
@@ -184,7 +190,9 @@ const Home = ({navigation}: Props) => {
                   {t('WhereUWantToGo')}
                 </Text>
                 <Text color={theme.colors.text} size="lg" numberOfLines={1}>
-                  Hledan
+                  {suggestions?.[random(0, suggestions.length)]?.name[
+                    appStore.language
+                  ] || '...'}
                 </Text>
               </RowItemContent>
               <RowItemRight>
@@ -230,7 +238,7 @@ const Home = ({navigation}: Props) => {
 const stylesheet = createStyleSheet(theme => ({
   container: {
     paddingVertical: theme.spacing['3'],
-    gap: theme.spacing['8'],
+    gap: theme.spacing['6'],
   },
   scrollView: {
     paddingBottom:

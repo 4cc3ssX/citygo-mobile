@@ -4,6 +4,7 @@ import {GeoCoordinates} from 'react-native-geolocation-service';
 import {Region} from 'react-native-maps';
 
 export interface IAppContext {
+  isOnline: boolean;
   isLocationEnabled: boolean;
   requestPermissions: () => Promise<void>;
   isLocating: boolean;
@@ -11,6 +12,7 @@ export interface IAppContext {
 }
 
 export const AppContext = createContext<IAppContext>({
+  isOnline: true,
   isLocationEnabled: false,
   requestPermissions: async () => {},
 

@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
+import {useShallow} from 'zustand/react/shallow';
 
 import {Storage} from '@helpers/storage';
 import {supportedLng} from '@locales/helpers';
@@ -14,7 +15,7 @@ export interface IAppState {
   setLanguage: (language: supportedLng) => void;
 }
 
-export const useAppStore = create(
+export const appStore = create(
   persist<IAppState>(
     set => ({
       theme: 'light',
@@ -31,3 +32,5 @@ export const useAppStore = create(
     },
   ),
 );
+
+export const useAppStore = () => appStore(useShallow(state => state));

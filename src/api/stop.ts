@@ -4,10 +4,12 @@ import {GetNearestStops} from '@typescript/api/request';
 import {IResponse, ResponseFormat} from '@typescript/api/response';
 import {IStop} from '@typescript/api/stops';
 
-export const getNearestStops = async (params: GetNearestStops) => {
+export const getNearestStops = async <T = IStop[]>(
+  params: GetNearestStops,
+): Promise<T> => {
   const {axios} = createRequest();
 
-  const {data} = await axios.get<IResponse<IStop[]>>(routes.nearestStops, {
+  const {data} = await axios.get<IResponse<T>>(routes.nearestStops, {
     params,
   });
 
@@ -39,10 +41,13 @@ export const getStops = async <T = IStop[]>(
   return data.data;
 };
 
-export const getPaginatedStops = async (page: number, size: number = 10) => {
+export const getPaginatedStops = async <T = IStop[]>(
+  page: number,
+  size: number = 10,
+): Promise<IResponse<T>> => {
   const {axios} = createRequest();
 
-  const {data} = await axios.get<IResponse<IStop[]>>(
+  const {data} = await axios.get<IResponse<T>>(
     `${routes.stops}?page=${page}&size=${size}`,
   );
 

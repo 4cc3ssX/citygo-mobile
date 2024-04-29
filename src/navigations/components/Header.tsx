@@ -7,7 +7,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createStyleSheet, useStyles} from 'react-native-unistyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {Button, HStack, Text, VStack} from '@components/ui';
+import {Button, HStack, IconButton, Text, VStack} from '@components/ui';
 import {Constants} from '@constants';
 
 export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
@@ -89,10 +89,7 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
       </VStack>
 
       {(!options.presentation || options.presentation === 'card') && (
-        <Button
-          size={headerStyle?.maxHeight ? 'md' : 'sm'}
-          color="surface"
-          br={theme.radius.full}
+        <IconButton
           icon={
             <Ionicons
               name="alert-circle-outline"
@@ -100,10 +97,8 @@ export const StackHeader = ({navigation, options}: NativeStackHeaderProps) => {
               color={theme.colors.text}
             />
           }
-          titleStyle={styles.buttonTitle}
-          onPress={onPressHelpHandler}>
-          Help
-        </Button>
+          onPress={onPressHelpHandler}
+        />
       )}
     </HStack>
   );

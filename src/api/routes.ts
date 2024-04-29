@@ -5,10 +5,10 @@ import {IResponse, ResponseFormat} from '@typescript/api';
 import {IFindRoutes} from '@typescript/api/request';
 import {IRoute, ITransitRoute} from '@typescript/api/routes';
 
-export const getRoutes = async () => {
+export const getRoutes = async <T = IRoute[]>(): Promise<T> => {
   const {axios} = createRequest();
 
-  const {data} = await axios.get<IResponse<IRoute[]>>(routes.routes);
+  const {data} = await axios.get<IResponse<T>>(routes.routes);
 
   if (data.status !== 'ok') {
     throw data.error || data.errors;
@@ -17,7 +17,7 @@ export const getRoutes = async () => {
   return data.data;
 };
 
-export const getRouteById = async <T = IRoute>(
+export const getRouteById = async <T = IRoute[]>(
   id: string,
   format: ResponseFormat = ResponseFormat.JSON,
 ): Promise<T> => {
@@ -34,13 +34,12 @@ export const getRouteById = async <T = IRoute>(
   return data.data;
 };
 
-export const findRoutes = async (values: IFindRoutes) => {
+export const findRoutes = async <T = ITransitRoute[]>(
+  values: IFindRoutes,
+): Promise<T> => {
   const {axios} = createRequest();
 
-  const {data} = await axios.post<IResponse<ITransitRoute[]>>(
-    routes.findRoutes,
-    values,
-  );
+  const {data} = await axios.post<IResponse<T>>(routes.findRoutes, values);
 
   if (data.status !== 'ok') {
     if (data.error) {
